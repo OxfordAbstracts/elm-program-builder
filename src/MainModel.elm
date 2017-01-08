@@ -13,6 +13,7 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
+    , newSessionBlurred : Session
     }
 
 
@@ -26,6 +27,7 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , newSession = blankSession 1
+    , newSessionBlurred = blankSession 1
     }
 
 
@@ -66,6 +68,7 @@ blankSession id =
     Session id "" "" defaultDateWithoutTime (TimeOfDay 9 0) (TimeOfDay 12 0) 1 1 "" []
 
 
+defaultDateWithoutTime : DateWithoutTime
 defaultDateWithoutTime =
     DateWithoutTime 0 0 0
 
@@ -78,7 +81,7 @@ initialSessions =
         "This a description of the inital session"
         (DateWithoutTime 2017 1 1)
         (TimeOfDay 9 0)
-        (TimeOfDay 10 30)
+        (TimeOfDay 9 1)
         1
         1
         "The aquariam"

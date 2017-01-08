@@ -30,23 +30,17 @@ dropDuplicates list =
 displayTime : Time.Time -> String
 displayTime timeDelimiter =
     let
-        addHour0Padding hour =
+        add0Padding hour =
             if String.length hour == 1 then
                 "0" ++ hour
             else
                 hour
-
-        addMin0Padding min =
-            if String.length min == 1 then
-                min ++ "0"
-            else
-                min
     in
         timeDelimiter
             |> Date.fromTime
             |> (\d ->
-                    [ d |> Date.hour |> toString |> addHour0Padding
-                    , d |> Date.minute |> toString |> addMin0Padding
+                    [ d |> Date.hour |> toString |> add0Padding
+                    , d |> Date.minute |> toString |> add0Padding
                     ]
                )
             |> String.join ":"
