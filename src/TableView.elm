@@ -70,6 +70,7 @@ viewDate sessions columns date =
             ++ (viewOtherRows sessionsInDate columns (List.drop 1 timeDelimiters))
 
 
+viewDateCell : Date.Date -> List Session -> List Float -> Float -> List (Html msg)
 viewDateCell date sessionsInDate timeDelimiters firstTime =
     let
         timeDisplay =
@@ -139,14 +140,12 @@ appendFirstRowCell sessionsInDate timeDelimiters column =
                         ]
 
 
-
--- viewOtherRows : List Session -> List Column -> List Int -> List (Html msg)
-
-
+viewOtherRows : List Session -> List Column -> List Float -> List (Html msg)
 viewOtherRows sessionsInDate columns timeDelimiters =
     List.map (viewOtherRow sessionsInDate columns timeDelimiters) timeDelimiters
 
 
+viewOtherRow : List Session -> List Column -> List Float -> Float -> Html msg
 viewOtherRow sessionsInDate columns timeDelimiters timeDelimiter =
     let
         timeDisplay =
@@ -174,11 +173,13 @@ viewOtherRow sessionsInDate columns timeDelimiters timeDelimiter =
                 )
 
 
+viewCells : List Session -> List Column -> List Float -> Float -> List (Html msg)
 viewCells sessionsInDate columns timeDelimiters timeDelimiter =
     columns
         |> List.map (viewCell sessionsInDate timeDelimiters timeDelimiter)
 
 
+viewCell : List Session -> List Float -> Float -> Column -> Html msg
 viewCell sessionsInDate timeDelimiters timeDelimiter column =
     let
         sessionsInColumn =
@@ -229,6 +230,7 @@ viewCell sessionsInDate timeDelimiters timeDelimiter column =
 -- HELPERS
 
 
+displayTimeDelimiter : List Session -> List Float -> Float -> String
 displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
     let
         nextDelimiter =
