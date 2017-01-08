@@ -14,4 +14,4 @@ type Msg
     | UpdateNewSessionDescription String
     | UpdateNewSessionColumn String
     | UpdateNewSessionTrack String
-    | UpdateNewSessionDay String
+    | UpdateNewSessionDate String

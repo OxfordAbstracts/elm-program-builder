@@ -3,15 +3,12 @@
 
 module MainModel exposing (..)
 
-import Date
-import Time
-
 
 type alias Model =
     { sessions : List Session
     , tracks : List Track
     , columns : List Column
-    , dates : List Date.Date
+    , dates : List DateWithoutTime
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
@@ -32,12 +29,18 @@ initialModel =
     }
 
 
+initialDates : List DateWithoutTime
+initialDates =
+    [ DateWithoutTime 2017 1 1, DateWithoutTime 2017 1 2 ]
+
+
 type alias Session =
     { id : Int
     , name : String
     , description : String
-    , startTime : Time.Time
-    , endTime : Time.Time
+    , date : DateWithoutTime
+    , startTime : TimeOfDay
+    , endTime : TimeOfDay
     , columnId : ColumnId
     , trackId : TrackId
     , location : String
@@ -45,9 +48,26 @@ type alias Session =
     }
 
 
+type alias DateWithoutTime =
+    { year : Int
+    , month : Int
+    , day : Int
+    }
+
+
+type alias TimeOfDay =
+    { hour : Int
+    , minute : Int
+    }
+
+
 blankSession : Int -> Session
 blankSession id =
-    Session id "" "" 0 0 1 1 "" []
+    Session id "" "" defaultDateWithoutTime (TimeOfDay 9 0) (TimeOfDay 12 0) 1 1 "" []
+
+
+defaultDateWithoutTime =
+    DateWithoutTime 0 0 0
 
 
 initialSessions : List Session
@@ -56,8 +76,9 @@ initialSessions =
         1
         "Conceptualising diabetes self-management as an occupation"
         "This a description of the inital session"
-        1483282800000
-        1483286400000
+        (DateWithoutTime 2017 1 1)
+        (TimeOfDay 9 0)
+        (TimeOfDay 10 30)
         1
         1
         "The aquariam"
@@ -66,8 +87,9 @@ initialSessions =
         2
         "Computers n stuff sesh 2"
         "This a description of the second inital session"
-        1483286400000
-        1483291800000
+        (DateWithoutTime 2017 1 1)
+        (TimeOfDay 10 30)
+        (TimeOfDay 11 0)
         1
         1
         "The observatory"
@@ -76,8 +98,9 @@ initialSessions =
         3
         "Sessioning hard 3"
         "This a description of the third inital session"
-        1483293600000
-        1483295400000
+        (DateWithoutTime 2017 1 1)
+        (TimeOfDay 13 30)
+        (TimeOfDay 15 0)
         1
         1
         "The games room"
@@ -86,8 +109,9 @@ initialSessions =
         4
         "Other column sesh 4"
         "This a description of the fourth inital session"
-        1483286400000
-        1483295100000
+        (DateWithoutTime 2017 1 1)
+        (TimeOfDay 13 0)
+        (TimeOfDay 15 30)
         2
         1
         "The mystery room"
@@ -96,8 +120,9 @@ initialSessions =
         5
         "first column 1 day 2 sesh 5"
         "This a description of the fifth inital session"
-        1483380000000
-        1483381800000
+        (DateWithoutTime 2017 1 2)
+        (TimeOfDay 11 0)
+        (TimeOfDay 14 30)
         1
         1
         "The mystery room 4"
@@ -123,8 +148,3 @@ type alias Column =
 
 type alias ColumnId =
     Int
-
-
-initialDates : List Date.Date
-initialDates =
-    [ Date.fromTime 1483228800000, Date.fromTime 1483315200000 ]

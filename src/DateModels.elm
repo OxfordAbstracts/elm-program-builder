@@ -1,7 +1,7 @@
-module DateModels exposing (..)
-
-
-type alias TimeOfDay =
-    { hour : Int
-    , minute : Int
-    }
+-- module DateModels exposing (..)
+--
+--
+-- type alias TimeOfDay =
+--     { hour : Int
+--     , minute : Int
+--     }

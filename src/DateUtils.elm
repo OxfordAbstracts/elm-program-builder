@@ -1,12 +1,13 @@
 module DateUtils
     exposing
-        ( parse
+        ( dateWithoutTimeToDate
         , displayTimeOfDay
+        , parse
         , timeOfDayToTime
         )
 
 import Date
-import DateModels exposing (..)
+import MainModel exposing (..)
 import Time
 
 
@@ -17,9 +18,18 @@ parse string =
         |> Result.withDefault (Date.fromTime 0)
 
 
-timeOfDayToTime : Date.Date -> TimeOfDay -> Time.Time
-timeOfDayToTime date timeOfDay =
-    ((Date.toTime date) + toFloat ((60 * timeOfDay.hour) + timeOfDay.minute)) * 60 * 1000
+dateWithoutTimeToDate : DateWithoutTime -> Date.Date
+dateWithoutTimeToDate dateWithoutTime =
+    ((toString dateWithoutTime.year) ++ "-" ++ (toString dateWithoutTime.month) ++ "-" ++ (toString dateWithoutTime.day))
+        |> parse
+
+
+timeOfDayToTime : DateWithoutTime -> TimeOfDay -> Time.Time
+timeOfDayToTime dateWithoutTime timeOfDay =
+    ((toString dateWithoutTime.year) ++ "-" ++ (toString dateWithoutTime.month) ++ "-" ++ (toString dateWithoutTime.day))
+        |> parse
+        |> Date.toTime
+        |> (\t -> t + ((toFloat timeOfDay.hour) * Time.hour + (toFloat timeOfDay.minute) * Time.minute))
 
 
 displayTimeOfDay : TimeOfDay -> String

@@ -1,13 +1,15 @@
 module TableView exposing (..)
 
 import Date
+import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import MainModel exposing (..)
+import Time
 import Utils
 
 
-view : List Date.Date -> List Session -> List Column -> Html msg
+view : List DateWithoutTime -> List Session -> List Column -> Html msg
 view dates sessions columns =
     div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
         [ div [ class "table-responsive" ]
@@ -39,21 +41,26 @@ viewColumnHeader column =
     th [] [ text column.name ]
 
 
-viewDate : List Session -> List Column -> Date.Date -> List (Html msg)
+viewDate : List Session -> List Column -> DateWithoutTime -> List (Html msg)
 viewDate sessions columns date =
     let
         sessionsInDate =
             List.filter isInDate sessions
 
         isInDate session =
-            session.startTime >= (Date.toTime date) && session.startTime < ((Date.toTime date) + lengthOfDay)
+            session.date == date
 
         lengthOfDay =
-            1000 * 3600 * 24
+            Time.hour * 24
 
         timeDelimiters =
             sessionsInDate
-                |> List.concatMap (\s -> [ s.startTime, s.endTime ])
+                |> List.concatMap
+                    (\s ->
+                        [ DateUtils.timeOfDayToTime s.date s.startTime
+                        , DateUtils.timeOfDayToTime s.date s.endTime
+                        ]
+                    )
                 |> Utils.dropDuplicates
                 |> List.sort
 
@@ -70,7 +77,7 @@ viewDate sessions columns date =
             ++ (viewOtherRows sessionsInDate columns (List.drop 1 timeDelimiters))
 
 
-viewDateCell : Date.Date -> List Session -> List Float -> Float -> List (Html msg)
+viewDateCell : DateWithoutTime -> List Session -> List Float -> Float -> List (Html msg)
 viewDateCell date sessionsInDate timeDelimiters firstTime =
     let
         timeDisplay =
@@ -81,14 +88,17 @@ viewDateCell date sessionsInDate timeDelimiters firstTime =
                 "active"
             else
                 ""
+
+        elmDate =
+            DateUtils.dateWithoutTimeToDate date
     in
         [ td [ class "active", attribute "rowspan" (toString ((List.length timeDelimiters) - 1)) ]
             [ div [ class "dayofmonth" ]
-                [ text (toString (Date.day date)) ]
+                [ text (toString (Date.day elmDate)) ]
             , div [ class "dayofweek" ]
-                [ text (toString (Date.dayOfWeek date)) ]
+                [ text (toString (Date.dayOfWeek elmDate)) ]
             , div [ class "shortdate text-muted" ]
-                [ text ((toString (Date.month date)) ++ ", " ++ (toString (Date.year date))) ]
+                [ text ((toString (Date.month elmDate)) ++ ", " ++ (toString (Date.year elmDate))) ]
             ]
         , td [ class timeClass ]
             [ text timeDisplay ]
@@ -105,17 +115,22 @@ appendFirstRowCell sessionsInDate timeDelimiters column =
 
         sessionStarting =
             sessionsInDate
-                |> List.filter (\s -> s.startTime == timeDelimiter && s.columnId == column.id)
+                |> List.filter (\s -> (DateUtils.timeOfDayToTime s.date s.startTime) == timeDelimiter && s.columnId == column.id)
                 |> List.head
+
+        sessionDate =
+            sessionStarting
+                |> Maybe.map .date
+                |> Maybe.withDefault (DateWithoutTime 0 0 0)
 
         endTime =
             sessionStarting
                 |> Maybe.map .endTime
-                |> Maybe.withDefault 0
+                |> Maybe.withDefault (TimeOfDay 0 0)
 
         rowSpan =
             timeDelimiters
-                |> List.filter (\t -> t >= timeDelimiter && t < endTime)
+                |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
                 |> toString
 
@@ -131,7 +146,7 @@ appendFirstRowCell sessionsInDate timeDelimiters column =
                 Just sessionStarting ->
                     td [ attribute "rowspan" rowSpan ]
                         [ div []
-                            [ text (sessionStarting.name ++ "  " ++ (Utils.displayTime sessionStarting.startTime) ++ " - " ++ (Utils.displayTime sessionStarting.endTime)) ]
+                            [ text (sessionStarting.name ++ "  " ++ (DateUtils.displayTimeOfDay sessionStarting.startTime) ++ " - " ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)) ]
                         ]
 
                 Nothing ->
@@ -188,17 +203,22 @@ viewCell sessionsInDate timeDelimiters timeDelimiter column =
 
         sessionStarting =
             sessionsInColumn
-                |> List.filter (\s -> s.startTime == timeDelimiter)
+                |> List.filter (\s -> (DateUtils.timeOfDayToTime s.date s.startTime) == timeDelimiter && s.columnId == column.id)
                 |> List.head
+
+        sessionDate =
+            sessionStarting
+                |> Maybe.map .date
+                |> Maybe.withDefault (DateWithoutTime 0 0 0)
 
         endTime =
             sessionStarting
                 |> Maybe.map .endTime
-                |> Maybe.withDefault 0
+                |> Maybe.withDefault (TimeOfDay 0 0)
 
         rowSpan =
             timeDelimiters
-                |> List.filter (\t -> t >= timeDelimiter && t < endTime)
+                |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
                 |> toString
 
@@ -214,11 +234,18 @@ viewCell sessionsInDate timeDelimiters timeDelimiter column =
                 Just sessionStarting ->
                     td [ attribute "rowspan" rowSpan ]
                         [ div [ class "agenda-event" ]
-                            [ text (sessionStarting.name ++ "  " ++ (Utils.displayTime sessionStarting.startTime) ++ " - " ++ (Utils.displayTime sessionStarting.endTime)) ]
+                            [ text
+                                (sessionStarting.name
+                                    ++ "  "
+                                    ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
+                                    ++ " - "
+                                    ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
+                                )
+                            ]
                         ]
 
                 Nothing ->
-                    if List.any (\s -> s.startTime <= timeDelimiter && s.endTime > timeDelimiter) sessionsInColumn then
+                    if List.any (\s -> (DateUtils.timeOfDayToTime s.date s.startTime) <= timeDelimiter && (DateUtils.timeOfDayToTime s.date s.endTime) > timeDelimiter) sessionsInColumn then
                         text ""
                     else
                         td [ class "agenda-date active", attribute "rowspan" rowSpan ]
@@ -239,7 +266,7 @@ displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
                 |> List.head
                 |> Maybe.withDefault 0
     in
-        if List.any (\s -> s.startTime == timeDelimiter || s.endTime == nextDelimiter) sessionsInDate then
+        if List.any (\s -> (DateUtils.timeOfDayToTime s.date s.startTime) == timeDelimiter || (DateUtils.timeOfDayToTime s.date s.endTime) == nextDelimiter) sessionsInDate then
             Utils.displayTime timeDelimiter ++ " - " ++ Utils.displayTime nextDelimiter
         else
             ""

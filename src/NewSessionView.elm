@@ -7,6 +7,7 @@ import Html.Events exposing (onClick, onInput)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
+import Tuple
 
 
 view : Model -> Html Msg
@@ -32,8 +33,11 @@ view model =
             let
                 dayOptions =
                     model.dates
-                        |> List.map (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)))
-                        |> List.map (\d -> option [ value d ] [ text d ])
+                        |> List.map (\d -> ( (toString d), (displayDate d) ))
+                        |> List.map (\d -> option [ value (Tuple.first d) ] [ text (Tuple.second d) ])
+
+                displayDate date =
+                    (toString (date.day)) ++ "/" ++ (toString (date.month)) ++ "/" ++ (toString (date.year))
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group" ]
@@ -48,8 +52,8 @@ view model =
                         , select [ id "track-input", onInput UpdateNewSessionTrack ]
                             (List.map (\t -> option [ value (toString t.id) ] [ text t.name ]) model.tracks)
                         ]
-                    , div [ class "input-group" ]
-                        [ label [ for "day-input" ] [ text "Day " ]
+                    , div [ class "input-group", onInput UpdateNewSessionDate ]
+                        [ label [ for "day-input" ] [ text "Date " ]
                         , br [] []
                         , select [ id "day-input" ]
                             dayOptions

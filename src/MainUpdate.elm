@@ -51,5 +51,5 @@ update msg model =
             UpdateNewSessionTrack newTrackId ->
                 ( (updateNewSession (\ns -> { ns | trackId = (toInt newTrackId) })), Cmd.none )
 
-            UpdateNewSessionDay newDay ->
+            UpdateNewSessionDate newDay ->
                 ( model, Cmd.none )
