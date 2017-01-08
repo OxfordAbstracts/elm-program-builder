@@ -41,8 +41,8 @@ update msg model =
             ToggleNewColumnUi ->
                 ( model, Cmd.none )
 
-            UpdateNewSessionBlurred ->
-                ( { model | newSessionBlurred = model.newSession }, Cmd.none )
+            CreateNewSession ->
+                ( { model | sessions = model.sessions ++ [ model.newSession ] }, Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )

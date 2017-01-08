@@ -8,7 +8,6 @@ import Html.Events exposing (onClick, onInput, onBlur)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
-import Tuple
 
 
 view : Model -> Html Msg
@@ -40,10 +39,7 @@ view model =
             let
                 dayOptions =
                     model.dates
-                        |> List.map (\d -> option [ value (DateUtils.displayDateWithoutTime d) ] [ text (DateUtils.displayDateWithoutTime d) ])
-
-                displayDate date =
-                    (toString (date.day)) ++ "/" ++ (toString (date.month)) ++ "/" ++ (toString (date.year))
+                        |> List.map (\d -> option [ value (DateUtils.dateWithoutTimeToValueString d) ] [ text (DateUtils.displayDateWithoutTime d) ])
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group" ]
@@ -64,7 +60,7 @@ view model =
                         , select [ id "day-input" ]
                             dayOptions
                         ]
-                      -- , div [] [ text (toString model.newSession) ]
+                    , div [] [ text (toString model.newSession) ]
                     ]
 
         column3 =
@@ -117,9 +113,9 @@ view model =
                             []
                         ]
                     ]
-                , div [] [ text (getWarning model) ]
-                , div [ style [ ( "margin-top", "2rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", onClick ToggleNewColumnUi ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewSession ]
                         [ text "Create Session" ]
                     ]
                 ]
@@ -142,12 +138,53 @@ getWarning model =
             ""
 
 
+
+-- to test
+
+
 getWarningSuffix model =
     if model.newSession.name == "" then
         "session name field is empty"
+    else if endNotMoreThanStart model.newSession then
+        "session end time must be greater than start time"
+    else if sessionsAreOverLapping model.newSession model.sessions then
+        "session times overlap another session in the same column"
     else
         ""
 
 
+endNotMoreThanStart newSession =
+    (DateUtils.timeOfDayToTime newSession.date newSession.startTime)
+        >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
 
+
+sessionsAreOverLapping newSession sessions =
+    sessions
+        |> List.filter (\s -> s.columnId == newSession.columnId)
+        |> List.any (overLappingTime newSession)
+
+
+
+--to test
+
+
+overLappingTime newSession session =
+    let
+        newSessionStart =
+            DateUtils.timeOfDayToTime newSession.date newSession.startTime
+
+        newSessionEnd =
+            DateUtils.timeOfDayToTime newSession.date newSession.endTime
+
+        sessionStart =
+            DateUtils.timeOfDayToTime session.date session.startTime
+
+        sessionEnd =
+            DateUtils.timeOfDayToTime session.date session.endTime
+    in
+        newSessionStart < sessionEnd && newSessionEnd > sessionStart
+
+
+
+-- over
 -- if model.newSession.name = "" then

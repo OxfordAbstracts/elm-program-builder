@@ -31,6 +31,10 @@ initialModel =
     }
 
 
+newSession =
+    Session
+
+
 initialDates : List DateWithoutTime
 initialDates =
     [ DateWithoutTime 2017 1 1, DateWithoutTime 2017 1 2 ]
@@ -65,7 +69,19 @@ type alias TimeOfDay =
 
 blankSession : Int -> Session
 blankSession id =
-    Session id "" "" defaultDateWithoutTime (TimeOfDay 9 0) (TimeOfDay 12 0) 1 1 "" []
+    Session id
+        ""
+        ""
+        (initialDates
+            |> List.head
+            |> Maybe.withDefault defaultDateWithoutTime
+        )
+        (TimeOfDay 9 0)
+        (TimeOfDay 12 0)
+        1
+        1
+        ""
+        []
 
 
 defaultDateWithoutTime : DateWithoutTime
