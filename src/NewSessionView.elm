@@ -19,6 +19,14 @@ view model =
             else
                 toString int
 
+        sessionBeingEditted =
+            case model.idOfSessionBeingEdited of
+                Nothing ->
+                    False
+
+                Just val ->
+                    True
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
@@ -133,7 +141,7 @@ view model =
                     ]
                 ]
     in
-        div [ hidden (not model.showNewSessionUi), class "row" ]
+        div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "row" ]
             [ div [ class "col-md-4" ] [ column1 ]
             , div [ class "col-md-4" ] [ column2 ]
             , div [ class "col-md-4" ] [ column3 ]

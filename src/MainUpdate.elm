@@ -33,7 +33,12 @@ update msg model =
                 ( model, Cmd.none )
 
             ToggleNewSessionUi ->
-                ( { model | showNewSessionUi = not model.showNewSessionUi }, Cmd.none )
+                ( { model
+                    | showNewSessionUi = not model.showNewSessionUi
+                    , idOfSessionBeingEdited = Nothing
+                  }
+                , Cmd.none
+                )
 
             ToggleNewTrackUi ->
                 ( model, Cmd.none )
@@ -93,4 +98,26 @@ update msg model =
                 ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
 
             SelectSessionToEdit sessionId ->
-                ( { model | idOfSessionBeingEdited = Just sessionId }, Cmd.none )
+                let
+                    isAlreadySelected =
+                        model.idOfSessionBeingEdited
+                            |> Maybe.withDefault -1
+                            |> (\id -> id == sessionId)
+
+                    session =
+                        model.sessions
+                            |> List.filter (\s -> s.id == sessionId)
+                            |> List.head
+                            |> Maybe.withDefault (blankSession -1)
+                in
+                    ( { model
+                        | idOfSessionBeingEdited =
+                            if isAlreadySelected then
+                                Nothing
+                            else
+                                Just sessionId
+                        , showNewSessionUi = False
+                        , newSession = session
+                      }
+                    , Cmd.none
+                    )
