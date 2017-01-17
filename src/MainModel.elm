@@ -13,7 +13,6 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
-    , newSessionBlurred : Session
     }
 
 
@@ -27,7 +26,6 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , newSession = blankSession 1
-    , newSessionBlurred = blankSession 1
     }
 
 
