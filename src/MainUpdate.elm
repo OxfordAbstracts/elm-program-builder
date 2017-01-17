@@ -42,7 +42,25 @@ update msg model =
                 ( model, Cmd.none )
 
             CreateNewSession ->
-                ( { model | sessions = model.sessions ++ [ model.newSession ] }, Cmd.none )
+                let
+                    newSessionId =
+                        model.sessions
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 1
+
+                    newSession =
+                        model.newSession
+
+                    newSessionWithId =
+                        { newSession | id = newSessionId }
+                in
+                    ( { model
+                        | sessions = model.sessions ++ [ newSessionWithId ]
+                        , newSession = blankSession 1
+                      }
+                    , Cmd.none
+                    )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )

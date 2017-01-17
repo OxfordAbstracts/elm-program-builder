@@ -24,13 +24,26 @@ view model =
                 [ div [ class "input-group" ]
                     [ label [ for "sesssion-name-input" ]
                         [ text "Session name" ]
-                    , input [ class "form-control", id "sesssion-name-input", type_ "text", onInput UpdateNewSessionName ]
+                    , input
+                        [ class "form-control"
+                        , id "sesssion-name-input"
+                        , type_ "text"
+                        , value model.newSession.name
+                        , onInput UpdateNewSessionName
+                        ]
                         [ text model.newSession.name ]
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "description-input" ]
                         [ text "Description" ]
-                    , textarea [ class "form-control", id "description-input", attribute "rows" "5", attribute "cols" "32", onInput UpdateNewSessionDescription ]
+                    , textarea
+                        [ class "form-control"
+                        , id "description-input"
+                        , attribute "rows" "5"
+                        , attribute "cols" "32"
+                        , value model.newSession.description
+                        , onInput UpdateNewSessionDescription
+                        ]
                         [ text model.newSession.description ]
                     ]
                 ]
@@ -60,7 +73,7 @@ view model =
                         , select [ id "day-input" ]
                             dayOptions
                         ]
-                    , div [] [ text (toString model.newSession) ]
+                    , div [ hidden True ] [ text (toString model.newSession) ]
                     ]
 
         column3 =
@@ -133,7 +146,7 @@ getWarning model =
             getWarningSuffix model
     in
         if warningSuffix /= "" then
-            "Cannot create Session: " ++ warningSuffix
+            "Cannot create session: " ++ warningSuffix
         else
             ""
 
