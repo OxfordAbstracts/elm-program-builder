@@ -88,3 +88,10 @@ update msg model =
 
             UpdateNewSessionEndMinute new ->
                 ( updateNewSessionEndTime (\et -> { et | minute = clamp 0 59 (toInt new) }), Cmd.none )
+
+            DeleteSession sessionId ->
+                let
+                    x =
+                        Debug.log "s id" sessionId
+                in
+                    ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )

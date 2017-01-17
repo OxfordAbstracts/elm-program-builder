@@ -4,12 +4,14 @@ import Date
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import MainMessages exposing (..)
 import MainModel exposing (..)
 import Time
 import Utils
 
 
-view : List DateWithoutTime -> List Session -> List Column -> Html msg
+view : List DateWithoutTime -> List Session -> List Column -> Html Msg
 view dates sessions columns =
     div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
         [ div [ class "table-responsive" ]
@@ -41,7 +43,7 @@ viewColumnHeader column =
     th [] [ text column.name ]
 
 
-viewDate : List Session -> List Column -> DateWithoutTime -> List (Html msg)
+viewDate : List Session -> List Column -> DateWithoutTime -> List (Html Msg)
 viewDate sessions columns date =
     let
         sessionsInDate =
@@ -105,7 +107,7 @@ viewDateCell date sessionsInDate timeDelimiters firstTime =
         ]
 
 
-appendFirstRowCell : List Session -> List Float -> Column -> Html msg
+appendFirstRowCell : List Session -> List Float -> Column -> Html Msg
 appendFirstRowCell sessionsInDate timeDelimiters column =
     let
         timeDelimiter =
@@ -158,13 +160,17 @@ appendFirstRowCell sessionsInDate timeDelimiters column =
                 Just sessionStarting ->
                     td [ attribute "rowspan" rowSpan ]
                         [ div []
-                            [ text
-                                (sessionStarting.name
-                                    ++ "  "
-                                    ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
-                                    ++ " - "
-                                    ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
-                                )
+                            [ span []
+                                [ text
+                                    (sessionStarting.name
+                                        ++ "  "
+                                        ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
+                                        ++ " - "
+                                        ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
+                                    )
+                                ]
+                            , button [ style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             ]
                         ]
 
@@ -174,12 +180,12 @@ appendFirstRowCell sessionsInDate timeDelimiters column =
                         ]
 
 
-viewOtherRows : List Session -> List Column -> List Float -> List (Html msg)
+viewOtherRows : List Session -> List Column -> List Float -> List (Html Msg)
 viewOtherRows sessionsInDate columns timeDelimiters =
     List.map (viewOtherRow sessionsInDate columns timeDelimiters) timeDelimiters
 
 
-viewOtherRow : List Session -> List Column -> List Float -> Float -> Html msg
+viewOtherRow : List Session -> List Column -> List Float -> Float -> Html Msg
 viewOtherRow sessionsInDate columns timeDelimiters timeDelimiter =
     let
         timeDisplay =
@@ -207,13 +213,13 @@ viewOtherRow sessionsInDate columns timeDelimiters timeDelimiter =
                 )
 
 
-viewCells : List Session -> List Column -> List Float -> Float -> List (Html msg)
+viewCells : List Session -> List Column -> List Float -> Float -> List (Html Msg)
 viewCells sessionsInDate columns timeDelimiters timeDelimiter =
     columns
         |> List.map (viewCell sessionsInDate timeDelimiters timeDelimiter)
 
 
-viewCell : List Session -> List Float -> Float -> Column -> Html msg
+viewCell : List Session -> List Float -> Float -> Column -> Html Msg
 viewCell sessionsInDate timeDelimiters timeDelimiter column =
     let
         sessionsInColumn =
@@ -258,14 +264,18 @@ viewCell sessionsInDate timeDelimiters timeDelimiter column =
             case sessionStarting of
                 Just sessionStarting ->
                     td [ attribute "rowspan" rowSpan ]
-                        [ div [ class "agenda-event" ]
-                            [ text
-                                (sessionStarting.name
-                                    ++ "  "
-                                    ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
-                                    ++ " - "
-                                    ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
-                                )
+                        [ div []
+                            [ span []
+                                [ text
+                                    (sessionStarting.name
+                                        ++ "  "
+                                        ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
+                                        ++ " - "
+                                        ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
+                                    )
+                                ]
+                            , button [ style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             ]
                         ]
 

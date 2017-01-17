@@ -20,3 +20,4 @@ type Msg
     | UpdateNewSessionStartMinute String
     | UpdateNewSessionEndHour String
     | UpdateNewSessionEndMinute String
+    | DeleteSession Int
