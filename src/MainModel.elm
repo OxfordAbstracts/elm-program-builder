@@ -13,6 +13,7 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
+    , idOfSessionBeingEdited : Maybe Int
     }
 
 
@@ -26,11 +27,8 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , newSession = blankSession 1
+    , idOfSessionBeingEdited = Nothing
     }
-
-
-newSession =
-    Session
 
 
 initialDates : List DateWithoutTime
