@@ -12,7 +12,9 @@ type Msg
     | CreateNewColumn
     | UpdateNewColumnName String
     | CreateNewSession
+    | CreateNewTrack
     | UpdateNewSessionName String
+    | UpdateNewTrackName String
     | UpdateNewSessionDescription String
     | UpdateNewSessionColumn String
     | UpdateNewSessionTrack String

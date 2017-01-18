@@ -14,6 +14,9 @@ update msg model =
         updateNewSession update =
             ({ model | newSession = (update model.newSession) })
 
+        updateNewTrack update =
+            ({ model | newTrack = (update model.newTrack) })
+
         updateNewSessionStartTime update =
             updateNewSession (\ns -> { ns | startTime = update ns.startTime })
 
@@ -36,18 +39,25 @@ update msg model =
                 ( { model
                     | showNewSessionUi = not model.showNewSessionUi
                     , showNewColumnUi = False
+                    , showNewTrackUi = False
                   }
                 , Cmd.none
                 )
 
             ToggleNewTrackUi ->
-                ( model, Cmd.none )
+                ( { model
+                    | showNewTrackUi = not model.showNewTrackUi
+                    , showNewColumnUi = False
+                    , showNewSessionUi = False
+                  }
+                , Cmd.none
+                )
 
             ToggleNewColumnUi ->
                 ( { model
                     | showNewColumnUi = not model.showNewColumnUi
                     , showNewSessionUi = False
-                    , newSession = blankSession 1
+                    , showNewTrackUi = False
                   }
                 , Cmd.none
                 )
@@ -94,11 +104,35 @@ update msg model =
                     , Cmd.none
                     )
 
+            CreateNewTrack ->
+                let
+                    highestTrackId =
+                        model.tracks
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 0
+
+                    newTrack =
+                        model.newTrack
+
+                    newTrackWithId =
+                        { newTrack | id = highestTrackId + 1 }
+                in
+                    ( { model
+                        | tracks = model.tracks ++ [ newTrackWithId ]
+                        , newTrack = blankTrack 1
+                      }
+                    , Cmd.none
+                    )
+
             UpdateNewColumnName newName ->
                 ( (updateNewColumn (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )
+
+            UpdateNewTrackName newName ->
+                ( (updateNewTrack (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession (\ns -> { ns | description = newDescription })), Cmd.none )

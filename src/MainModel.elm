@@ -14,6 +14,7 @@ type alias Model =
     , showNewColumnUi : Bool
     , newSession : Session
     , newColumn : Column
+    , newTrack : Track
     }
 
 
@@ -24,10 +25,11 @@ initialModel =
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
-    , showNewTrackUi = False
-    , showNewColumnUi = True
+    , showNewTrackUi = True
+    , showNewColumnUi = False
     , newSession = blankSession 1
     , newColumn = blankColumn 1
+    , newTrack = blankTrack 1
     }
 
 
@@ -97,6 +99,12 @@ blankSession id =
 blankColumn : Int -> Column
 blankColumn id =
     Column id
+        ""
+
+
+blankTrack : Int -> Track
+blankTrack id =
+    Track id
         ""
 
 
