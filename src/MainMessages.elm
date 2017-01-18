@@ -4,8 +4,7 @@ module MainMessages exposing (..)
 
 
 type Msg
-    = NewSession
-    | NewTrack
+    = NewTrack
     | NewColumn
     | ToggleNewSessionUi
     | ToggleNewTrackUi

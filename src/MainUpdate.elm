@@ -23,9 +23,6 @@ update msg model =
                 |> Result.withDefault 0
     in
         case msg of
-            NewSession ->
-                ( model, Cmd.none )
-
             NewTrack ->
                 ( model, Cmd.none )
 
