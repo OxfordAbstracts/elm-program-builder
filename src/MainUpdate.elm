@@ -30,13 +30,44 @@ update msg model =
                 ( model, Cmd.none )
 
             ToggleNewSessionUi ->
-                ( { model | showNewSessionUi = not model.showNewSessionUi }, Cmd.none )
+                ( { model
+                    | showNewSessionUi = not model.showNewSessionUi
+                    , showNewColumnUi = False
+                  }
+                , Cmd.none
+                )
 
             ToggleNewTrackUi ->
                 ( model, Cmd.none )
 
             ToggleNewColumnUi ->
-                ( model, Cmd.none )
+                ( { model
+                    | showNewColumnUi = not model.showNewColumnUi
+                    , showNewSessionUi = False
+                  }
+                , Cmd.none
+                )
+
+            CreateNewColumn ->
+                let
+                    newColumnId =
+                        model.columns
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 1
+
+                    newColumn =
+                        model.newColumn
+
+                    newColumnWithId =
+                        { newColumn | id = newColumnId }
+                in
+                    ( { model
+                        | columns = model.columns ++ [ newColumnWithId ]
+                        , newColumn = blankColumn 1
+                      }
+                    , Cmd.none
+                    )
 
             CreateNewSession ->
                 let

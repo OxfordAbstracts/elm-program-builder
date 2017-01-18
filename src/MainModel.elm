@@ -13,6 +13,7 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
+    , newColumn : Column
     }
 
 
@@ -22,10 +23,11 @@ initialModel =
     , tracks = [ Track 1 "track 1", Track 2 "track 2" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
-    , showNewSessionUi = True
+    , showNewSessionUi = False
     , showNewTrackUi = False
-    , showNewColumnUi = False
+    , showNewColumnUi = True
     , newSession = blankSession 1
+    , newColumn = blankColumn 1
     }
 
 
@@ -50,6 +52,16 @@ type alias Session =
     , location : String
     , submissionIds : List Int
     }
+
+
+type alias Column =
+    { id : ColumnId
+    , name : String
+    }
+
+
+type alias ColumnId =
+    Int
 
 
 type alias DateWithoutTime =
@@ -80,6 +92,12 @@ blankSession id =
         1
         ""
         []
+
+
+blankColumn : Int -> Column
+blankColumn id =
+    Column id
+        ""
 
 
 defaultDateWithoutTime : DateWithoutTime
@@ -154,14 +172,4 @@ type alias Track =
 
 
 type alias TrackId =
-    Int
-
-
-type alias Column =
-    { id : ColumnId
-    , name : String
-    }
-
-
-type alias ColumnId =
     Int
