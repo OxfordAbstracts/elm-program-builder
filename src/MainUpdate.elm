@@ -8,6 +8,9 @@ import MainModel exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
+        updateNewColumn update =
+            ({ model | newColumn = (update model.newColumn) })
+
         updateNewSession update =
             ({ model | newSession = (update model.newSession) })
 
@@ -44,23 +47,24 @@ update msg model =
                 ( { model
                     | showNewColumnUi = not model.showNewColumnUi
                     , showNewSessionUi = False
+                    , newSession = blankSession 1
                   }
                 , Cmd.none
                 )
 
             CreateNewColumn ->
                 let
-                    newColumnId =
+                    highestColumnId =
                         model.columns
                             |> List.map .id
                             |> List.maximum
-                            |> Maybe.withDefault 1
+                            |> Maybe.withDefault 0
 
                     newColumn =
                         model.newColumn
 
                     newColumnWithId =
-                        { newColumn | id = newColumnId }
+                        { newColumn | id = highestColumnId + 1 }
                 in
                     ( { model
                         | columns = model.columns ++ [ newColumnWithId ]
@@ -89,6 +93,9 @@ update msg model =
                       }
                     , Cmd.none
                     )
+
+            UpdateNewColumnName newName ->
+                ( (updateNewColumn (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )

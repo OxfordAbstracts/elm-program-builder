@@ -10,6 +10,7 @@ type Msg
     | ToggleNewTrackUi
     | ToggleNewColumnUi
     | CreateNewColumn
+    | UpdateNewColumnName String
     | CreateNewSession
     | UpdateNewSessionName String
     | UpdateNewSessionDescription String

@@ -13,6 +13,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ viewUiButtons model
+        , text (toString model.columns)
+        , text (toString (List.map .id model.sessions))
         , NewSessionView.view model
         , NewColumnView.view model
         ]
