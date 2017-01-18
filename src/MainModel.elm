@@ -156,7 +156,7 @@ initialSessions =
         (TimeOfDay 13 0)
         (TimeOfDay 15 30)
         2
-        1
+        2
         "The mystery room"
         []
     , Session
