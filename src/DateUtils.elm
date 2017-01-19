@@ -5,6 +5,7 @@ module DateUtils
         , displayDateWithoutTime
         , dateWithoutTimeToValueString
         , displayTimeOfDay
+        , getDateMonthInt
         , parse
         , timeOfDayToTime
         , valueStringToDateWithoutTime
@@ -43,12 +44,6 @@ timeOfDayToTime dateWithoutTime timeOfDay =
         |> parse
         |> Date.toTime
         |> (\t -> t + ((toFloat timeOfDay.hour) * Time.hour + (toFloat timeOfDay.minute) * Time.minute))
-
-
-
--- timeOfDayTo =
--- stringToTimeOfDay string =
---     s
 
 
 dateWithoutTimeToValueString : DateWithoutTime -> String
