@@ -40,6 +40,7 @@ update msg model =
                     | showNewSessionUi = not model.showNewSessionUi
                     , showNewColumnUi = False
                     , showNewTrackUi = False
+                    , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
                 )
@@ -165,8 +166,29 @@ update msg model =
                 ( updateNewSessionEndTime (\et -> { et | minute = clamp 0 59 (toInt new) }), Cmd.none )
 
             DeleteSession sessionId ->
+                ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
+
+            SelectSessionToEdit sessionId ->
                 let
-                    x =
-                        Debug.log "s id" sessionId
+                    isAlreadySelected =
+                        model.idOfSessionBeingEdited
+                            |> Maybe.withDefault -1
+                            |> (\id -> id == sessionId)
+
+                    session =
+                        model.sessions
+                            |> List.filter (\s -> s.id == sessionId)
+                            |> List.head
+                            |> Maybe.withDefault (blankSession -1)
                 in
-                    ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
+                    ( { model
+                        | idOfSessionBeingEdited =
+                            if isAlreadySelected then
+                                Nothing
+                            else
+                                Just sessionId
+                        , showNewSessionUi = False
+                        , newSession = session
+                      }
+                    , Cmd.none
+                    )

@@ -15,6 +15,7 @@ type alias Model =
     , newSession : Session
     , newColumn : Column
     , newTrack : Track
+    , idOfSessionBeingEdited : Maybe Int
     }
 
 
@@ -30,11 +31,8 @@ initialModel =
     , newSession = blankSession 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
+    , idOfSessionBeingEdited = Nothing
     }
-
-
-newSession =
-    Session
 
 
 initialDates : List DateWithoutTime
