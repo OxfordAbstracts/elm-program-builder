@@ -1,6 +1,7 @@
 module DateUtils
     exposing
         ( dateWithoutTimeToDate
+        , dateToDateWithoutTime
         , displayDateWithoutTime
         , dateWithoutTimeToValueString
         , displayTimeOfDay
