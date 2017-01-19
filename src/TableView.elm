@@ -11,7 +11,7 @@ import Time
 import Utils
 
 
-view : Model ->  Html Msg
+view : Model -> Html Msg
 view model =
     div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
         [ div [ class "table-responsive" ]
@@ -26,7 +26,6 @@ view model =
                     (List.concatMap (viewDate model.sessions model.columns model.tracks) model.dates)
                 ]
             ]
-
         ]
 
 
@@ -155,18 +154,16 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                 |> Maybe.withDefault 0
 
         trackId =
-          sessionStarting
-              |> Maybe.map .trackId
-              |> Maybe.withDefault (0)
-
+            sessionStarting
+                |> Maybe.map .trackId
+                |> Maybe.withDefault (0)
 
         trackName =
-          tracks
-              |> List.filter (\t -> t.id == trackId)
-              |> List.map .name
-              |> List.head
-              |> Maybe.withDefault ("")
-
+            tracks
+                |> List.filter (\t -> t.id == trackId)
+                |> List.map .name
+                |> List.head
+                |> Maybe.withDefault ("")
     in
         if timeDelimiter == lastTime then
             text ""
@@ -179,7 +176,14 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
+                                        ++ "Track:  "
                                         ++ trackName
+                                        ++ "  "
+                                        ++ "Chair:  "
+                                        ++ sessionStarting.chair
+                                        ++ "  "
+                                        ++ "Location:  "
+                                        ++ sessionStarting.location
                                         ++ "  "
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
                                         ++ " - "
@@ -276,18 +280,16 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                 |> Maybe.withDefault -1
 
         trackId =
-          sessionStarting
-              |> Maybe.map .trackId
-              |> Maybe.withDefault (0)
+            sessionStarting
+                |> Maybe.map .trackId
+                |> Maybe.withDefault (0)
 
         trackName =
-          tracks
-              |> List.filter (\t -> t.id == trackId)
-              |> List.map .name
-              |> List.head
-              |> Maybe.withDefault ("")
-
-
+            tracks
+                |> List.filter (\t -> t.id == trackId)
+                |> List.map .name
+                |> List.head
+                |> Maybe.withDefault ("")
     in
         if timeDelimiter == lastTime then
             text ""
@@ -300,7 +302,14 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
+                                        ++ "Track:  "
                                         ++ trackName
+                                        ++ "  "
+                                        ++ "Chair:  "
+                                        ++ sessionStarting.chair
+                                        ++ "  "
+                                        ++ "Location:  "
+                                        ++ sessionStarting.location
                                         ++ "  "
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
                                         ++ " - "

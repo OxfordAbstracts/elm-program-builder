@@ -17,6 +17,8 @@ type Msg
     | UpdateNewTrackName String
     | UpdateNewSessionDescription String
     | UpdateNewSessionColumn String
+    | UpdateNewSessionChair String
+    | UpdateNewSessionLocation String
     | UpdateNewSessionTrack String
     | UpdateNewSessionDate String
     | UpdateNewSessionStartHour String

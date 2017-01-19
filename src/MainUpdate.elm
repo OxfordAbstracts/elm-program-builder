@@ -140,6 +140,12 @@ update msg model =
             UpdateNewSessionColumn newColumnId ->
                 ( (updateNewSession (\ns -> { ns | columnId = (toInt newColumnId) })), Cmd.none )
 
+            UpdateNewSessionChair newChair ->
+                ( (updateNewSession (\ns -> { ns | chair = newChair })), Cmd.none )
+
+            UpdateNewSessionLocation newLocation ->
+                ( (updateNewSession (\ns -> { ns | location = newLocation })), Cmd.none )
+
             UpdateNewSessionTrack newTrackId ->
                 ( (updateNewSession (\ns -> { ns | trackId = (toInt newTrackId) })), Cmd.none )
 

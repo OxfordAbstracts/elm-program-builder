@@ -53,6 +53,7 @@ type alias Session =
     , trackId : TrackId
     , location : String
     , submissionIds : List Int
+    , chair : String
     }
 
 
@@ -94,6 +95,7 @@ blankSession id =
         1
         ""
         []
+        ""
 
 
 blankColumn : Int -> Column
@@ -126,6 +128,7 @@ initialSessions =
         1
         "The aquariam"
         []
+        "Chairman Dave"
     , Session
         2
         "Computers n stuff sesh 2"
@@ -137,6 +140,7 @@ initialSessions =
         1
         "The observatory"
         []
+        "Chairwoman Sue"
     , Session
         3
         "Sessioning hard 3"
@@ -148,6 +152,7 @@ initialSessions =
         1
         "The games room"
         []
+        ""
     , Session
         4
         "Other column sesh 4"
@@ -159,6 +164,7 @@ initialSessions =
         2
         "The mystery room"
         []
+        ""
     , Session
         5
         "first column 1 day 2 sesh 5"
@@ -170,6 +176,7 @@ initialSessions =
         1
         "The mystery room 4"
         []
+        ""
     ]
 
 
