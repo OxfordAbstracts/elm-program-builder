@@ -62,13 +62,14 @@ view model =
                     [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                        (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
+                        (List.map (\c -> option [ value (toString c.id), selected (model.newSession.columnId == c.id) ] [ text c.name ]) model.columns)
                     ]
+                  -- if newSession.columnId == c.id the selected
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []
                     , select [ id "track-input", onInput UpdateNewSessionTrack ]
-                        (List.map (\t -> option [ value (toString t.id) ] [ text t.name ]) model.tracks)
+                        (List.map (\t -> option [ value (toString t.id), selected (model.newSession.trackId == t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "chair-input" ]
@@ -101,7 +102,7 @@ view model =
             let
                 dayOptions =
                     model.dates
-                        |> List.map (\d -> option [ value (DateUtils.dateWithoutTimeToValueString d) ] [ text (DateUtils.displayDateWithoutTime d) ])
+                        |> List.map (\d -> option [ value (DateUtils.dateWithoutTimeToValueString d), selected (model.newSession.date == d) ] [ text (DateUtils.displayDateWithoutTime d) ])
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group", onInput UpdateNewSessionDate ]
@@ -170,6 +171,7 @@ view model =
             [ div [ class "col-md-4" ] [ column1 ]
             , div [ class "col-md-4" ] [ column2 ]
             , div [ class "col-md-4" ] [ column3 ]
+            , div [] [ text (toString model.newSession) ]
             ]
 
 
