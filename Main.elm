@@ -28,7 +28,7 @@ view model =
         [ Html.h2 [] [ text "Program builder" ]
         , Stylesheet.view
         , ControlsView.view model
-        , TableView.view model.dates model.sessions model.columns
+        , TableView.view model
         ]
 
 

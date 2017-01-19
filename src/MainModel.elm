@@ -13,6 +13,8 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
+    , newColumn : Column
+    , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
     }
 
@@ -23,10 +25,12 @@ initialModel =
     , tracks = [ Track 1 "track 1", Track 2 "track 2" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
-    , showNewSessionUi = True
-    , showNewTrackUi = False
+    , showNewSessionUi = False
+    , showNewTrackUi = True
     , showNewColumnUi = False
     , newSession = blankSession 1
+    , newColumn = blankColumn 1
+    , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     }
 
@@ -47,7 +51,18 @@ type alias Session =
     , trackId : TrackId
     , location : String
     , submissionIds : List Int
+    , chair : String
     }
+
+
+type alias Column =
+    { id : ColumnId
+    , name : String
+    }
+
+
+type alias ColumnId =
+    Int
 
 
 type alias DateWithoutTime =
@@ -78,6 +93,19 @@ blankSession id =
         1
         ""
         []
+        ""
+
+
+blankColumn : Int -> Column
+blankColumn id =
+    Column id
+        ""
+
+
+blankTrack : Int -> Track
+blankTrack id =
+    Track id
+        ""
 
 
 defaultDateWithoutTime : DateWithoutTime
@@ -98,6 +126,7 @@ initialSessions =
         1
         "The aquariam"
         []
+        "Chairman Dave"
     , Session
         2
         "Computers n stuff sesh 2"
@@ -109,6 +138,7 @@ initialSessions =
         1
         "The observatory"
         []
+        "Chairwoman Sue"
     , Session
         3
         "Sessioning hard 3"
@@ -120,6 +150,7 @@ initialSessions =
         1
         "The games room"
         []
+        ""
     , Session
         4
         "Other column sesh 4"
@@ -128,9 +159,10 @@ initialSessions =
         (TimeOfDay 13 0)
         (TimeOfDay 15 30)
         2
-        1
+        2
         "The mystery room"
         []
+        ""
     , Session
         5
         "first column 1 day 2 sesh 5"
@@ -142,6 +174,7 @@ initialSessions =
         1
         "The mystery room 4"
         []
+        ""
     ]
 
 
@@ -152,14 +185,4 @@ type alias Track =
 
 
 type alias TrackId =
-    Int
-
-
-type alias Column =
-    { id : ColumnId
-    , name : String
-    }
-
-
-type alias ColumnId =
     Int
