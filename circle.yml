@@ -23,11 +23,12 @@ test:
 
 dependencies:
   pre:
+    - sh circle-deps.sh
+    - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm run build
     # - npm i -g elm
     # - npm i elm-test --dev
     # - npm i elm-test
     - elm-package install -y
-    - sh circle-deps.sh
 
   # override:
   #   - npm i -g elm
