@@ -14,8 +14,8 @@ test:
   #   - elm-package install --yes
 
   override:
-    - elm-package install --yes
-    - npm test
+    # - elm-package install --yes
+    - /home/ubuntu/sysconfcpus/bin/sysconfcpus -n 2 npm test
 
   # post:
   #   - killall --wait sc
@@ -23,11 +23,23 @@ test:
   #   - codecov --file coverage/lcov.info --disable search --token=f054ae63-f930-4ad8-ba09-e2b2be42b2d6
 
 dependencies:
-  override:
+  pre:
     - npm i -g elm
     - npm i elm-test --dev
     - npm i elm-test
     - elm-package install -y
+    - git clone https://github.com/obmarg/libsysconfcpus.git;
+    - cd libsysconfcpus
+    - ./configure --prefix=/home/ubuntu/sysconfcpus;
+    - make install
+    - cd ..
+    - /home/ubuntu/sysconfcpus/bin/sysconfcpus -n 2 make elm
 
-  post:
-    - npm test
+  # override:
+  #   - npm i -g elm
+  #   - npm i elm-test --dev
+  #   - npm i elm-test
+  #   - elm-package install -y
+
+  # post:
+  #   - npm test
