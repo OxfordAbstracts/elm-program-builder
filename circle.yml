@@ -14,16 +14,6 @@ test:
     - elm-package install --yes
 
   override:
-    # - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
-    #     background: true
-    # # Wait for tunnel to be ready
-    # - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
-    # - npm start:
-    #     background: true
-    #
-    # # Run performance, nightwatch & unit tests
-    # - case $CIRCLE_NODE_INDEX in 0) npm run test:e2eRemote ;; 1) npm run perf-t && npm run test ;; esac:
-    #     parallel: true
     - elm-package install --yes
     - npm test
 
@@ -33,9 +23,11 @@ test:
   #   - codecov --file coverage/lcov.info --disable search --token=f054ae63-f930-4ad8-ba09-e2b2be42b2d6
 
 dependencies:
-   cache_directories:
-    - elm-stuff/build-artifacts
-    - node_modules
+  override:
+    - npm i -g elm
+    - npm i elm-test --dev
+    - npm i elm-test
+    - elm-package install -y
 
   post:
     - npm i -g elm
