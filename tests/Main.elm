@@ -5,17 +5,21 @@ import GetWarningTests
 import MainUpdateTests
 import Test.Runner.Node exposing (run, TestProgram)
 import Json.Encode exposing (Value)
+import Test exposing (..)
 
 
--- this files lists all our tests
+allTests : Test
+allTests =
+    describe "all tests"
+        [ DateUtilsTests.all
+        , MainUpdateTests.all
+        , GetWarningTests.all
+        ]
 
 
 main : TestProgram
 main =
-    -- UNSURE HOW TO GET BOTH OF THESE TO RUN ONE AFTER THE OTHER :(
-    -- run emit DateUtilsTests.all
-    -- run emit MainUpdateTests.all
-    run emit GetWarningTests.all
+    run emit allTests
 
 
 port emit : ( String, Value ) -> Cmd msg
