@@ -2,7 +2,7 @@ machine:
   pre:
     - sudo apt-get update; sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 10
   environment:
-    DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
+    # DATABASE_URL: postgres://ubuntu:@127.0.0.1:5432/circle_test
   node:
     version: 6.0.0
 
@@ -10,35 +10,18 @@ general:
   artifacts:
     - "test"
 
-
-#details on running sauselabs tests with circle ci can be found here https://circleci.com/docs/browser-testing-with-sauce-labs/
 test:
 
-  pre:
-    - npm run eslint
+  # pre:
+  #   - npm run eslint
 
-  override:
-    - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
-        background: true
-    # Wait for tunnel to be ready
-    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
-    - npm start:
-        background: true
-
-    # Run performance, nightwatch & unit tests
-    - case $CIRCLE_NODE_INDEX in 0) npm run test:e2eRemote ;; 1) npm run perf-t && npm run test ;; esac:
-        parallel: true
-
-  post:
-    - killall --wait sc
-    - pip install --user codecov
-    - codecov --file coverage/lcov.info --disable search --token=f054ae63-f930-4ad8-ba09-e2b2be42b2d6
+  # post:
+  #   - pip install --user codecov
+  #   - codecov --file coverage/lcov.info --disable search --token=f054ae63-f930-4ad8-ba09-e2b2be42b2d6
 
 dependencies:
   pre:
     - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
-    - sudo apt-get install pandoc
   post:
-    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
     - tar -xzf sc-latest-linux.tar.gz
