@@ -4,7 +4,7 @@
   "description": "To watch and compile: ` elm-live Main.elm --output=elm.js --open `",
   "main": "elm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "elm-test"
   },
   "repository": {
     "type": "git",
