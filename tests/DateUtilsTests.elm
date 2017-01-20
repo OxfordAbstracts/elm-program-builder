@@ -20,7 +20,16 @@ all =
                     (Date.fromTime 1497744000000)
         , test "dateWithoutTimeToDate correctly converts a date record without a time to the correct date" <|
             \() ->
-                Expect.equal (DateUtils.dateWithoutTimeToDate { year = 2017, month = 6, day = 18 }) (Date.fromTime 1497740400000)
+                let
+                    expectedDate =
+                        case Date.fromString "2017-6-18" of
+                            Err str ->
+                                Debug.crash str
+
+                            Ok date ->
+                                date
+                in
+                    Expect.equal (DateUtils.dateWithoutTimeToDate { year = 2017, month = 6, day = 18 }) expectedDate
         , test "dateToDateWithoutTime correctly converts a date to our date record without a time" <|
             \() ->
                 Expect.equal (DateUtils.dateToDateWithoutTime (Date.fromTime 1497740400000)) ({ year = 2017, month = 6, day = 18 })
