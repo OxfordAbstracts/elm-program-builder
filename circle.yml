@@ -15,8 +15,7 @@ test:
 
   override:
     # - elm-package install --yes
-    - /home/ubuntu/sysconfcpus/bin/sysconfcpus -n 2 npm test
-
+    - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
   # post:
   #   - killall --wait sc
   #   - pip install --user codecov
@@ -28,12 +27,7 @@ dependencies:
     - npm i elm-test --dev
     - npm i elm-test
     - elm-package install -y
-    - git clone https://github.com/obmarg/libsysconfcpus.git;
-    - cd libsysconfcpus
-    - ./configure --prefix=/home/ubuntu/sysconfcpus;
-    - make install
-    - cd ..
-    - /home/ubuntu/sysconfcpus/bin/sysconfcpus -n 2 make elm
+    - sh circle-deps.sh
 
   # override:
   #   - npm i -g elm
