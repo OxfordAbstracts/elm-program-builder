@@ -8,10 +8,14 @@ general:
     - "test"
 
 test:
+  pre:
+    - sh circle-deps.sh
+    - npm i -g elm
+
   override:
     - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
 
 dependencies:
-  pre:
-    - sh circle-deps.sh
-    - npm i -g elm
+  - ~/dependencies
+  - elm-stuff
+  - tests/elm-stuff
