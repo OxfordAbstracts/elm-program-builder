@@ -6,6 +6,7 @@ import Html.Events exposing (onClick, onInput, onBlur)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
+import GetWarning exposing (..)
 
 
 view : Model -> Html Msg
@@ -31,33 +32,13 @@ view model =
                         ]
                         [ text model.newColumn.name ]
                     ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewColumn ]
-                            [ text "Create Column" ]
-                  ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewColumn ]
+                        [ text "Create Column" ]
+                    ]
                 ]
-
     in
         div [ hidden (not model.showNewColumnUi), class "row" ]
             [ div [ class "col-md-4" ] [ column1 ]
             ]
-
-getWarning model =
-    let
-        warningSuffix =
-            getWarningSuffix model
-    in
-        if warningSuffix /= "" then
-            "Cannot create column: " ++ warningSuffix
-        else
-            ""
-
--- to test
-
-
-getWarningSuffix model =
-    if model.newColumn.name == "" then
-        "Column name field is empty"
-    else
-        ""

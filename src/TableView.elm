@@ -282,7 +282,7 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
         trackId =
             sessionStarting
                 |> Maybe.map .trackId
-                |> Maybe.withDefault (0)
+                |> Maybe.withDefault 0
 
         trackName =
             tracks

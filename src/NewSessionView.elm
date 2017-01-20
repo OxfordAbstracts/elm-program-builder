@@ -8,6 +8,7 @@ import Html.Events exposing (onClick, onInput, onBlur)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
+import GetWarning exposing (..)
 
 
 view : Model -> Html Msg
@@ -173,66 +174,3 @@ view model =
             , div [ class "col-md-4" ] [ column3 ]
             , div [] [ text (toString model.newSession) ]
             ]
-
-
-getWarning model =
-    let
-        warningSuffix =
-            getWarningSuffix model
-    in
-        if warningSuffix /= "" then
-            "Cannot create session: " ++ warningSuffix
-        else
-            ""
-
-
-
--- to test
-
-
-getWarningSuffix model =
-    if model.newSession.name == "" then
-        "session name field is empty"
-    else if endNotMoreThanStart model.newSession then
-        "session end time must be greater than start time"
-    else if sessionsAreOverLapping model.newSession model.sessions then
-        "session times overlap another session in the same column"
-    else
-        ""
-
-
-endNotMoreThanStart newSession =
-    (DateUtils.timeOfDayToTime newSession.date newSession.startTime)
-        >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
-
-
-sessionsAreOverLapping newSession sessions =
-    sessions
-        |> List.filter (\s -> s.columnId == newSession.columnId)
-        |> List.any (overLappingTime newSession)
-
-
-
---to test
-
-
-overLappingTime newSession session =
-    let
-        newSessionStart =
-            DateUtils.timeOfDayToTime newSession.date newSession.startTime
-
-        newSessionEnd =
-            DateUtils.timeOfDayToTime newSession.date newSession.endTime
-
-        sessionStart =
-            DateUtils.timeOfDayToTime session.date session.startTime
-
-        sessionEnd =
-            DateUtils.timeOfDayToTime session.date session.endTime
-    in
-        newSessionStart < sessionEnd && newSessionEnd > sessionStart
-
-
-
--- over
--- if model.newSession.name = "" then
