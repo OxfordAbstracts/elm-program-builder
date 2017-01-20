@@ -16,8 +16,8 @@ test:
   override:
     - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
 
-dependencies:
-  cache_directories:
-    - ~/dependencies
-    - elm-stuff
-    - tests/elm-stuff
+# dependencies:
+#   cache_directories:
+#     - ~/dependencies
+#     - elm-stuff
+#     - tests/elm-stuff
