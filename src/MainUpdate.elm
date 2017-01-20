@@ -8,6 +8,9 @@ import MainModel exposing (..)
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
+        updateNewColumn update =
+            ({ model | newColumn = (update model.newColumn) })
+
         updateNewSession update =
             ({ model | newSession = (update model.newSession) })
 
@@ -23,9 +26,6 @@ update msg model =
                 |> Result.withDefault 0
     in
         case msg of
-            NewSession ->
-                ( model, Cmd.none )
-
             NewTrack ->
                 ( model, Cmd.none )
 
@@ -35,7 +35,7 @@ update msg model =
             ToggleNewSessionUi ->
                 ( { model
                     | showNewSessionUi = not model.showNewSessionUi
-                    , idOfSessionBeingEdited = Nothing
+                    , showNewColumnUi = False
                   }
                 , Cmd.none
                 )
@@ -44,7 +44,34 @@ update msg model =
                 ( model, Cmd.none )
 
             ToggleNewColumnUi ->
-                ( model, Cmd.none )
+                ( { model
+                    | showNewColumnUi = not model.showNewColumnUi
+                    , showNewSessionUi = False
+                    , newSession = blankSession 1
+                  }
+                , Cmd.none
+                )
+
+            CreateNewColumn ->
+                let
+                    highestColumnId =
+                        model.columns
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 0
+
+                    newColumn =
+                        model.newColumn
+
+                    newColumnWithId =
+                        { newColumn | id = highestColumnId + 1 }
+                in
+                    ( { model
+                        | columns = model.columns ++ [ newColumnWithId ]
+                        , newColumn = blankColumn 1
+                      }
+                    , Cmd.none
+                    )
 
             CreateNewSession ->
                 let
@@ -66,6 +93,9 @@ update msg model =
                       }
                     , Cmd.none
                     )
+
+            UpdateNewColumnName newName ->
+                ( (updateNewColumn (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )
@@ -95,29 +125,8 @@ update msg model =
                 ( updateNewSessionEndTime (\et -> { et | minute = clamp 0 59 (toInt new) }), Cmd.none )
 
             DeleteSession sessionId ->
-                ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
-
-            SelectSessionToEdit sessionId ->
                 let
-                    isAlreadySelected =
-                        model.idOfSessionBeingEdited
-                            |> Maybe.withDefault -1
-                            |> (\id -> id == sessionId)
-
-                    session =
-                        model.sessions
-                            |> List.filter (\s -> s.id == sessionId)
-                            |> List.head
-                            |> Maybe.withDefault (blankSession -1)
+                    x =
+                        Debug.log "s id" sessionId
                 in
-                    ( { model
-                        | idOfSessionBeingEdited =
-                            if isAlreadySelected then
-                                Nothing
-                            else
-                                Just sessionId
-                        , showNewSessionUi = False
-                        , newSession = session
-                      }
-                    , Cmd.none
-                    )
+                    ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )

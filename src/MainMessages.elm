@@ -4,12 +4,13 @@ module MainMessages exposing (..)
 
 
 type Msg
-    = NewSession
-    | NewTrack
+    = NewTrack
     | NewColumn
     | ToggleNewSessionUi
     | ToggleNewTrackUi
     | ToggleNewColumnUi
+    | CreateNewColumn
+    | UpdateNewColumnName String
     | CreateNewSession
     | UpdateNewSessionName String
     | UpdateNewSessionDescription String
@@ -21,4 +22,3 @@ type Msg
     | UpdateNewSessionEndHour String
     | UpdateNewSessionEndMinute String
     | DeleteSession Int
-    | SelectSessionToEdit Int
