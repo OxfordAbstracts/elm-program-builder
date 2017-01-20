@@ -12,9 +12,6 @@ test:
     - sh circle-dependencies.sh
     - npm i -g elm
 
-  post:
-    - bash <(curl -s https://codecov.io/bash) -t f51fab01-d0ef-49ff-ad6d-12bebe469b51
-
 # using sysconfcpus to speed up elm compiler # See: https://github.com/elm-lang/elm-compiler/issues/1473#issuecomment-245704142
   override:
     - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
