@@ -23,9 +23,9 @@ test:
 
 dependencies:
   pre:
-    - npm i -g elm
-    - npm i elm-test --dev
-    - npm i elm-test
+    # - npm i -g elm
+    # - npm i elm-test --dev
+    # - npm i elm-test
     - elm-package install -y
     - sh circle-deps.sh
 
