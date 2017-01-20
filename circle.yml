@@ -1,13 +1,17 @@
+
+machine:
+  node:
+    version: 6.0.0
+
 general:
   artifacts:
     - "test"
 
-
 #details on running sauselabs tests with circle ci can be found here https://circleci.com/docs/browser-testing-with-sauce-labs/
 test:
 
-  # pre:
-  #   - npm run eslint
+  pre:
+    - elm-package install --yes
 
   override:
     # - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
