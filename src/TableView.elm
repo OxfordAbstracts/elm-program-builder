@@ -156,14 +156,14 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
         trackId =
             sessionStarting
                 |> Maybe.map .trackId
-                |> Maybe.withDefault (0)
+                |> Maybe.withDefault 0
 
         trackName =
             tracks
                 |> List.filter (\t -> t.id == trackId)
                 |> List.map .name
                 |> List.head
-                |> Maybe.withDefault ("")
+                |> Maybe.withDefault ""
     in
         if timeDelimiter == lastTime then
             text ""
@@ -289,7 +289,7 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                 |> List.filter (\t -> t.id == trackId)
                 |> List.map .name
                 |> List.head
-                |> Maybe.withDefault ("")
+                |> Maybe.withDefault ""
     in
         if timeDelimiter == lastTime then
             text ""
