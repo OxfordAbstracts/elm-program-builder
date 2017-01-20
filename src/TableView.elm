@@ -287,8 +287,8 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
         trackName =
             tracks
                 |> List.filter (\t -> t.id == trackId)
-                |> List.map .name
                 |> List.head
+                |> Maybe.map .name
                 |> Maybe.withDefault ""
     in
         if timeDelimiter == lastTime then
