@@ -6,7 +6,6 @@ import DateUtils
 import Date
 import GetWarning
 import MainModel
-import Debug exposing (log)
 
 
 -- showNewTrackUi is true for initial model
