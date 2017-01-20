@@ -16,6 +16,7 @@ test:
     - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
 
 dependencies:
-  - ~/dependencies
-  - elm-stuff
-  - tests/elm-stuff
+  cache_directories:
+    - ~/dependencies
+    - elm-stuff
+    - tests/elm-stuff
