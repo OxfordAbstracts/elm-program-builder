@@ -10,8 +10,8 @@ general:
 #details on running sauselabs tests with circle ci can be found here https://circleci.com/docs/browser-testing-with-sauce-labs/
 test:
 
-  pre:
-    - elm-package install --yes
+  # pre:
+  #   - elm-package install --yes
 
   override:
     - elm-package install --yes
@@ -30,9 +30,4 @@ dependencies:
     - elm-package install -y
 
   post:
-    - npm i -g elm
-    - elm-package install -y
-        # Build the project once so that we can cache the build artifacts inside
-    # `elm-stuff/build-artifacts`
-    - elm-make src/Main.elm --output /tmp/main.js
-    - elm-test
+    - npm test
