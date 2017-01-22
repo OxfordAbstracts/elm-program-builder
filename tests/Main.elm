@@ -3,6 +3,7 @@ port module Main exposing (..)
 import DateUtilsTests
 import GetWarningTests
 import MainUpdateTests
+import UtilsTests
 import Test.Runner.Node exposing (run, TestProgram)
 import Json.Encode exposing (Value)
 import Test exposing (..)
@@ -14,6 +15,7 @@ allTests =
         [ DateUtilsTests.all
         , MainUpdateTests.all
         , GetWarningTests.all
+        , UtilsTests.all
         ]
 
 
