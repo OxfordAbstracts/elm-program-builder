@@ -1,12 +1,13 @@
 module DateUtils
     exposing
-        ( dateWithoutTimeToDate
+        ( add0Padding
+        , dateWithoutTimeToDate
         , dateToDateWithoutTime
         , displayDateWithoutTime
         , dateWithoutTimeToValueString
         , displayTimeOfDay
         , getDateMonthInt
-        , parse
+        , fromStringWithDefault
         , timeOfDayToTime
         , valueStringToDateWithoutTime
         )
@@ -16,8 +17,15 @@ import MainModel exposing (..)
 import Time
 
 
-parse : String -> Date.Date
-parse string =
+add0Padding hour =
+    if String.length hour == 1 then
+        "0" ++ hour
+    else
+        hour
+
+
+fromStringWithDefault : String -> Date.Date
+fromStringWithDefault string =
     string
         |> Date.fromString
         |> Result.withDefault (Date.fromTime 0)
@@ -30,7 +38,7 @@ dateWithoutTimeToDate dateWithoutTime =
         ++ (toString dateWithoutTime.month)
         ++ "-"
         ++ (toString dateWithoutTime.day)
-        |> parse
+        |> fromStringWithDefault
 
 
 dateToDateWithoutTime : Date.Date -> DateWithoutTime
@@ -41,7 +49,7 @@ dateToDateWithoutTime date =
 timeOfDayToTime : DateWithoutTime -> TimeOfDay -> Time.Time
 timeOfDayToTime dateWithoutTime timeOfDay =
     ((toString dateWithoutTime.year) ++ "-" ++ (toString dateWithoutTime.month) ++ "-" ++ (toString dateWithoutTime.day))
-        |> parse
+        |> fromStringWithDefault
         |> Date.toTime
         |> (\t -> t + ((toFloat timeOfDay.hour) * Time.hour + (toFloat timeOfDay.minute) * Time.minute))
 
@@ -58,7 +66,7 @@ dateWithoutTimeToValueString dateWithoutTime =
 valueStringToDateWithoutTime : String -> DateWithoutTime
 valueStringToDateWithoutTime dateString =
     dateString
-        |> parse
+        |> fromStringWithDefault
         |> dateToDateWithoutTime
 
 
@@ -71,20 +79,13 @@ displayDateWithoutTime dateWithoutTime =
 
 displayTimeOfDay : TimeOfDay -> String
 displayTimeOfDay timeOfDay =
-    let
-        add0Padding hour =
-            if String.length hour == 1 then
-                "0" ++ hour
-            else
-                hour
-    in
-        timeOfDay
-            |> (\d ->
-                    [ d |> .hour |> toString |> add0Padding
-                    , d |> .minute |> toString |> add0Padding
-                    ]
-               )
-            |> String.join ":"
+    timeOfDay
+        |> (\d ->
+                [ d |> .hour |> toString |> add0Padding
+                , d |> .minute |> toString |> add0Padding
+                ]
+           )
+        |> String.join ":"
 
 
 getDateMonthInt : Date.Date -> Int

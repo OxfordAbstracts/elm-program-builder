@@ -137,16 +137,7 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                 |> Maybe.withDefault (TimeOfDay 0 0)
 
         rowSpan =
-            timeDelimiters
-                |> List.filter
-                    (\t ->
-                        t
-                            >= timeDelimiter
-                            && t
-                            < (DateUtils.timeOfDayToTime sessionDate endTime)
-                    )
-                |> List.length
-                |> toString
+            getRowSpan timeDelimiters timeDelimiter sessionDate endTime
 
         lastTime =
             timeDelimiters
@@ -365,3 +356,20 @@ displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
             Utils.displayTime timeDelimiter ++ " - " ++ Utils.displayTime nextDelimiter
         else
             ""
+
+
+
+--
+
+
+getRowSpan timeDelimiters timeDelimiter sessionDate endTime =
+    timeDelimiters
+        |> List.filter
+            (\t ->
+                t
+                    >= timeDelimiter
+                    && t
+                    < (DateUtils.timeOfDayToTime sessionDate endTime)
+            )
+        |> List.length
+        |> toString
