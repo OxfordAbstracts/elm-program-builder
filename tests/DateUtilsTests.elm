@@ -62,4 +62,13 @@ all =
         , test "getDateMonthInt correctly gets the numerical month from the date" <|
             \() ->
                 Expect.equal (DateUtils.getDateMonthInt (Date.fromTime 1497744000000)) 6
+        , test "displayTime converts the time to a string" <|
+            \() ->
+                let
+                    time =
+                        "2017-06-18T00:00:00.000+01:00"
+                            |> DateUtils.fromStringWithDefault
+                            |> Date.toTime
+                in
+                    Expect.equal (DateUtils.displayTime time) "00:00"
         ]

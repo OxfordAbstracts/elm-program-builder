@@ -353,7 +353,7 @@ displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
                 )
                 sessionsInDate
         then
-            Utils.displayTime timeDelimiter ++ " - " ++ Utils.displayTime nextDelimiter
+            DateUtils.displayTime timeDelimiter ++ " - " ++ DateUtils.displayTime nextDelimiter
         else
             ""
 

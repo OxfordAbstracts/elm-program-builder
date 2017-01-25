@@ -4,8 +4,9 @@ module DateUtils
         , dateWithoutTimeToDate
         , dateToDateWithoutTime
         , displayDateWithoutTime
-        , dateWithoutTimeToValueString
+        , displayTime
         , displayTimeOfDay
+        , dateWithoutTimeToValueString
         , getDateMonthInt
         , fromStringWithDefault
         , timeOfDayToTime
@@ -44,6 +45,11 @@ dateWithoutTimeToDate dateWithoutTime =
 dateToDateWithoutTime : Date.Date -> DateWithoutTime
 dateToDateWithoutTime date =
     DateWithoutTime (Date.year date) (getDateMonthInt date) (Date.day date)
+
+
+dateToTimeOfDay : Date.Date -> TimeOfDay
+dateToTimeOfDay date =
+    TimeOfDay (Date.hour date) (Date.minute date)
 
 
 timeOfDayToTime : DateWithoutTime -> TimeOfDay -> Time.Time
@@ -86,6 +92,22 @@ displayTimeOfDay timeOfDay =
                 ]
            )
         |> String.join ":"
+
+
+{-| Converts a timestamp into a humam readable hours and minutes format
+-}
+displayTime : Time.Time -> String
+displayTime =
+    Date.fromTime >> dateToTimeOfDay >> displayTimeOfDay
+
+
+
+-- displayTime = function(time) {
+--   var x = fromTime (time)
+--   var y = dateToTimeOfDay(x)
+--   var z = displayTimeOfDay(y)
+--   return z
+-- }
 
 
 getDateMonthInt : Date.Date -> Int
