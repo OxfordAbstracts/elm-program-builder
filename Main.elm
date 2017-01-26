@@ -8,7 +8,8 @@ import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
-import Json.Decode as Json
+import Json.Decode as Json exposing (int, string, float, list, Decoder)
+import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 import Http
 
 
@@ -17,9 +18,48 @@ init =
     ( initialModel, getModelFromDb )
 
 
-decodeUrl : Json.Decoder String
+decodeUrl : Json.Decoder Model
+
+
+
+-- decodeUrl =
+--     --     Json.at [ "model" ] Json.string
+--     -- Json.at [ "model" ] Json.string
+--     Json.decodeString (field "Session" Json.)
+-- decodeUrl : Json.Decoder Model
+-- http://package.elm-lang.org/packages/elm-lang/core/5.1.1/Json-Decode
+-- http://package.elm-lang.org/packages/NoRedInk/elm-decode-pipeline/latest
+
+
 decodeUrl =
-    Json.at [ "model" ] Json.string
+    let
+        required =
+            Json.Decode.Pipeline.required
+    in
+        decode Model
+            |> required "sessions" Json.list
+            |> required "tracks" Json.list
+            |> required "columns" Json.list
+            |> required "dates" Json.list
+            |> required "showNewSessionUi" Json.bool
+            |> required "showNewTrackUi" Json.bool
+            |> required "showNewColumnUi" Json.bool
+            |> required "newSession" Session
+            |> required "newColumn" Column
+            |> required "newTrack" Track
+            |> required "idOfSessionBeingEdited" Json.int
+
+
+
+-- Json.decode Model
+--     (field "days" Json.int)
+--     (field "avgPerDay" Json.float)
+--     (field "reports" Json.int)
+--     (field "people" Json.int)
+--     (field "locations" Json.int)
+--     ("totalCoffees" := Json.int)
+--     ("coffeesPerDay" (:=) Json.float)
+-- (field "session" Json.list)
 
 
 getModelFromDb : Cmd Msg
@@ -34,7 +74,7 @@ getModelFromDb =
         requestModel =
             requestString
 
-        -- convert requet string to model
+        -- convert request string to model
     in
         Http.send UpdateModel requestModel
 
