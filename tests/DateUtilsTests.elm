@@ -9,7 +9,6 @@ import Fuzz exposing (intRange)
 
 all : Test
 all =
-    -- 1497744000 is 18 june 2017 00:00 gmt
     describe "DateUtils Module"
         [ test "fromStringWithDefault function defaults to 0 if it is passed an invalid date" <|
             \() ->
@@ -62,13 +61,19 @@ all =
         , test "getDateMonthInt correctly gets the numerical month from the date" <|
             \() ->
                 Expect.equal (DateUtils.getDateMonthInt (Date.fromTime 1497744000000)) 6
-        , test "displayTime converts the time to a string" <|
+        , test "displayTime displays a timeStamp as a readable time" <|
             \() ->
                 let
+                    dateWithoutTime =
+                        { year = 2017, month = 12, day = 20 }
+
+                    timeofDay =
+                        { hour = 9, minute = 45 }
+
                     time =
-                        "2017-06-18T00:00:00.000+01:00"
-                            |> DateUtils.fromStringWithDefault
-                            |> Date.toTime
+                        --  DateWithoutTime -> TimeOfDay -> Time.Time
+                        DateUtils.timeOfDayToTime dateWithoutTime timeofDay
                 in
-                    Expect.equal (DateUtils.displayTime time) "00:00"
+                    -- use display time of day
+                    Expect.equal (DateUtils.displayTime time) "09:45"
         ]

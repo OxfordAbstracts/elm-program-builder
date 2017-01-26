@@ -8,7 +8,8 @@ import MainUpdate
 
 dummyModel : MainModel.Model
 dummyModel =
-  MainModel.initialModel
+    MainModel.initialModel
+
 
 dummySessions : List MainModel.Session
 dummySessions =
@@ -38,26 +39,40 @@ dummySessions =
         "Chairwoman Sue"
     ]
 
-all: Test
+
+all : Test
 all =
     describe "Main update tests"
-      [
-        test "update new column" <|
-                \() ->
-                    Expect.equal (MainUpdate.updateNewColumn dummyModel (\ns -> { ns | name = "new column" })).newColumn.name "new column"
-      , test "update new session" <|
-              \() ->
-                  Expect.equal (MainUpdate.updateNewSession dummyModel (\ns -> { ns | name = "new session" })).newSession.name "new session"
-      , test "update new track" <|
-              \() ->
-                  Expect.equal (MainUpdate.updateNewTrack dummyModel (\ns -> { ns | name = "new track" })).newTrack.name "new track"
-    , test "update new session start time" <|
+        [ test "updateNewColumn updates the model" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewSessionStartTime dummyModel (\st -> { st | hour = 4, minute = 59 })).newSession.startTime { hour = 4, minute = 59 }
-    , test "update new session end time" <|
+                Expect.equal (MainUpdate.updateNewColumn dummyModel (\ns -> { ns | name = "new column" })).newColumn.name "new column"
+        , test "updateNewSession updates the model" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewSessionEndTime dummyModel (\st -> { st | hour = 19, minute = 00 })).newSession.endTime { hour = 19, minute = 00 }
-    , test "toInt" <|
+                Expect.equal (MainUpdate.updateNewSession dummyModel (\ns -> { ns | name = "new session" })).newSession.name "new session"
+        , test "updateNewTrack updates the model" <|
+            \() ->
+                Expect.equal (MainUpdate.updateNewTrack dummyModel (\ns -> { ns | name = "new track" })).newTrack.name "new track"
+        , test "updateNewSessionStartTime updates the model" <|
+            \() ->
+                let
+                    actualTimeRecord =
+                        (MainUpdate.updateNewSessionStartTime
+                            dummyModel
+                            (\st -> { st | hour = 4, minute = 59 })
+                        ).newSession.startTime
+                in
+                    Expect.equal actualTimeRecord { hour = 4, minute = 59 }
+        , test "updateNewSessionEndTime updates the model" <|
+            \() ->
+                let
+                    actualTimeRecord =
+                        (MainUpdate.updateNewSessionEndTime
+                            dummyModel
+                            (\st -> { st | hour = 19, minute = 0 })
+                        ).newSession.endTime
+                in
+                    Expect.equal actualTimeRecord { hour = 19, minute = 0 }
+        , test "toInt updates the model" <|
             \() ->
                 Expect.equal (MainUpdate.toInt dummyModel "5") 5
-      ]
+        ]
