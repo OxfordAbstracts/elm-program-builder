@@ -17,8 +17,7 @@ type Msg
     | UpdateNewColumnName String
     | CreateNewSession
     | CreateNewTrack
-      -- | UpdateModel (Result Http.Error MainModel.Model)
-    | UpdateModel (Result Http.Error String)
+    | UpdateModel (Result Http.Error MainModel.ApiUpdate)
     | UpdateNewSessionName String
     | UpdateNewTrackName String
     | UpdateNewSessionDescription String

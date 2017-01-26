@@ -137,8 +137,16 @@ update msg model =
                 , Cmd.none
                 )
 
-        UpdateModel (Ok randomString) ->
-            ( { model | randomString = randomString }, Cmd.none )
+        UpdateModel (Ok apiUpdate) ->
+            ( { model
+                | sessions =
+                    apiUpdate.sessions
+                    -- , tracks = apiUpdate.tracks
+                    -- , columns = apiUpdate.columns
+                    -- , dates = apiUpdate.dates
+              }
+            , Cmd.none
+            )
 
         UpdateModel (Err _) ->
             ( model, Cmd.none )
