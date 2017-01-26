@@ -137,6 +137,12 @@ update msg model =
                 , Cmd.none
                 )
 
+        UpdateModel (Ok newModel) ->
+            ( newModel, Cmd.none )
+
+        UpdateModel (Err _) ->
+            ( model, Cmd.none )
+
         UpdateNewColumnName newName ->
             ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )
 

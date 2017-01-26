@@ -1,5 +1,9 @@
 module MainMessages exposing (..)
 
+import Http
+import MainModel
+
+
 -- import MainModel exposing (..)
 
 
@@ -13,6 +17,7 @@ type Msg
     | UpdateNewColumnName String
     | CreateNewSession
     | CreateNewTrack
+    | UpdateModel (Result Http.Error MainModel.Model)
     | UpdateNewSessionName String
     | UpdateNewTrackName String
     | UpdateNewSessionDescription String

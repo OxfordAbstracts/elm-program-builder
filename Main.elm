@@ -1,21 +1,42 @@
 module Main exposing (..)
 
-import Date
 import Html exposing (Html, div, button, text, program)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
 import ControlsView exposing (view)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
-import Time
+import Json.Decode as Json
+import Http
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.none )
+    ( initialModel, getModelFromDb )
+
+
+decodeUrl : Json.Decoder String
+decodeUrl =
+    Json.at [ "model" ] Json.string
+
+
+getModelFromDb : Cmd Msg
+getModelFromDb =
+    let
+        url =
+            "/get-model-from-db"
+
+        requestString =
+            Http.get url decodeUrl
+
+        requestModel =
+            requestString
+
+        -- convert requet string to model
+    in
+        Http.send UpdateModel requestModel
 
 
 
