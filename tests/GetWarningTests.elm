@@ -2,8 +2,6 @@ module GetWarningTests exposing (..)
 
 import Test exposing (..)
 import Expect
-import DateUtils
-import Date
 import GetWarning
 import MainModel
 
@@ -11,13 +9,14 @@ import MainModel
 -- showNewTrackUi is true for initial model
 
 
+dummyModel : MainModel.Model
 dummyModel =
     MainModel.initialModel
 
 
 all : Test
 all =
-    describe "GetWarning functions work correctly"
+    describe "GetWarning functions"
         [ test "GetWarning shows correct message when there is no track name" <|
             \() ->
                 Expect.equal (GetWarning.getWarning dummyModel) ("Cannot create: Track name field is empty")

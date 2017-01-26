@@ -5,33 +5,27 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 
 
-updateNewColumn : { b | newColumn : a } -> (a -> c) -> { b | newColumn : c }
+updateNewColumn : Model -> (Column -> Column) -> Model
 updateNewColumn model update =
     ({ model | newColumn = (update model.newColumn) })
 
 
-updateNewSession : { b | newSession : a } -> (a -> c) -> { b | newSession : c }
+updateNewSession : Model -> (Session -> Session) -> Model
 updateNewSession model update =
     ({ model | newSession = (update model.newSession) })
 
 
-updateNewTrack : { b | newTrack : a } -> (a -> c) -> { b | newTrack : c }
+updateNewTrack : Model -> (Track -> Track) -> Model
 updateNewTrack model update =
     ({ model | newTrack = (update model.newTrack) })
 
 
-updateNewSessionStartTime :
-    { b | newSession : { c | startTime : a } }
-    -> (a -> d)
-    -> { b | newSession : { c | startTime : d } }
+updateNewSessionStartTime : Model -> (TimeOfDay -> TimeOfDay) -> Model
 updateNewSessionStartTime model update =
     updateNewSession model (\ns -> { ns | startTime = update ns.startTime })
 
 
-updateNewSessionEndTime :
-    { b | newSession : { c | endTime : a } }
-    -> (a -> d)
-    -> { b | newSession : { c | endTime : d } }
+updateNewSessionEndTime : Model -> (TimeOfDay -> TimeOfDay) -> Model
 updateNewSessionEndTime model update =
     updateNewSession model (\ns -> { ns | endTime = update ns.endTime })
 

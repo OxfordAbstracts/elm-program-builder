@@ -13,7 +13,7 @@ all =
         [ test "fromStringWithDefault function defaults to 0 if it is passed an invalid date" <|
             \() ->
                 Expect.equal (DateUtils.fromStringWithDefault "not Date") (Date.fromTime 0)
-        , test "fromStringWithDefault appears to correctly fromStringWithDefault dates" <|
+        , test "fromStringWithDefault appears to convert string into a date" <|
             \() ->
                 Expect.equal
                     (Ok (DateUtils.fromStringWithDefault "2017-06-18T00:00:00.000+00:00"))
