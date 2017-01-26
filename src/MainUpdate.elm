@@ -137,8 +137,8 @@ update msg model =
                 , Cmd.none
                 )
 
-        UpdateModel (Ok newModel) ->
-            ( newModel, Cmd.none )
+        UpdateModel (Ok randomString) ->
+            ( { model | randomString = randomString }, Cmd.none )
 
         UpdateModel (Err _) ->
             ( model, Cmd.none )

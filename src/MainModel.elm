@@ -16,6 +16,7 @@ type alias Model =
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
+    , randomString : String
     }
 
 
@@ -32,6 +33,7 @@ initialModel =
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
+    , randomString = "bla"
     }
 
 
