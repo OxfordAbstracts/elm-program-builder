@@ -12,9 +12,12 @@ decodeUrl : Json.Decoder ApiUpdate
 decodeUrl =
     decode ApiUpdate
         |> required "sessions" (Json.list sessionDecoder)
-        |> required "tracks" (Json.list trackDecoder)
-        |> required "columns" (Json.list columnDecoder)
-        |> required "dates" (Json.list dateDecoder)
+
+
+
+-- |> required "tracks" (Json.list trackDecoder)
+-- |> required "columns" (Json.list columnDecoder)
+-- |> required "dates" (Json.list dateDecoder)
 
 
 encodeModel : ApiUpdate -> Json.Encode.Value
@@ -110,7 +113,7 @@ getModelFromDb : Cmd Msg
 getModelFromDb =
     let
         url =
-            "get-model-from-db"
+            "/get-model-from-db"
 
         request =
             Http.get url decodeUrl
@@ -118,13 +121,13 @@ getModelFromDb =
         Http.send UpdateModel request
 
 
-postModelToDb : Cmd Msg
-postModelToDb =
+postModelToDb : ApiUpdate -> Cmd Msg
+postModelToDb apiUpdateModel =
     let
         -- url =
         --     "http://localhost:5000/post-model-from-db"
         request =
-            Http.post "/post-model-from-db" Http.emptyBody decodeUrl
+            Http.post "/post-model-to-db" (Http.jsonBody (encodeModel apiUpdateModel)) decodeUrl
     in
         Http.send SaveModel request
 

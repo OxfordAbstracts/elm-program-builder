@@ -109,12 +109,16 @@ update msg model =
 
                 newSessionWithId =
                     { newSession | id = newSessionId }
+
+                newSessionToPost =
+                    { sessions = model.sessions
+                    }
             in
                 ( { model
                     | sessions = model.sessions ++ [ newSessionWithId ]
                     , newSession = blankSession 1
                   }
-                , Api.postModelToDb
+                , Api.postModelToDb newSessionToPost
                 )
 
         CreateNewTrack ->
@@ -142,9 +146,9 @@ update msg model =
             ( { model
                 | sessions =
                     apiUpdate.sessions
-                , tracks = apiUpdate.tracks
-                , columns = apiUpdate.columns
-                , dates = apiUpdate.dates
+                    -- , tracks = apiUpdate.tracks
+                    -- , columns = apiUpdate.columns
+                    -- , dates = apiUpdate.dates
               }
             , Cmd.none
             )
