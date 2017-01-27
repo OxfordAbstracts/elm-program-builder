@@ -191,9 +191,9 @@ type alias TrackId =
 type alias ApiUpdate =
     { sessions :
         List Session
-        -- , tracks :
-        --     List Track
-        -- , columns :
-        --     List Column
-        -- , dates : List DateWithoutTime
+    , tracks :
+        List Track
+    , columns :
+        List Column
+    , dates : List DateWithoutTime
     }

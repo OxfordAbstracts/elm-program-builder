@@ -12,21 +12,18 @@ decodeUrl : Json.Decoder ApiUpdate
 decodeUrl =
     decode ApiUpdate
         |> required "sessions" (Json.list sessionDecoder)
-
-
-
--- |> required "tracks" (Json.list trackDecoder)
--- |> required "columns" (Json.list columnDecoder)
--- |> required "dates" (Json.list dateDecoder)
+        |> required "tracks" (Json.list trackDecoder)
+        |> required "columns" (Json.list columnDecoder)
+        |> required "dates" (Json.list dateDecoder)
 
 
 encodeModel : ApiUpdate -> Json.Encode.Value
 encodeModel record =
     Json.Encode.object
         [ ( "sessions", Json.Encode.list <| List.map sessionEncoder <| record.sessions )
-          -- , ( "tracks", Json.Encode.list <| List.map encodeComplexType <| record.tracks )
-          -- , ( "columns", Json.Encode.list <| List.map encodeComplexType <| record.columns )
-          -- , ( "dates", Json.Encode.list <| List.map encodeComplexType <| record.dates )
+        , ( "tracks", Json.Encode.list <| List.map trackEncoder <| record.tracks )
+        , ( "columns", Json.Encode.list <| List.map columnEncoder <| record.columns )
+        , ( "dates", Json.Encode.list <| List.map dateEncoder <| record.dates )
         ]
 
 
@@ -63,11 +60,27 @@ sessionDecoder =
         |> required "chair" Json.string
 
 
+trackEncoder : Track -> Json.Encode.Value
+trackEncoder record =
+    Json.Encode.object
+        [ ( "id", Json.Encode.int <| record.id )
+        , ( "name", Json.Encode.string <| record.name )
+        ]
+
+
 trackDecoder : Json.Decoder Track
 trackDecoder =
     decode Track
         |> required "id" Json.int
         |> required "name" Json.string
+
+
+columnEncoder : Column -> Json.Encode.Value
+columnEncoder record =
+    Json.Encode.object
+        [ ( "id", Json.Encode.int <| record.id )
+        , ( "name", Json.Encode.string <| record.name )
+        ]
 
 
 columnDecoder : Json.Decoder Column
@@ -124,15 +137,7 @@ getModelFromDb =
 postModelToDb : ApiUpdate -> Cmd Msg
 postModelToDb apiUpdateModel =
     let
-        -- url =
-        --     "http://localhost:5000/post-model-from-db"
         request =
             Http.post "/post-model-to-db" (Http.jsonBody (encodeModel apiUpdateModel)) decodeUrl
     in
         Http.send SaveModel request
-
-
-
--- Http.stringBody (encodeModel)
--- in
---     Http.send SaveModel MainModel.Model request

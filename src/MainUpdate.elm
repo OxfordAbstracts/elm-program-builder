@@ -111,7 +111,10 @@ update msg model =
                     { newSession | id = newSessionId }
 
                 newSessionToPost =
-                    { sessions = model.sessions
+                    { sessions = model.sessions ++ [ newSessionWithId ]
+                    , tracks = model.tracks
+                    , columns = model.tracks
+                    , dates = model.dates
                     }
             in
                 ( { model
