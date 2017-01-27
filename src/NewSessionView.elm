@@ -11,6 +11,17 @@ import MainMessages exposing (..)
 import GetWarning exposing (..)
 
 
+newSessionWarning model =
+    if model.showNewSessionUi && model.newSession.name == "" then
+        getWarning "Session name field is empty" model
+    else if model.showNewSessionUi && endNotMoreThanStart model.newSession then
+        getWarning "Session end time must be greater than start time" model
+    else if model.showNewSessionUi && sessionsAreOverLapping model.newSession model.sessions then
+        "Session times overlap another session in the same column"
+    else
+        ""
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -96,14 +107,20 @@ view model =
                         ]
                         [ text model.newSession.location ]
                     ]
-                , div [ hidden True ] [ text (toString model.newSession) ]
                 ]
 
         column3 =
             let
                 dayOptions =
                     model.dates
-                        |> List.map (\d -> option [ value (DateUtils.dateWithoutTimeToValueString d), selected (model.newSession.date == d) ] [ text (DateUtils.displayDateWithoutTime d) ])
+                        |> List.map
+                            (\d ->
+                                option
+                                    [ value (DateUtils.dateWithoutTimeToValueString d)
+                                    , selected (model.newSession.date == d)
+                                    ]
+                                    [ text (DateUtils.displayDateWithoutTime d) ]
+                            )
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group", onInput UpdateNewSessionDate ]
@@ -161,9 +178,9 @@ view model =
                                 []
                             ]
                         ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
+                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionWarning model) ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewSession ]
+                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick CreateNewSession ]
                             [ text "Create Session" ]
                         ]
                     ]

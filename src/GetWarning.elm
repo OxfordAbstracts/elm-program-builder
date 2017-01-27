@@ -3,28 +3,9 @@ module GetWarning exposing (..)
 import DateUtils
 
 
-getWarning model =
-    let
-        warningSuffix =
-            getWarningSuffix model
-    in
-        if warningSuffix /= "" then
-            "Cannot create: " ++ warningSuffix
-        else
-            ""
-
-
-getWarningSuffix model =
-    if model.showNewSessionUi && model.newSession.name == "" then
-        "Session name field is empty"
-    else if model.showNewSessionUi && endNotMoreThanStart model.newSession then
-        "Session end time must be greater than start time"
-    else if model.showNewSessionUi && sessionsAreOverLapping model.newSession model.sessions then
-        "Session times overlap another session in the same column"
-    else if model.showNewTrackUi && model.newTrack.name == "" then
-        "Track name field is empty"
-    else if model.showNewColumnUi && model.newColumn.name == "" then
-        "Column name field is empty"
+getWarning warningSuffix model =
+    if warningSuffix /= "" then
+        "Cannot create: " ++ warningSuffix
     else
         ""
 

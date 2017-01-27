@@ -61,6 +61,7 @@ update msg model =
                 | showNewTrackUi = not model.showNewTrackUi
                 , showNewColumnUi = False
                 , showNewSessionUi = False
+                , idOfSessionBeingEdited = Nothing
               }
             , Cmd.none
             )
@@ -70,6 +71,7 @@ update msg model =
                 | showNewColumnUi = not model.showNewColumnUi
                 , showNewSessionUi = False
                 , showNewTrackUi = False
+                , idOfSessionBeingEdited = Nothing
               }
             , Cmd.none
             )
@@ -199,6 +201,8 @@ update msg model =
                         else
                             Just sessionId
                     , showNewSessionUi = False
+                    , showNewColumnUi = False
+                    , showNewTrackUi = False
                     , newSession = session
                   }
                 , Cmd.none

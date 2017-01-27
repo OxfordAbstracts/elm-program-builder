@@ -71,9 +71,7 @@ all =
                         { hour = 9, minute = 45 }
 
                     time =
-                        --  DateWithoutTime -> TimeOfDay -> Time.Time
                         DateUtils.timeOfDayToTime dateWithoutTime timeofDay
                 in
-                    -- use display time of day
                     Expect.equal (DateUtils.displayTime time) "09:45"
         ]

@@ -9,6 +9,13 @@ import MainMessages exposing (..)
 import GetWarning exposing (..)
 
 
+newTrackWarning model =
+    if model.showNewTrackUi && model.newTrack.name == "" then
+        getWarning "Track name field is empty" model
+    else
+        ""
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -32,9 +39,9 @@ view model =
                         ]
                         [ text model.newColumn.name ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewTrack ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick CreateNewTrack ]
                         [ text "Create Track" ]
                     ]
                 ]
