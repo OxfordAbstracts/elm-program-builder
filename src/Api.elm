@@ -11,12 +11,9 @@ decodeUrl : Json.Decoder ApiUpdate
 decodeUrl =
     decode ApiUpdate
         |> required "sessions" (Json.list sessionDecoder)
-
-
-
--- |> required "tracks" (Json.list Track)
--- |> required "columns" (Json.list Column)
--- |> required "dates" (Json.list DateWithoutTime)
+        |> required "tracks" (Json.list trackDecoder)
+        |> required "columns" (Json.list columnDecoder)
+        |> required "dates" (Json.list dateDecoder)
 
 
 sessionDecoder : Json.Decoder Session
@@ -33,6 +30,20 @@ sessionDecoder =
         |> required "location" Json.string
         |> required "submissionIds" (Json.list Json.int)
         |> required "chair" Json.string
+
+
+trackDecoder : Json.Decoder Track
+trackDecoder =
+    decode Track
+        |> required "id" Json.int
+        |> required "name" Json.string
+
+
+columnDecoder : Json.Decoder Column
+columnDecoder =
+    decode Column
+        |> required "id" Json.int
+        |> required "name" Json.string
 
 
 dateDecoder : Json.Decoder DateWithoutTime

@@ -141,9 +141,9 @@ update msg model =
             ( { model
                 | sessions =
                     apiUpdate.sessions
-                    -- , tracks = apiUpdate.tracks
-                    -- , columns = apiUpdate.columns
-                    -- , dates = apiUpdate.dates
+                , tracks = apiUpdate.tracks
+                , columns = apiUpdate.columns
+                , dates = apiUpdate.dates
               }
             , Cmd.none
             )
