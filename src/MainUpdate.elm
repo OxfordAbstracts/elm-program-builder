@@ -1,5 +1,6 @@
 module MainUpdate exposing (..)
 
+import Api
 import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
@@ -113,7 +114,7 @@ update msg model =
                     | sessions = model.sessions ++ [ newSessionWithId ]
                     , newSession = blankSession 1
                   }
-                , Cmd.none
+                , Api.postModelToDb
                 )
 
         CreateNewTrack ->
@@ -149,6 +150,12 @@ update msg model =
             )
 
         UpdateModel (Err _) ->
+            ( model, Cmd.none )
+
+        SaveModel (Err _) ->
+            ( model, Cmd.none )
+
+        SaveModel (Ok apiUpdate) ->
             ( model, Cmd.none )
 
         UpdateNewColumnName newName ->
