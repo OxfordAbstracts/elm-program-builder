@@ -1,4 +1,4 @@
-module NewTrackView exposing (view)
+module NewTrackView exposing (view, newTrackWarning)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

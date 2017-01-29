@@ -201,8 +201,6 @@ update msg model =
                         else
                             Just sessionId
                     , showNewSessionUi = False
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
                     , newSession = session
                   }
                 , Cmd.none

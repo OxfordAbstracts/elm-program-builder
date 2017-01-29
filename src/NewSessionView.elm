@@ -1,4 +1,4 @@
-module NewSessionView exposing (view)
+module NewSessionView exposing (view, newSessionWarning)
 
 import Date
 import DateUtils
@@ -17,7 +17,7 @@ newSessionWarning model =
     else if model.showNewSessionUi && endNotMoreThanStart model.newSession then
         getWarning "Session end time must be greater than start time" model
     else if model.showNewSessionUi && sessionsAreOverLapping model.newSession model.sessions then
-        "Session times overlap another session in the same column"
+        getWarning "Session times overlap another session in the same column" model
     else
         ""
 

@@ -1,4 +1,4 @@
-module NewColumnView exposing (view)
+module NewColumnView exposing (view, newColumnWarning)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
