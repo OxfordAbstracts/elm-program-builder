@@ -189,5 +189,4 @@ view model =
             [ div [ class "col-md-4" ] [ column1 ]
             , div [ class "col-md-4" ] [ column2 ]
             , div [ class "col-md-4" ] [ column3 ]
-            , div [] [ text (toString model.newSession) ]
             ]
