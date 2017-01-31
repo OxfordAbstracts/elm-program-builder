@@ -1,4 +1,4 @@
-module NewColumnView exposing (view)
+module NewColumnView exposing (view, newColumnWarning)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -7,6 +7,13 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import GetWarning exposing (..)
+
+
+newColumnWarning model =
+    if model.showNewColumnUi && model.newColumn.name == "" then
+        getWarning "Column name field is empty" model
+    else
+        ""
 
 
 view : Model -> Html Msg
@@ -32,9 +39,9 @@ view model =
                         ]
                         [ text model.newColumn.name ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newColumnWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewColumn ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (newColumnWarning model /= ""), onClick CreateNewColumn ]
                         [ text "Create Column" ]
                     ]
                 ]
