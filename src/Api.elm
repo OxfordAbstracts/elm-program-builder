@@ -126,7 +126,7 @@ getModelFromDb : Cmd Msg
 getModelFromDb =
     let
         url =
-            "/events/1/program-builder-model"
+            "/events/2/program-builder-model"
 
         request =
             Http.get url decodeModel
@@ -138,6 +138,6 @@ postModelToDb : ApiUpdate -> Cmd Msg
 postModelToDb apiUpdateModel =
     let
         request =
-            Http.post "/events/1/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) decodeModel
+            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) decodeModel
     in
         Http.send SaveModel request
