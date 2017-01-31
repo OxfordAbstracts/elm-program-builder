@@ -17,8 +17,8 @@ apiUpdateDecoder =
         |> required "dates" (Json.list dateDecoder)
 
 
-encodeModel : ApiUpdate -> Json.Encode.Value
-encodeModel record =
+encodeApiUpdate : ApiUpdate -> Json.Encode.Value
+encodeApiUpdate record =
     Json.Encode.object
         [ ( "sessions", Json.Encode.list <| List.map sessionEncoder <| record.sessions )
         , ( "tracks", Json.Encode.list <| List.map trackEncoder <| record.tracks )
@@ -138,6 +138,6 @@ postModelToDb : ApiUpdate -> Cmd Msg
 postModelToDb apiUpdateModel =
     let
         request =
-            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) apiUpdateDecoder
+            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeApiUpdate apiUpdateModel)) apiUpdateDecoder
     in
         Http.send SaveModel request

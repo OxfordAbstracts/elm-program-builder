@@ -6,6 +6,7 @@ import MainModel
 import DummyTypes exposing (..)
 import Api
 import Json.Decode
+import Json.Encode
 
 
 -- showNewTrackUi is true for initial model
@@ -30,13 +31,16 @@ all =
         [ test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for sessions" <|
             \() ->
                 Expect.equal (decodedApiUpdate.sessions) (dummySessions)
-        , test "apiUpdateDecoder decodes model from a JSON to elm format for tracks" <|
+        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for tracks" <|
             \() ->
                 Expect.equal (decodedApiUpdate.tracks) (dummyTracks)
-        , test "apiUpdateDecoder decodes model from a JSON to elm format for columns" <|
+        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for columns" <|
             \() ->
                 Expect.equal (decodedApiUpdate.columns) (dummyColumn)
-        , test "apiUpdateDecoder decodes model from a JSON to elm format for dates" <|
+        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for dates" <|
             \() ->
                 Expect.equal (decodedApiUpdate.dates) (dummyDates)
+        , test "encodeApiUpdate encodes apiUpdate from elm format to a JSON" <|
+            \() ->
+                Expect.equal (Api.encodeApiUpdate dummyApiUpdate) (Json.Encode.string dummyApiUpdateJson)
         ]
