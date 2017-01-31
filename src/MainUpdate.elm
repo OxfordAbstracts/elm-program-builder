@@ -196,47 +196,6 @@ update msg model =
             DeleteSession sessionId ->
                 ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
 
-            -- UpdateNewColumnName newName ->
-            --     ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )
-            --
-            -- UpdateNewSessionName newName ->
-            --     ( (updateNewSession model (\ns -> { ns | name = newName })), Cmd.none )
-            --
-            -- UpdateNewTrackName newName ->
-            --     ( (updateNewTrack model (\ns -> { ns | name = newName })), Cmd.none )
-            --
-            -- UpdateNewSessionDescription newDescription ->
-            --     ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
-            --
-            -- UpdateNewSessionColumn newColumnId ->
-            --     ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
-            --
-            -- UpdateNewSessionChair newChair ->
-            --     ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
-            --
-            -- UpdateNewSessionLocation newLocation ->
-            --     ( (updateNewSession model (\ns -> { ns | location = newLocation })), Cmd.none )
-            --
-            -- UpdateNewSessionTrack newTrackId ->
-            --     ( (updateNewSession model (\ns -> { ns | trackId = (toInt model newTrackId) })), Cmd.none )
-            --
-            -- UpdateNewSessionDate newDate ->
-            --     ( (updateNewSession model (\ns -> { ns | date = (DateUtils.valueStringToDateWithoutTime newDate) })), Cmd.none )
-            --
-            -- UpdateNewSessionStartHour new ->
-            --     ( updateNewSessionStartTime model (\st -> { st | hour = clamp 0 23 (toInt model new) }), Cmd.none )
-            --
-            -- UpdateNewSessionStartMinute new ->
-            --     ( updateNewSessionStartTime model (\st -> { st | minute = clamp 0 59 (toInt model new) }), Cmd.none )
-            --
-            -- UpdateNewSessionEndHour new ->
-            --     ( updateNewSessionEndTime model (\et -> { et | hour = clamp 0 23 (toInt model new) }), Cmd.none )
-            --
-            -- UpdateNewSessionEndMinute new ->
-            --     ( updateNewSessionEndTime model (\et -> { et | minute = clamp 0 59 (toInt model new) }), Cmd.none )
-            --
-            -- DeleteSession sessionId ->
-            --     ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
             SelectSessionToEdit sessionId ->
                 let
                     isAlreadySelected =
