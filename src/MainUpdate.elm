@@ -95,12 +95,19 @@ update msg model =
                 let
                     listWithNewId =
                         appendNewElementToList model.columns model.newColumn
+
+                    newColumnToPost =
+                        { sessions = model.sessions
+                        , tracks = model.tracks
+                        , columns = listWithNewId
+                        , dates = model.dates
+                        }
                 in
                     ( { model
                         | columns = listWithNewId
                         , newColumn = blankColumn 1
                       }
-                    , Cmd.none
+                    , Api.postModelToDb newColumnToPost
                     )
 
             CreateNewSession ->
@@ -111,7 +118,7 @@ update msg model =
                     newSessionToPost =
                         { sessions = listWithNewId
                         , tracks = model.tracks
-                        , columns = model.tracks
+                        , columns = model.columns
                         , dates = model.dates
                         }
                 in
@@ -126,21 +133,27 @@ update msg model =
                 let
                     listWithNewId =
                         appendNewElementToList model.tracks model.newTrack
+
+                    newTrackToPost =
+                        { sessions = model.sessions
+                        , tracks = model.tracks
+                        , columns = listWithNewId
+                        , dates = model.dates
+                        }
                 in
                     ( { model
                         | tracks = listWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Cmd.none
+                    , Api.postModelToDb newTrackToPost
                     )
 
             UpdateModel (Ok apiUpdate) ->
                 ( { model
-                    | sessions =
-                        apiUpdate.sessions
-                        -- , tracks = apiUpdate.tracks
-                        -- , columns = apiUpdate.columns
-                        -- , dates = apiUpdate.dates
+                    | sessions = apiUpdate.sessions
+                    , tracks = apiUpdate.tracks
+                    , columns = apiUpdate.columns
+                    , dates = apiUpdate.dates
                   }
                 , Cmd.none
                 )
