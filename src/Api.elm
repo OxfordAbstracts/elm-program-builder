@@ -8,8 +8,8 @@ import Http
 import Json.Encode
 
 
-decodeUrl : Json.Decoder ApiUpdate
-decodeUrl =
+decodeModel : Json.Decoder ApiUpdate
+decodeModel =
     decode ApiUpdate
         |> required "sessions" (Json.list sessionDecoder)
         |> required "tracks" (Json.list trackDecoder)
@@ -129,7 +129,7 @@ getModelFromDb =
             "/events/1/program-builder-model"
 
         request =
-            Http.get url decodeUrl
+            Http.get url decodeModel
     in
         Http.send UpdateModel request
 
@@ -138,6 +138,6 @@ postModelToDb : ApiUpdate -> Cmd Msg
 postModelToDb apiUpdateModel =
     let
         request =
-            Http.post "/events/1/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) decodeUrl
+            Http.post "/events/1/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) decodeModel
     in
         Http.send SaveModel request

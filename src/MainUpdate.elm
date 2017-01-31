@@ -38,6 +38,17 @@ toInt model string =
         |> Result.withDefault 0
 
 
+updateModelWithApiUpdate : Model -> ApiUpdate -> Model
+updateModelWithApiUpdate model apiUpdate =
+    ({ model
+        | sessions = apiUpdate.sessions
+        , tracks = apiUpdate.tracks
+        , columns = apiUpdate.columns
+        , dates = apiUpdate.dates
+     }
+    )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
@@ -149,14 +160,11 @@ update msg model =
                     )
 
             UpdateModel (Ok apiUpdate) ->
-                ( { model
-                    | sessions = apiUpdate.sessions
-                    , tracks = apiUpdate.tracks
-                    , columns = apiUpdate.columns
-                    , dates = apiUpdate.dates
-                  }
-                , Cmd.none
-                )
+                let
+                    updatedModel =
+                        updateModelWithApiUpdate model apiUpdate
+                in
+                    ( updatedModel, Cmd.none )
 
             UpdateModel (Err _) ->
                 ( model, Cmd.none )
