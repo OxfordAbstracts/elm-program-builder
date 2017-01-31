@@ -17,7 +17,7 @@ view model =
         , NewSessionView.view model
         , NewColumnView.view model
         , NewTrackView.view model
-        , text (toString model)
+          -- , text (toString model)
         ]
 
 
