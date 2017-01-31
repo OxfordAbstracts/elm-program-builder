@@ -1,5 +1,6 @@
 port module Main exposing (..)
 
+import ApiTests
 import DateUtilsTests
 import GetWarningTests
 import MainUpdateTests
@@ -15,7 +16,8 @@ import Test exposing (..)
 allTests : Test
 allTests =
     describe "all tests"
-        [ DateUtilsTests.all
+        [ ApiTests.all
+        , DateUtilsTests.all
         , GetWarningTests.all
         , MainUpdateTests.all
         , NewColumnViewTests.all

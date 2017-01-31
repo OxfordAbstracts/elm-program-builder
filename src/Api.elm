@@ -1,4 +1,4 @@
-module Api exposing (getModelFromDb, postModelToDb)
+module Api exposing (..)
 
 import MainModel exposing (..)
 import MainMessages exposing (..)
@@ -8,8 +8,8 @@ import Http
 import Json.Encode
 
 
-decodeModel : Json.Decoder ApiUpdate
-decodeModel =
+apiUpdateDecoder : Json.Decoder ApiUpdate
+apiUpdateDecoder =
     decode ApiUpdate
         |> required "sessions" (Json.list sessionDecoder)
         |> required "tracks" (Json.list trackDecoder)
@@ -129,7 +129,7 @@ getModelFromDb =
             "/events/2/program-builder-model"
 
         request =
-            Http.get url decodeModel
+            Http.get url apiUpdateDecoder
     in
         Http.send UpdateModel request
 
@@ -138,6 +138,6 @@ postModelToDb : ApiUpdate -> Cmd Msg
 postModelToDb apiUpdateModel =
     let
         request =
-            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) decodeModel
+            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeModel apiUpdateModel)) apiUpdateDecoder
     in
         Http.send SaveModel request
