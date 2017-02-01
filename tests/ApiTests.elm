@@ -81,8 +81,12 @@ dummyApiUpdateJson =
 
 
 decodedApiUpdate =
-    Json.Decode.decodeString Api.apiUpdateDecoder dummyApiUpdateJson
-        |> Result.withDefault dummyApiUpdate
+    case Json.Decode.decodeString Api.apiUpdateDecoder dummyApiUpdateJson of
+        Err str ->
+            Debug.crash str
+
+        Ok decodedUpdate ->
+            decodedUpdate
 
 
 all : Test
