@@ -215,7 +215,21 @@ update msg model =
                 ( updateNewSessionEndTime model (\et -> { et | minute = clamp 0 59 (toInt model new) }), Cmd.none )
 
             DeleteSession sessionId ->
-                ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
+                let
+                    newSessionsList =
+                        model.sessions
+                            |> List.filter (\s -> s.id /= sessionId)
+
+                    apiUpdate =
+                        { sessions = newSessionsList
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , dates = model.dates
+                        }
+                in
+                    ( { model | sessions = newSessionsList }
+                    , Api.postModelToDb apiUpdate
+                    )
 
             SelectSessionToEdit sessionId ->
                 let
