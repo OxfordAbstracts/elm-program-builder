@@ -20,27 +20,27 @@ apiUpdateDecoder =
 encodeApiUpdate : ApiUpdate -> Json.Encode.Value
 encodeApiUpdate record =
     Json.Encode.object
-        [ ( "sessions", Json.Encode.list <| List.map sessionEncoder <| record.sessions )
-        , ( "tracks", Json.Encode.list <| List.map trackEncoder <| record.tracks )
-        , ( "columns", Json.Encode.list <| List.map columnEncoder <| record.columns )
-        , ( "dates", Json.Encode.list <| List.map dateEncoder <| record.dates )
+        [ ( "sessions", Json.Encode.list <| List.map sessionEncoder record.sessions )
+        , ( "tracks", Json.Encode.list <| List.map trackEncoder record.tracks )
+        , ( "columns", Json.Encode.list <| List.map columnEncoder record.columns )
+        , ( "dates", Json.Encode.list <| List.map dateEncoder record.dates )
         ]
 
 
 sessionEncoder : Session -> Json.Encode.Value
 sessionEncoder record =
     Json.Encode.object
-        [ ( "id", Json.Encode.int <| record.id )
-        , ( "name", Json.Encode.string <| record.name )
-        , ( "description", Json.Encode.string <| record.description )
-        , ( "date", dateEncoder <| record.date )
-        , ( "startTime", timeEncoder <| record.startTime )
-        , ( "endTime", timeEncoder <| record.endTime )
-        , ( "columnId", Json.Encode.int <| record.columnId )
-        , ( "trackId", Json.Encode.int <| record.trackId )
-        , ( "location", Json.Encode.string <| record.location )
-        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int <| record.submissionIds )
-        , ( "chair", Json.Encode.string <| record.chair )
+        [ ( "id", Json.Encode.int record.id )
+        , ( "name", Json.Encode.string record.name )
+        , ( "description", Json.Encode.string record.description )
+        , ( "date", dateEncoder record.date )
+        , ( "startTime", timeEncoder record.startTime )
+        , ( "endTime", timeEncoder record.endTime )
+        , ( "columnId", Json.Encode.int record.columnId )
+        , ( "trackId", Json.Encode.int record.trackId )
+        , ( "location", Json.Encode.string record.location )
+        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int record.submissionIds )
+        , ( "chair", Json.Encode.string record.chair )
         ]
 
 
@@ -63,8 +63,8 @@ sessionDecoder =
 trackEncoder : Track -> Json.Encode.Value
 trackEncoder record =
     Json.Encode.object
-        [ ( "id", Json.Encode.int <| record.id )
-        , ( "name", Json.Encode.string <| record.name )
+        [ ( "id", Json.Encode.int record.id )
+        , ( "name", Json.Encode.string record.name )
         ]
 
 
@@ -78,8 +78,8 @@ trackDecoder =
 columnEncoder : Column -> Json.Encode.Value
 columnEncoder record =
     Json.Encode.object
-        [ ( "id", Json.Encode.int <| record.id )
-        , ( "name", Json.Encode.string <| record.name )
+        [ ( "id", Json.Encode.int record.id )
+        , ( "name", Json.Encode.string record.name )
         ]
 
 
@@ -101,9 +101,9 @@ dateDecoder =
 dateEncoder : DateWithoutTime -> Json.Encode.Value
 dateEncoder record =
     Json.Encode.object
-        [ ( "year", Json.Encode.int <| record.year )
-        , ( "month", Json.Encode.int <| record.month )
-        , ( "day", Json.Encode.int <| record.day )
+        [ ( "year", Json.Encode.int record.year )
+        , ( "month", Json.Encode.int record.month )
+        , ( "day", Json.Encode.int record.day )
         ]
 
 
@@ -117,8 +117,8 @@ timeDecoder =
 timeEncoder : TimeOfDay -> Json.Encode.Value
 timeEncoder record =
     Json.Encode.object
-        [ ( "hour", Json.Encode.int <| record.hour )
-        , ( "minute", Json.Encode.int <| record.minute )
+        [ ( "hour", Json.Encode.int record.hour )
+        , ( "minute", Json.Encode.int record.minute )
         ]
 
 
