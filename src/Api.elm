@@ -2,19 +2,19 @@ module Api exposing (..)
 
 import MainModel exposing (..)
 import MainMessages exposing (..)
-import Json.Decode as Json
+import Json.Decode
 import Json.Decode.Pipeline exposing (required, decode)
 import Http
 import Json.Encode
 
 
-apiUpdateDecoder : Json.Decoder ApiUpdate
+apiUpdateDecoder : Json.Decode.Decoder ApiUpdate
 apiUpdateDecoder =
     decode ApiUpdate
-        |> required "sessions" (Json.list sessionDecoder)
-        |> required "tracks" (Json.list trackDecoder)
-        |> required "columns" (Json.list columnDecoder)
-        |> required "dates" (Json.list dateDecoder)
+        |> required "sessions" (Json.Decode.list sessionDecoder)
+        |> required "tracks" (Json.Decode.list trackDecoder)
+        |> required "columns" (Json.Decode.list columnDecoder)
+        |> required "dates" (Json.Decode.list dateDecoder)
 
 
 encodeApiUpdate : ApiUpdate -> Json.Encode.Value
@@ -44,20 +44,20 @@ sessionEncoder record =
         ]
 
 
-sessionDecoder : Json.Decoder Session
+sessionDecoder : Json.Decode.Decoder Session
 sessionDecoder =
     decode Session
-        |> required "id" Json.int
-        |> required "name" Json.string
-        |> required "description" Json.string
+        |> required "id" Json.Decode.int
+        |> required "name" Json.Decode.string
+        |> required "description" Json.Decode.string
         |> required "date" dateDecoder
         |> required "startTime" timeDecoder
         |> required "endTime" timeDecoder
-        |> required "columnId" Json.int
-        |> required "trackId" Json.int
-        |> required "location" Json.string
-        |> required "submissionIds" (Json.list Json.int)
-        |> required "chair" Json.string
+        |> required "columnId" Json.Decode.int
+        |> required "trackId" Json.Decode.int
+        |> required "location" Json.Decode.string
+        |> required "submissionIds" (Json.Decode.list Json.Decode.int)
+        |> required "chair" Json.Decode.string
 
 
 trackEncoder : Track -> Json.Encode.Value
@@ -68,11 +68,11 @@ trackEncoder record =
         ]
 
 
-trackDecoder : Json.Decoder Track
+trackDecoder : Json.Decode.Decoder Track
 trackDecoder =
     decode Track
-        |> required "id" Json.int
-        |> required "name" Json.string
+        |> required "id" Json.Decode.int
+        |> required "name" Json.Decode.string
 
 
 columnEncoder : Column -> Json.Encode.Value
@@ -83,19 +83,19 @@ columnEncoder record =
         ]
 
 
-columnDecoder : Json.Decoder Column
+columnDecoder : Json.Decode.Decoder Column
 columnDecoder =
     decode Column
-        |> required "id" Json.int
-        |> required "name" Json.string
+        |> required "id" Json.Decode.int
+        |> required "name" Json.Decode.string
 
 
-dateDecoder : Json.Decoder DateWithoutTime
+dateDecoder : Json.Decode.Decoder DateWithoutTime
 dateDecoder =
     decode DateWithoutTime
-        |> required "year" Json.int
-        |> required "month" Json.int
-        |> required "day" Json.int
+        |> required "year" Json.Decode.int
+        |> required "month" Json.Decode.int
+        |> required "day" Json.Decode.int
 
 
 dateEncoder : DateWithoutTime -> Json.Encode.Value
@@ -107,11 +107,11 @@ dateEncoder record =
         ]
 
 
-timeDecoder : Json.Decoder TimeOfDay
+timeDecoder : Json.Decode.Decoder TimeOfDay
 timeDecoder =
     decode TimeOfDay
-        |> required "hour" Json.int
-        |> required "minute" Json.int
+        |> required "hour" Json.Decode.int
+        |> required "minute" Json.Decode.int
 
 
 timeEncoder : TimeOfDay -> Json.Encode.Value
