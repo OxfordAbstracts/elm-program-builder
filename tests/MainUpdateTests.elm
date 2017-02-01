@@ -11,13 +11,28 @@ all =
     describe "Main update tests"
         [ test "updateNewColumn updates the model with the new column name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewColumn dummyModel (\ns -> { ns | name = "new column" })).newColumn.name "new column"
+                let
+                    updatedModel =
+                        MainUpdate.updateNewColumn dummyModel
+                            (\ns -> { ns | name = "new column" })
+                in
+                    Expect.equal updatedModel.newColumn.name "new column"
         , test "updateNewSession updates the model with the new session name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewSession dummyModel (\ns -> { ns | name = "new session" })).newSession.name "new session"
+                let
+                    updatedModel =
+                        MainUpdate.updateNewSession dummyModel
+                            (\ns -> { ns | name = "new session" })
+                in
+                    Expect.equal updatedModel.newSession.name "new session"
         , test "updateNewTrack updates the model with the new track name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewTrack dummyModel (\ns -> { ns | name = "new track" })).newTrack.name "new track"
+                let
+                    updatedModel =
+                        MainUpdate.updateNewTrack dummyModel
+                            (\ns -> { ns | name = "new track" })
+                in
+                    Expect.equal updatedModel.newTrack.name "new track"
         , test "updateNewSessionStartTime updates the model with the new session start time" <|
             \() ->
                 let
