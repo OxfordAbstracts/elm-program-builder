@@ -178,8 +178,8 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                              -- , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                              -- , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text (" Track: " ++ trackName) ]
                             ]
@@ -303,8 +303,8 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                              -- , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                              -- , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text (" Track: " ++ trackName) ]
                             ]
