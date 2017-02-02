@@ -250,39 +250,43 @@ update msg model =
                                 Nothing
                             else
                                 Just sessionId
-                        , showNewSessionUi = False
+                        , showNewSessionUi = True
+                        , showNewTrackUi = False
+                        , showNewColumnUi = False
                         , newSession = session
                       }
                     , Cmd.none
                     )
 
             EditSession ->
-                let
-                    idOfSessionBeingEdited =
-                        Maybe.withDefault -1 model.idOfSessionBeingEdited
+                case model.idOfSessionBeingEdited of
+                    Just id ->
+                        let
+                            listWithoutSessionBeingEdited =
+                                model.sessions
+                                    |> List.filter (\s -> s.id /= id)
 
-                    listWithoutSessionBeingEdited =
-                        model.sessions
-                            |> List.filter (\s -> s.id /= idOfSessionBeingEdited)
+                            newSession =
+                                model.newSession
 
-                    newSession =
-                        model.newSession
+                            editedSession =
+                                { newSession
+                                    | id = id
+                                }
 
-                    editedSession =
-                        { newSession
-                            | id = idOfSessionBeingEdited
-                        }
+                            apiUpdate =
+                                { sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                , tracks = model.tracks
+                                , columns = model.columns
+                                , dates = model.dates
+                                }
+                        in
+                            ( { model
+                                | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                , newSession = blankSession 1
+                              }
+                            , Api.postModelToDb apiUpdate
+                            )
 
-                    apiUpdate =
-                        { sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
-                        , tracks = model.tracks
-                        , columns = model.columns
-                        , dates = model.dates
-                        }
-                in
-                    ( { model
-                        | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
-                        , newSession = blankSession 1
-                      }
-                    , Api.postModelToDb apiUpdate
-                    )
+                    Nothing ->
+                        ( model, Cmd.none )

@@ -186,7 +186,12 @@ view model =
                         ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionWarning model) ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick createOrEditSession ]
+                        [ button
+                            [ class "btn btn-default"
+                            , type_ "button"
+                            , disabled (newSessionWarning model /= "")
+                            , onClick createOrEditSession
+                            ]
                             [ text "Create Session" ]
                         ]
                     ]
