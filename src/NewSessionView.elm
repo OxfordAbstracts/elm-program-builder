@@ -1,4 +1,4 @@
-module NewSessionView exposing (view, newSessionWarning)
+module NewSessionView exposing (view, newSessionWarning, NewSessionContext)
 
 import Date
 import DateUtils
@@ -22,8 +22,14 @@ newSessionWarning model =
         ""
 
 
-view : Model -> Html Msg
-view model =
+type alias NewSessionContext =
+    { buttonText : String
+    , onClickAction : Msg
+    }
+
+
+view : NewSessionContext -> Model -> Html Msg
+view context model =
     let
         toStringIgnore0 int =
             if int == 0 then
@@ -121,12 +127,6 @@ view model =
                                     ]
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )
-
-                createOrEditSession =
-                    if model.idOfSessionBeingEdited == Nothing then
-                        CreateNewSession
-                    else
-                        EditSession
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group", onInput UpdateNewSessionDate ]
@@ -190,9 +190,9 @@ view model =
                             [ class "btn btn-default"
                             , type_ "button"
                             , disabled (newSessionWarning model /= "")
-                            , onClick createOrEditSession
+                            , onClick context.onClickAction
                             ]
-                            [ text "Create Session" ]
+                            [ text context.buttonText ]
                         ]
                     ]
     in

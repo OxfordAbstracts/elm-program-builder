@@ -5,19 +5,28 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import MainMessages exposing (..)
 import MainModel exposing (..)
-import NewSessionView
+import NewSessionView exposing (..)
 import NewColumnView
 import NewTrackView
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ viewUiButtons model
-        , NewSessionView.view model
-        , NewColumnView.view model
-        , NewTrackView.view model
-        ]
+    let
+        context =
+            case model.idOfSessionBeingEdited of
+                Just id ->
+                    NewSessionContext "Edit session" EditSession
+
+                Nothing ->
+                    NewSessionContext "New session" CreateNewSession
+    in
+        div []
+            [ viewUiButtons model
+            , NewSessionView.view context model
+            , NewColumnView.view model
+            , NewTrackView.view model
+            ]
 
 
 viewUiButtons : Model -> Html Msg
