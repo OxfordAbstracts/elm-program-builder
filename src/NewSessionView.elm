@@ -121,6 +121,12 @@ view model =
                                     ]
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )
+
+                createOrEditSession =
+                    if model.idOfSessionBeingEdited == Nothing then
+                        CreateNewSession
+                    else
+                        EditSession
             in
                 div [ class "form-group" ]
                     [ div [ class "input-group", onInput UpdateNewSessionDate ]
@@ -180,7 +186,7 @@ view model =
                         ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionWarning model) ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick CreateNewSession ]
+                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick createOrEditSession ]
                             [ text "Create Session" ]
                         ]
                     ]

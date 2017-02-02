@@ -255,3 +255,34 @@ update msg model =
                       }
                     , Cmd.none
                     )
+
+            EditSession ->
+                let
+                    idOfSessionBeingEdited =
+                        Maybe.withDefault -1 model.idOfSessionBeingEdited
+
+                    listWithoutSessionBeingEdited =
+                        model.sessions
+                            |> List.filter (\s -> s.id /= idOfSessionBeingEdited)
+
+                    newSession =
+                        model.newSession
+
+                    editedSession =
+                        { newSession
+                            | id = idOfSessionBeingEdited
+                        }
+
+                    apiUpdate =
+                        { sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , dates = model.dates
+                        }
+                in
+                    ( { model
+                        | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                        , newSession = blankSession 1
+                      }
+                    , Api.postModelToDb apiUpdate
+                    )
