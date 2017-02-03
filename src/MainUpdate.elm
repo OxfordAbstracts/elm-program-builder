@@ -79,7 +79,10 @@ update msg model =
 
             ToggleNewSessionUi ->
                 ( { model
-                    | showNewSessionUi = not model.showNewSessionUi
+                    | showNewSessionUi =
+                        not model.showNewSessionUi
+                            || model.idOfSessionBeingEdited
+                            /= Nothing
                     , showNewColumnUi = False
                     , showNewTrackUi = False
                     , idOfSessionBeingEdited = Nothing

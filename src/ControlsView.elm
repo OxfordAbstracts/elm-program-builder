@@ -33,7 +33,7 @@ viewUiButtons : Model -> Html Msg
 viewUiButtons model =
     let
         toggleNewSessionClass =
-            if model.showNewSessionUi then
+            if model.showNewSessionUi && model.idOfSessionBeingEdited == Nothing then
                 "btn btn-default active"
             else
                 "btn btn-default"
