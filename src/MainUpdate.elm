@@ -13,7 +13,12 @@ updateNewColumn model update =
 
 updateNewSession : Model -> (Session -> Session) -> Model
 updateNewSession model update =
-    ({ model | newSession = (update model.newSession) })
+    case model.idOfSessionBeingEdited of
+        Just id ->
+            ({ model | editSession = (update model.editSession) })
+
+        Nothing ->
+            ({ model | newSession = (update model.newSession) })
 
 
 updateNewTrack : Model -> (Track -> Track) -> Model
@@ -253,7 +258,7 @@ update msg model =
                         , showNewSessionUi = True
                         , showNewTrackUi = False
                         , showNewColumnUi = False
-                        , newSession = session
+                        , editSession = session
                       }
                     , Cmd.none
                     )
@@ -266,11 +271,11 @@ update msg model =
                                 model.sessions
                                     |> List.filter (\s -> s.id /= id)
 
-                            newSession =
-                                model.newSession
+                            editSession =
+                                model.editSession
 
                             editedSession =
-                                { newSession
+                                { editSession
                                     | id = id
                                 }
 
@@ -283,7 +288,7 @@ update msg model =
                         in
                             ( { model
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
-                                , newSession = blankSession 1
+                                , editSession = blankSession 1
                               }
                             , Api.postModelToDb apiUpdate
                             )

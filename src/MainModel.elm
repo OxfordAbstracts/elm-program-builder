@@ -13,6 +13,7 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , newSession : Session
+    , editSession : Session
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
@@ -29,6 +30,7 @@ initialModel =
     , showNewTrackUi = True
     , showNewColumnUi = False
     , newSession = blankSession 1
+    , editSession = blankSession 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
