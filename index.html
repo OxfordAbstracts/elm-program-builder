@@ -8,7 +8,7 @@
   var node = document.querySelector("div");
   Elm.Main.embed(node,
     {
-     eventId: window.location.href.split('event')[1] ?  window.location.href.split('event')[1].split('/'): ""
+     eventId: window.location.href.split('/events/')[1] ?  window.location.href.split('/events/')[1].split('/')[0]: ""
    });
   </script>
 </body>
