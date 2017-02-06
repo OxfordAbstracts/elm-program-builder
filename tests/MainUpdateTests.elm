@@ -2,57 +2,38 @@ module MainUpdateTests exposing (..)
 
 import Test exposing (..)
 import Expect
-import MainModel
+import DummyTypes exposing (..)
 import MainUpdate
-
-
-dummyModel : MainModel.Model
-dummyModel =
-    MainModel.initialModel
-
-
-dummySessions : List MainModel.Session
-dummySessions =
-    [ MainModel.Session
-        1
-        "Conceptualising diabetes self-management as an occupation"
-        "This a description of the inital session"
-        (MainModel.DateWithoutTime 2017 1 1)
-        (MainModel.TimeOfDay 9 0)
-        (MainModel.TimeOfDay 9 1)
-        1
-        1
-        "The aquariam"
-        []
-        "Chairman Dave"
-    , MainModel.Session
-        2
-        "Computers n stuff sesh 2"
-        "This a description of the second inital session"
-        (MainModel.DateWithoutTime 2017 1 1)
-        (MainModel.TimeOfDay 10 30)
-        (MainModel.TimeOfDay 11 0)
-        1
-        1
-        "The observatory"
-        []
-        "Chairwoman Sue"
-    ]
 
 
 all : Test
 all =
     describe "Main update tests"
-        [ test "updateNewColumn updates the model" <|
+        [ test "updateNewColumn updates the model with the new column name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewColumn dummyModel (\ns -> { ns | name = "new column" })).newColumn.name "new column"
-        , test "updateNewSession updates the model" <|
+                let
+                    updatedModel =
+                        MainUpdate.updateNewColumn dummyModel
+                            (\ns -> { ns | name = "new column" })
+                in
+                    Expect.equal updatedModel.newColumn.name "new column"
+        , test "updateNewSession updates the model with the new session name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewSession dummyModel (\ns -> { ns | name = "new session" })).newSession.name "new session"
-        , test "updateNewTrack updates the model" <|
+                let
+                    updatedModel =
+                        MainUpdate.updateNewSession dummyModel
+                            (\ns -> { ns | name = "new session" })
+                in
+                    Expect.equal updatedModel.newSession.name "new session"
+        , test "updateNewTrack updates the model with the new track name" <|
             \() ->
-                Expect.equal (MainUpdate.updateNewTrack dummyModel (\ns -> { ns | name = "new track" })).newTrack.name "new track"
-        , test "updateNewSessionStartTime updates the model" <|
+                let
+                    updatedModel =
+                        MainUpdate.updateNewTrack dummyModel
+                            (\ns -> { ns | name = "new track" })
+                in
+                    Expect.equal updatedModel.newTrack.name "new track"
+        , test "updateNewSessionStartTime updates the model with the new session start time" <|
             \() ->
                 let
                     actualTimeRecord =
@@ -62,7 +43,7 @@ all =
                         ).newSession.startTime
                 in
                     Expect.equal actualTimeRecord { hour = 4, minute = 59 }
-        , test "updateNewSessionEndTime updates the model" <|
+        , test "updateNewSessionEndTime updates the model with the new session end time" <|
             \() ->
                 let
                     actualTimeRecord =
@@ -72,7 +53,20 @@ all =
                         ).newSession.endTime
                 in
                     Expect.equal actualTimeRecord { hour = 19, minute = 0 }
-        , test "toInt updates the model" <|
+        , test "toInt converts a stringified integer to an integer" <|
             \() ->
                 Expect.equal (MainUpdate.toInt dummyModel "5") 5
+        , test "updateModel updates model with the tracks in apiUpdate" <|
+            \() ->
+                Expect.equal (updatedModel.tracks) dummyTracks
+        , test "updateModel updates model with the columns in apiUpdate" <|
+            \() ->
+                Expect.equal (updatedModel.columns)
+                    dummyColumn
+        , test "updateModel updates model with the dates in apiUpdate" <|
+            \() ->
+                Expect.equal (updatedModel.dates) dummyDates
+        , test "updateModel updates model with the sessions in apiUpdate" <|
+            \() ->
+                Expect.equal (updatedModel.sessions) dummySessions
         ]

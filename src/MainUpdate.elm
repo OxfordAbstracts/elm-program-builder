@@ -1,5 +1,6 @@
 module MainUpdate exposing (..)
 
+import Api
 import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
@@ -35,6 +36,17 @@ toInt model string =
     string
         |> String.toInt
         |> Result.withDefault 0
+
+
+updateModelWithApiUpdate : Model -> ApiUpdate -> Model
+updateModelWithApiUpdate model apiUpdate =
+    ({ model
+        | sessions = apiUpdate.sessions
+        , tracks = apiUpdate.tracks
+        , columns = apiUpdate.columns
+        , dates = apiUpdate.dates
+     }
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,37 +106,74 @@ update msg model =
                 let
                     listWithNewId =
                         appendNewElementToList model.columns model.newColumn
+
+                    newColumnToPost =
+                        { sessions = model.sessions
+                        , tracks = model.tracks
+                        , columns = listWithNewId
+                        , dates = model.dates
+                        }
                 in
                     ( { model
                         | columns = listWithNewId
                         , newColumn = blankColumn 1
                       }
-                    , Cmd.none
+                    , Api.postModelToDb newColumnToPost
                     )
 
             CreateNewSession ->
                 let
                     listWithNewId =
                         appendNewElementToList model.sessions model.newSession
+
+                    newSessionToPost =
+                        { sessions = listWithNewId
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , dates = model.dates
+                        }
                 in
                     ( { model
                         | sessions = listWithNewId
                         , newSession = blankSession 1
                       }
-                    , Cmd.none
+                    , Api.postModelToDb newSessionToPost
                     )
 
             CreateNewTrack ->
                 let
                     listWithNewId =
                         appendNewElementToList model.tracks model.newTrack
+
+                    newTrackToPost =
+                        { sessions = model.sessions
+                        , tracks = model.tracks
+                        , columns = listWithNewId
+                        , dates = model.dates
+                        }
                 in
                     ( { model
                         | tracks = listWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Cmd.none
+                    , Api.postModelToDb newTrackToPost
                     )
+
+            UpdateModel (Ok apiUpdate) ->
+                let
+                    updatedModel =
+                        updateModelWithApiUpdate model apiUpdate
+                in
+                    ( updatedModel, Cmd.none )
+
+            UpdateModel (Err _) ->
+                ( model, Cmd.none )
+
+            SaveModel (Err _) ->
+                ( model, Cmd.none )
+
+            SaveModel (Ok apiUpdate) ->
+                ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
                 ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )

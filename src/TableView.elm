@@ -167,9 +167,6 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
-                                        ++ "Track:  "
-                                        ++ trackName
-                                        ++ "  "
                                         ++ "Chair:  "
                                         ++ sessionStarting.chair
                                         ++ "  "
@@ -183,6 +180,8 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                                 ]
                             , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
                             , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , br [] []
+                            , b [] [ text (" Track: " ++ trackName) ]
                             ]
                         ]
 
@@ -293,9 +292,6 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
-                                        ++ "Track:  "
-                                        ++ trackName
-                                        ++ "  "
                                         ++ "Chair:  "
                                         ++ sessionStarting.chair
                                         ++ "  "
@@ -309,6 +305,8 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                                 ]
                             , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
                             , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , br [] []
+                            , b [] [ text (" Track: " ++ trackName) ]
                             ]
                         ]
 

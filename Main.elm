@@ -1,21 +1,23 @@
 module Main exposing (..)
 
-import Date
 import Html exposing (Html, div, button, text, program)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class)
 import ControlsView exposing (view)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
-import Time
+import Api
+
+
+-- import Json.Decode as Json exposing (int, string, float, Decoder)
+-- import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.none )
+    ( initialModel, Api.getModelFromDb )
 
 
 
