@@ -17,7 +17,12 @@ type alias Model =
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
+    , eventId : String
     }
+
+
+type alias Flags =
+    { eventId : String }
 
 
 initialModel : Model
@@ -34,6 +39,7 @@ initialModel =
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
+    , eventId = ""
     }
 
 

@@ -4,5 +4,11 @@
 <body>
   <div></div>
   <script src="elm.js"></script>
-  <script>Elm.Main.embed(document.querySelector("div"));</script>
+  <script>
+  var node = document.querySelector("div");
+  Elm.Main.embed(node,
+    {
+     eventId: window.location.href.split('event')[1] ?  window.location.href.split('event')[1].split('/'): ""
+   });
+  </script>
 </body>
