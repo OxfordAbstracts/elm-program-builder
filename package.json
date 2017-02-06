@@ -1,0 +1,24 @@
+{
+  "name": "elm-program-builder",
+  "version": "1.0.0",
+  "description": "To watch and compile: ` elm-live Main.elm --output=elm.js --open `",
+  "main": "elm.js",
+  "scripts": {
+    "test": "elm-test",
+    "wt": "elm-test --watch",
+    "start": "elm-live Main.elm --output=elm.js --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OxfordAbstracts/elm-program-builder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OxfordAbstracts/elm-program-builder/issues"
+  },
+  "homepage": "https://github.com/OxfordAbstracts/elm-program-builder#readme",
+  "dependencies": {
+    "elm-test": "^0.18.2"
+  }
+}

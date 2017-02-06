@@ -1,4 +1,4 @@
-module NewSessionView exposing (view)
+module NewSessionView exposing (view, newSessionWarning)
 
 import Date
 import DateUtils
@@ -8,6 +8,18 @@ import Html.Events exposing (onClick, onInput, onBlur)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
+import GetWarning exposing (..)
+
+
+newSessionWarning model =
+    if model.showNewSessionUi && model.newSession.name == "" then
+        getWarning "Session name field is empty" model
+    else if model.showNewSessionUi && endNotMoreThanStart model.newSession then
+        getWarning "Session end time must be greater than start time" model
+    else if model.showNewSessionUi && sessionsAreOverLapping model.newSession model.sessions then
+        getWarning "Session times overlap another session in the same column" model
+    else
+        ""
 
 
 view : Model -> Html Msg
@@ -57,155 +69,125 @@ view model =
                 ]
 
         column2 =
+            div [ class "form-group" ]
+                [ div [ class "input-group" ]
+                    [ label [ for "column-input" ] [ text "Column" ]
+                    , br [] []
+                    , select [ id "column-input", onInput UpdateNewSessionColumn ]
+                        (List.map (\c -> option [ value (toString c.id), selected (model.newSession.columnId == c.id) ] [ text c.name ]) model.columns)
+                    ]
+                  -- if newSession.columnId == c.id the selected
+                , div [ class "input-group" ]
+                    [ label [ for "track-input" ] [ text "Track " ]
+                    , br [] []
+                    , select [ id "track-input", onInput UpdateNewSessionTrack ]
+                        (List.map (\t -> option [ value (toString t.id), selected (model.newSession.trackId == t.id) ] [ text t.name ]) model.tracks)
+                    ]
+                , div [ class "input-group" ]
+                    [ label [ for "chair-input" ]
+                        [ text "Chair" ]
+                    , input
+                        [ class "form-control"
+                        , id "chair-input"
+                        , type_ "text"
+                        , value model.newSession.chair
+                        , onInput UpdateNewSessionChair
+                        ]
+                        [ text model.newSession.chair ]
+                    ]
+                , div [ class "input-group" ]
+                    [ label [ for "location-input" ]
+                        [ text "Location" ]
+                    , input
+                        [ class "form-control"
+                        , id "location-input"
+                        , type_ "text"
+                        , value model.newSession.location
+                        , onInput UpdateNewSessionLocation
+                        ]
+                        [ text model.newSession.location ]
+                    ]
+                ]
+
+        column3 =
             let
                 dayOptions =
                     model.dates
-                        |> List.map (\d -> option [ value (DateUtils.dateWithoutTimeToValueString d) ] [ text (DateUtils.displayDateWithoutTime d) ])
+                        |> List.map
+                            (\d ->
+                                option
+                                    [ value (DateUtils.dateWithoutTimeToValueString d)
+                                    , selected (model.newSession.date == d)
+                                    ]
+                                    [ text (DateUtils.displayDateWithoutTime d) ]
+                            )
             in
                 div [ class "form-group" ]
-                    [ div [ class "input-group" ]
-                        [ label [ for "column-input" ] [ text "Column" ]
-                        , br [] []
-                        , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                            (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
-                        ]
-                    , div [ class "input-group" ]
-                        [ label [ for "track-input" ] [ text "Track " ]
-                        , br [] []
-                        , select [ id "track-input", onInput UpdateNewSessionTrack ]
-                            (List.map (\t -> option [ value (toString t.id) ] [ text t.name ]) model.tracks)
-                        ]
-                    , div [ class "input-group", onInput UpdateNewSessionDate ]
+                    [ div [ class "input-group", onInput UpdateNewSessionDate ]
                         [ label [ for "day-input" ] [ text "Date " ]
                         , br [] []
                         , select [ id "day-input" ]
                             dayOptions
                         ]
-                    , div [ hidden True ] [ text (toString model.newSession) ]
-                    ]
-
-        column3 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
-                    [ label []
-                        [ text "Start time" ]
-                    , div []
-                        [ input
-                            [ class "form-control"
-                            , type_ "number"
-                            , style [ ( "width", "6rem" ) ]
-                            , value (toStringIgnore0 model.newSession.startTime.hour)
-                            , onInput UpdateNewSessionStartHour
-                            , placeholder "00"
+                    , div
+                        [ class "input-group" ]
+                        [ label []
+                            [ text "Start time" ]
+                        , div []
+                            [ input
+                                [ class "form-control"
+                                , type_ "number"
+                                , style [ ( "width", "6rem" ) ]
+                                , value (toStringIgnore0 model.newSession.startTime.hour)
+                                , onInput UpdateNewSessionStartHour
+                                , placeholder "00"
+                                ]
+                                []
+                            , input
+                                [ class "form-control"
+                                , type_ "number"
+                                , style [ ( "width", "6rem" ) ]
+                                , value (toStringIgnore0 model.newSession.startTime.minute)
+                                , onInput UpdateNewSessionStartMinute
+                                , placeholder "00"
+                                ]
+                                []
                             ]
-                            []
-                        , input
-                            [ class "form-control"
-                            , type_ "number"
-                            , style [ ( "width", "6rem" ) ]
-                            , value (toStringIgnore0 model.newSession.startTime.minute)
-                            , onInput UpdateNewSessionStartMinute
-                            , placeholder "00"
+                        ]
+                    , div [ class "input-group" ]
+                        [ label []
+                            [ text "End time" ]
+                        , div []
+                            [ input
+                                [ class "form-control"
+                                , type_ "number"
+                                , style [ ( "width", "6rem" ) ]
+                                , value (toStringIgnore0 model.newSession.endTime.hour)
+                                , onInput UpdateNewSessionEndHour
+                                , placeholder "00"
+                                ]
+                                []
+                            , input
+                                [ class "form-control"
+                                , type_ "number"
+                                , style [ ( "width", "6rem" ) ]
+                                , value (toStringIgnore0 model.newSession.endTime.minute)
+                                , onInput UpdateNewSessionEndMinute
+                                , placeholder "00"
+                                ]
+                                []
                             ]
-                            []
+                        ]
+                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionWarning model) ]
+                    , div [ style [ ( "margin-top", "1rem" ) ] ]
+                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick CreateNewSession ]
+                            [ text "Create Session" ]
                         ]
                     ]
-                , div [ class "input-group" ]
-                    [ label []
-                        [ text "End time" ]
-                    , div []
-                        [ input
-                            [ class "form-control"
-                            , type_ "number"
-                            , style [ ( "width", "6rem" ) ]
-                            , value (toStringIgnore0 model.newSession.endTime.hour)
-                            , onInput UpdateNewSessionEndHour
-                            , placeholder "00"
-                            ]
-                            []
-                        , input
-                            [ class "form-control"
-                            , type_ "number"
-                            , style [ ( "width", "6rem" ) ]
-                            , value (toStringIgnore0 model.newSession.endTime.minute)
-                            , onInput UpdateNewSessionEndMinute
-                            , placeholder "00"
-                            ]
-                            []
-                        ]
-                    ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (getWarning model) ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (getWarning model /= ""), onClick CreateNewSession ]
-                        [ text "Create Session" ]
-                    ]
-                ]
     in
         div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "row" ]
             [ div [ class "col-md-4" ] [ column1 ]
             , div [ class "col-md-4" ] [ column2 ]
             , div [ class "col-md-4" ] [ column3 ]
+            , div [] [ text (toString model.newSession) ]
             ]
-
-
-getWarning model =
-    let
-        warningSuffix =
-            getWarningSuffix model
-    in
-        if warningSuffix /= "" then
-            "Cannot create session: " ++ warningSuffix
-        else
-            ""
-
-
-
--- to test
-
-
-getWarningSuffix model =
-    if model.newSession.name == "" then
-        "session name field is empty"
-    else if endNotMoreThanStart model.newSession then
-        "session end time must be greater than start time"
-    else if sessionsAreOverLapping model.newSession model.sessions then
-        "session times overlap another session in the same column"
-    else
-        ""
-
-
-endNotMoreThanStart newSession =
-    (DateUtils.timeOfDayToTime newSession.date newSession.startTime)
-        >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
-
-
-sessionsAreOverLapping newSession sessions =
-    sessions
-        |> List.filter (\s -> s.columnId == newSession.columnId)
-        |> List.any (overLappingTime newSession)
-
-
-
---to test
-
-
-overLappingTime newSession session =
-    let
-        newSessionStart =
-            DateUtils.timeOfDayToTime newSession.date newSession.startTime
-
-        newSessionEnd =
-            DateUtils.timeOfDayToTime newSession.date newSession.endTime
-
-        sessionStart =
-            DateUtils.timeOfDayToTime session.date session.startTime
-
-        sessionEnd =
-            DateUtils.timeOfDayToTime session.date session.endTime
-    in
-        newSessionStart < sessionEnd && newSessionEnd > sessionStart
-
-
-
--- over
--- if model.newSession.name = "" then

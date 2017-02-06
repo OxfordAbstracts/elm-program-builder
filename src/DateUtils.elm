@@ -1,10 +1,14 @@
 module DateUtils
     exposing
-        ( dateWithoutTimeToDate
+        ( add0Padding
+        , dateWithoutTimeToDate
+        , dateToDateWithoutTime
         , displayDateWithoutTime
-        , dateWithoutTimeToValueString
+        , displayTime
         , displayTimeOfDay
-        , parse
+        , dateWithoutTimeToValueString
+        , getDateMonthInt
+        , fromStringWithDefault
         , timeOfDayToTime
         , valueStringToDateWithoutTime
         )
@@ -14,8 +18,15 @@ import MainModel exposing (..)
 import Time
 
 
-parse : String -> Date.Date
-parse string =
+add0Padding hour =
+    if String.length hour == 1 then
+        "0" ++ hour
+    else
+        hour
+
+
+fromStringWithDefault : String -> Date.Date
+fromStringWithDefault string =
     string
         |> Date.fromString
         |> Result.withDefault (Date.fromTime 0)
@@ -28,7 +39,7 @@ dateWithoutTimeToDate dateWithoutTime =
         ++ (toString dateWithoutTime.month)
         ++ "-"
         ++ (toString dateWithoutTime.day)
-        |> parse
+        |> fromStringWithDefault
 
 
 dateToDateWithoutTime : Date.Date -> DateWithoutTime
@@ -36,18 +47,17 @@ dateToDateWithoutTime date =
     DateWithoutTime (Date.year date) (getDateMonthInt date) (Date.day date)
 
 
+dateToTimeOfDay : Date.Date -> TimeOfDay
+dateToTimeOfDay date =
+    TimeOfDay (Date.hour date) (Date.minute date)
+
+
 timeOfDayToTime : DateWithoutTime -> TimeOfDay -> Time.Time
 timeOfDayToTime dateWithoutTime timeOfDay =
     ((toString dateWithoutTime.year) ++ "-" ++ (toString dateWithoutTime.month) ++ "-" ++ (toString dateWithoutTime.day))
-        |> parse
+        |> fromStringWithDefault
         |> Date.toTime
         |> (\t -> t + ((toFloat timeOfDay.hour) * Time.hour + (toFloat timeOfDay.minute) * Time.minute))
-
-
-
--- timeOfDayTo =
--- stringToTimeOfDay string =
---     s
 
 
 dateWithoutTimeToValueString : DateWithoutTime -> String
@@ -62,7 +72,7 @@ dateWithoutTimeToValueString dateWithoutTime =
 valueStringToDateWithoutTime : String -> DateWithoutTime
 valueStringToDateWithoutTime dateString =
     dateString
-        |> parse
+        |> fromStringWithDefault
         |> dateToDateWithoutTime
 
 
@@ -75,20 +85,29 @@ displayDateWithoutTime dateWithoutTime =
 
 displayTimeOfDay : TimeOfDay -> String
 displayTimeOfDay timeOfDay =
-    let
-        add0Padding hour =
-            if String.length hour == 1 then
-                "0" ++ hour
-            else
-                hour
-    in
-        timeOfDay
-            |> (\d ->
-                    [ d |> .hour |> toString |> add0Padding
-                    , d |> .minute |> toString |> add0Padding
-                    ]
-               )
-            |> String.join ":"
+    timeOfDay
+        |> (\d ->
+                [ d |> .hour |> toString |> add0Padding
+                , d |> .minute |> toString |> add0Padding
+                ]
+           )
+        |> String.join ":"
+
+
+{-| Converts a timestamp into a humam readable hours and minutes format
+-}
+displayTime : Time.Time -> String
+displayTime =
+    Date.fromTime >> dateToTimeOfDay >> displayTimeOfDay
+
+
+
+-- displayTime = function(time) {
+--   var x = fromTime (time)
+--   var y = dateToTimeOfDay(x)
+--   var z = displayTimeOfDay(y)
+--   return z
+-- }
 
 
 getDateMonthInt : Date.Date -> Int

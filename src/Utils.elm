@@ -1,7 +1,6 @@
 module Utils
     exposing
         ( dropDuplicates
-        , displayTime
         , last
         )
 
@@ -23,27 +22,6 @@ dropDuplicates list =
                 ( Set.insert next set, next :: acc )
     in
         List.foldl step ( Set.empty, [] ) list |> second |> List.reverse
-
-
-{-| Converts a timestamp into a humam readable hours and minutes format
--}
-displayTime : Time.Time -> String
-displayTime timeDelimiter =
-    let
-        add0Padding hour =
-            if String.length hour == 1 then
-                "0" ++ hour
-            else
-                hour
-    in
-        timeDelimiter
-            |> Date.fromTime
-            |> (\d ->
-                    [ d |> Date.hour |> toString |> add0Padding
-                    , d |> Date.minute |> toString |> add0Padding
-                    ]
-               )
-            |> String.join ":"
 
 
 {-| Extract the last element of the list

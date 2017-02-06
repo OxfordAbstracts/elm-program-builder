@@ -1,31 +1,59 @@
-module MainUpdate exposing (update)
+module MainUpdate exposing (..)
 
 import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
 
 
+updateNewColumn : Model -> (Column -> Column) -> Model
+updateNewColumn model update =
+    ({ model | newColumn = (update model.newColumn) })
+
+
+updateNewSession : Model -> (Session -> Session) -> Model
+updateNewSession model update =
+    ({ model | newSession = (update model.newSession) })
+
+
+updateNewTrack : Model -> (Track -> Track) -> Model
+updateNewTrack model update =
+    ({ model | newTrack = (update model.newTrack) })
+
+
+updateNewSessionStartTime : Model -> (TimeOfDay -> TimeOfDay) -> Model
+updateNewSessionStartTime model update =
+    updateNewSession model (\ns -> { ns | startTime = update ns.startTime })
+
+
+updateNewSessionEndTime : Model -> (TimeOfDay -> TimeOfDay) -> Model
+updateNewSessionEndTime model update =
+    updateNewSession model (\ns -> { ns | endTime = update ns.endTime })
+
+
+toInt : a -> String -> Int
+toInt model string =
+    string
+        |> String.toInt
+        |> Result.withDefault 0
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        updateNewSession update =
-            ({ model | newSession = (update model.newSession) })
+        appendNewElementToList list newElement =
+            let
+                highestId =
+                    list
+                        |> List.map .id
+                        |> List.maximum
+                        |> Maybe.withDefault 0
 
-        updateNewSessionStartTime update =
-            updateNewSession (\ns -> { ns | startTime = update ns.startTime })
-
-        updateNewSessionEndTime update =
-            updateNewSession (\ns -> { ns | endTime = update ns.endTime })
-
-        toInt string =
-            string
-                |> String.toInt
-                |> Result.withDefault 0
+                newElementWithId =
+                    { newElement | id = highestId + 1 }
+            in
+                list ++ [ newElementWithId ]
     in
         case msg of
-            NewSession ->
-                ( model, Cmd.none )
-
             NewTrack ->
                 ( model, Cmd.none )
 
@@ -35,64 +63,107 @@ update msg model =
             ToggleNewSessionUi ->
                 ( { model
                     | showNewSessionUi = not model.showNewSessionUi
+                    , showNewColumnUi = False
+                    , showNewTrackUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
                 )
 
             ToggleNewTrackUi ->
-                ( model, Cmd.none )
+                ( { model
+                    | showNewTrackUi = not model.showNewTrackUi
+                    , showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , idOfSessionBeingEdited = Nothing
+                  }
+                , Cmd.none
+                )
 
             ToggleNewColumnUi ->
-                ( model, Cmd.none )
+                ( { model
+                    | showNewColumnUi = not model.showNewColumnUi
+                    , showNewSessionUi = False
+                    , showNewTrackUi = False
+                    , idOfSessionBeingEdited = Nothing
+                  }
+                , Cmd.none
+                )
+
+            CreateNewColumn ->
+                let
+                    listWithNewId =
+                        appendNewElementToList model.columns model.newColumn
+                in
+                    ( { model
+                        | columns = listWithNewId
+                        , newColumn = blankColumn 1
+                      }
+                    , Cmd.none
+                    )
 
             CreateNewSession ->
                 let
-                    newSessionId =
-                        model.sessions
-                            |> List.map .id
-                            |> List.maximum
-                            |> Maybe.withDefault 1
-
-                    newSession =
-                        model.newSession
-
-                    newSessionWithId =
-                        { newSession | id = newSessionId }
+                    listWithNewId =
+                        appendNewElementToList model.sessions model.newSession
                 in
                     ( { model
-                        | sessions = model.sessions ++ [ newSessionWithId ]
+                        | sessions = listWithNewId
                         , newSession = blankSession 1
                       }
                     , Cmd.none
                     )
 
+            CreateNewTrack ->
+                let
+                    listWithNewId =
+                        appendNewElementToList model.tracks model.newTrack
+                in
+                    ( { model
+                        | tracks = listWithNewId
+                        , newTrack = blankTrack 1
+                      }
+                    , Cmd.none
+                    )
+
+            UpdateNewColumnName newName ->
+                ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )
+
             UpdateNewSessionName newName ->
-                ( (updateNewSession (\ns -> { ns | name = newName })), Cmd.none )
+                ( (updateNewSession model (\ns -> { ns | name = newName })), Cmd.none )
+
+            UpdateNewTrackName newName ->
+                ( (updateNewTrack model (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewSessionDescription newDescription ->
-                ( (updateNewSession (\ns -> { ns | description = newDescription })), Cmd.none )
+                ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
 
             UpdateNewSessionColumn newColumnId ->
-                ( (updateNewSession (\ns -> { ns | columnId = (toInt newColumnId) })), Cmd.none )
+                ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
+
+            UpdateNewSessionChair newChair ->
+                ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
+
+            UpdateNewSessionLocation newLocation ->
+                ( (updateNewSession model (\ns -> { ns | location = newLocation })), Cmd.none )
 
             UpdateNewSessionTrack newTrackId ->
-                ( (updateNewSession (\ns -> { ns | trackId = (toInt newTrackId) })), Cmd.none )
+                ( (updateNewSession model (\ns -> { ns | trackId = (toInt model newTrackId) })), Cmd.none )
 
             UpdateNewSessionDate newDate ->
-                ( (updateNewSession (\ns -> { ns | date = (DateUtils.valueStringToDateWithoutTime newDate) })), Cmd.none )
+                ( (updateNewSession model (\ns -> { ns | date = (DateUtils.valueStringToDateWithoutTime newDate) })), Cmd.none )
 
             UpdateNewSessionStartHour new ->
-                ( updateNewSessionStartTime (\st -> { st | hour = clamp 0 23 (toInt new) }), Cmd.none )
+                ( updateNewSessionStartTime model (\st -> { st | hour = clamp 0 23 (toInt model new) }), Cmd.none )
 
             UpdateNewSessionStartMinute new ->
-                ( updateNewSessionStartTime (\st -> { st | minute = clamp 0 59 (toInt new) }), Cmd.none )
+                ( updateNewSessionStartTime model (\st -> { st | minute = clamp 0 59 (toInt model new) }), Cmd.none )
 
             UpdateNewSessionEndHour new ->
-                ( updateNewSessionEndTime (\et -> { et | hour = clamp 0 23 (toInt new) }), Cmd.none )
+                ( updateNewSessionEndTime model (\et -> { et | hour = clamp 0 23 (toInt model new) }), Cmd.none )
 
             UpdateNewSessionEndMinute new ->
-                ( updateNewSessionEndTime (\et -> { et | minute = clamp 0 59 (toInt new) }), Cmd.none )
+                ( updateNewSessionEndTime model (\et -> { et | minute = clamp 0 59 (toInt model new) }), Cmd.none )
 
             DeleteSession sessionId ->
                 ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
