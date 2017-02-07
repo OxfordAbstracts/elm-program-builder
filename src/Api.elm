@@ -126,7 +126,7 @@ getModelFromDb : String -> Cmd Msg
 getModelFromDb eventId =
     let
         url =
-            "/events/" ++ eventId ++ "/program-builder-model"
+            "/events/" ++ eventId ++ "/programme-builder-model"
 
         request =
             Http.get url apiUpdateDecoder
@@ -138,7 +138,7 @@ postModelToDb : ApiUpdate -> String -> Cmd Msg
 postModelToDb apiUpdateModel eventId =
     let
         requestUrl =
-            "/events/" ++ eventId ++ "/program-builder-model"
+            "/events/" ++ eventId ++ "/programme-builder-model"
 
         request =
             Http.post requestUrl (Http.jsonBody (encodeApiUpdate apiUpdateModel)) apiUpdateDecoder
