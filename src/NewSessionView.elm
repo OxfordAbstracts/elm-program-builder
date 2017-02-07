@@ -63,7 +63,7 @@ view context model =
                         , id "sesssion-name-input"
                         , type_ "text"
                         , value context.session.name
-                        , onInput (UpdateNewSessionName)
+                        , onInput UpdateNewSessionName
                         ]
                         [ text context.session.name ]
                     ]
