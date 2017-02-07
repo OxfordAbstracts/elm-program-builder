@@ -1,4 +1,4 @@
-module NewSessionView exposing (view, newSessionWarning)
+module NewSessionView exposing (view, newSessionViewWarning, NewSessionContext)
 
 import Date
 import DateUtils
@@ -11,19 +11,33 @@ import MainMessages exposing (..)
 import GetWarning exposing (..)
 
 
-newSessionWarning model =
-    if model.showNewSessionUi && model.newSession.name == "" then
+type alias NewSessionContext =
+    { buttonText : String
+    , onClickAction : Msg
+    , session : Session
+    }
+
+
+newSessionViewWarning : NewSessionContext -> Model -> String
+newSessionViewWarning context model =
+    if model.showNewSessionUi && context.session.name == "" then
         getWarning "Session name field is empty" model
-    else if model.showNewSessionUi && endNotMoreThanStart model.newSession then
+    else if model.showNewSessionUi && endNotMoreThanStart context.session then
         getWarning "Session end time must be greater than start time" model
-    else if model.showNewSessionUi && sessionsAreOverLapping model.newSession model.sessions then
+    else if
+        model.showNewSessionUi
+            && sessionsAreOverLapping
+                context.session
+                model.sessions
+                model.idOfSessionBeingEdited
+    then
         getWarning "Session times overlap another session in the same column" model
     else
         ""
 
 
-view : Model -> Html Msg
-view model =
+view : NewSessionContext -> Model -> Html Msg
+view context model =
     let
         toStringIgnore0 int =
             if int == 0 then
@@ -48,10 +62,10 @@ view model =
                         [ class "form-control"
                         , id "sesssion-name-input"
                         , type_ "text"
-                        , value model.newSession.name
+                        , value context.session.name
                         , onInput UpdateNewSessionName
                         ]
-                        [ text model.newSession.name ]
+                        [ text context.session.name ]
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "description-input" ]
@@ -61,10 +75,10 @@ view model =
                         , id "description-input"
                         , attribute "rows" "5"
                         , attribute "cols" "32"
-                        , value model.newSession.description
+                        , value context.session.description
                         , onInput UpdateNewSessionDescription
                         ]
-                        [ text model.newSession.description ]
+                        [ text context.session.description ]
                     ]
                 ]
 
@@ -74,14 +88,14 @@ view model =
                     [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                        (List.map (\c -> option [ value (toString c.id), selected (model.newSession.columnId == c.id) ] [ text c.name ]) model.columns)
+                        (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
                     ]
                   -- if newSession.columnId == c.id the selected
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []
                     , select [ id "track-input", onInput UpdateNewSessionTrack ]
-                        (List.map (\t -> option [ value (toString t.id), selected (model.newSession.trackId == t.id) ] [ text t.name ]) model.tracks)
+                        (List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "chair-input" ]
@@ -90,7 +104,7 @@ view model =
                         [ class "form-control"
                         , id "chair-input"
                         , type_ "text"
-                        , value model.newSession.chair
+                        , value context.session.chair
                         , onInput UpdateNewSessionChair
                         ]
                         [ text model.newSession.chair ]
@@ -102,10 +116,10 @@ view model =
                         [ class "form-control"
                         , id "location-input"
                         , type_ "text"
-                        , value model.newSession.location
+                        , value context.session.location
                         , onInput UpdateNewSessionLocation
                         ]
-                        [ text model.newSession.location ]
+                        [ text context.session.location ]
                     ]
                 ]
 
@@ -117,7 +131,7 @@ view model =
                             (\d ->
                                 option
                                     [ value (DateUtils.dateWithoutTimeToValueString d)
-                                    , selected (model.newSession.date == d)
+                                    , selected (context.session.date == d)
                                     ]
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )
@@ -138,7 +152,7 @@ view model =
                                 [ class "form-control"
                                 , type_ "number"
                                 , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 model.newSession.startTime.hour)
+                                , value (toStringIgnore0 context.session.startTime.hour)
                                 , onInput UpdateNewSessionStartHour
                                 , placeholder "00"
                                 ]
@@ -147,7 +161,7 @@ view model =
                                 [ class "form-control"
                                 , type_ "number"
                                 , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 model.newSession.startTime.minute)
+                                , value (toStringIgnore0 context.session.startTime.minute)
                                 , onInput UpdateNewSessionStartMinute
                                 , placeholder "00"
                                 ]
@@ -162,7 +176,7 @@ view model =
                                 [ class "form-control"
                                 , type_ "number"
                                 , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 model.newSession.endTime.hour)
+                                , value (toStringIgnore0 context.session.endTime.hour)
                                 , onInput UpdateNewSessionEndHour
                                 , placeholder "00"
                                 ]
@@ -171,17 +185,22 @@ view model =
                                 [ class "form-control"
                                 , type_ "number"
                                 , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 model.newSession.endTime.minute)
+                                , value (toStringIgnore0 context.session.endTime.minute)
                                 , onInput UpdateNewSessionEndMinute
                                 , placeholder "00"
                                 ]
                                 []
                             ]
                         ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionWarning model) ]
+                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
                     , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button [ class "btn btn-default", type_ "button", disabled (newSessionWarning model /= ""), onClick CreateNewSession ]
-                            [ text "Create Session" ]
+                        [ button
+                            [ class "btn btn-default"
+                            , type_ "button"
+                            , disabled (newSessionViewWarning context model /= "")
+                            , onClick context.onClickAction
+                            ]
+                            [ text context.buttonText ]
                         ]
                     ]
     in

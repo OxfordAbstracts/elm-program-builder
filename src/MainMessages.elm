@@ -33,3 +33,4 @@ type Msg
     | UpdateNewSessionEndMinute String
     | DeleteSession Int
     | SelectSessionToEdit Int
+    | EditSession

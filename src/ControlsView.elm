@@ -5,26 +5,35 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import MainMessages exposing (..)
 import MainModel exposing (..)
-import NewSessionView
+import NewSessionView exposing (NewSessionContext, view)
 import NewColumnView
 import NewTrackView
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ viewUiButtons model
-        , NewSessionView.view model
-        , NewColumnView.view model
-        , NewTrackView.view model
-        ]
+    let
+        context =
+            case model.idOfSessionBeingEdited of
+                Just id ->
+                    NewSessionContext "Edit session" EditSession model.editSession
+
+                Nothing ->
+                    NewSessionContext "New session" CreateNewSession model.newSession
+    in
+        div []
+            [ viewUiButtons model
+            , NewSessionView.view context model
+            , NewColumnView.view model
+            , NewTrackView.view model
+            ]
 
 
 viewUiButtons : Model -> Html Msg
 viewUiButtons model =
     let
         toggleNewSessionClass =
-            if model.showNewSessionUi then
+            if model.showNewSessionUi && model.idOfSessionBeingEdited == Nothing then
                 "btn btn-default active"
             else
                 "btn btn-default"

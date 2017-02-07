@@ -1,5 +1,6 @@
 module GetWarning exposing (..)
 
+import MainModel exposing (..)
 import DateUtils
 
 
@@ -15,9 +16,11 @@ endNotMoreThanStart newSession =
         >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
 
 
-sessionsAreOverLapping newSession sessions =
+sessionsAreOverLapping : Session -> List Session -> Maybe Int -> Bool
+sessionsAreOverLapping newSession sessions idOfSessionBeingEdited =
     sessions
         |> List.filter (\s -> s.columnId == newSession.columnId)
+        |> List.filter (\s -> s.id /= (Maybe.withDefault -1 idOfSessionBeingEdited))
         |> List.any (overLappingTime newSession)
 
 

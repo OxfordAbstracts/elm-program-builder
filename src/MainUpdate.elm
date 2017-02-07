@@ -13,7 +13,12 @@ updateNewColumn model update =
 
 updateNewSession : Model -> (Session -> Session) -> Model
 updateNewSession model update =
-    ({ model | newSession = (update model.newSession) })
+    case model.idOfSessionBeingEdited of
+        Just id ->
+            ({ model | editSession = (update model.editSession) })
+
+        Nothing ->
+            ({ model | newSession = (update model.newSession) })
 
 
 updateNewTrack : Model -> (Track -> Track) -> Model
@@ -74,7 +79,10 @@ update msg model =
 
             ToggleNewSessionUi ->
                 ( { model
-                    | showNewSessionUi = not model.showNewSessionUi
+                    | showNewSessionUi =
+                        not model.showNewSessionUi
+                            || model.idOfSessionBeingEdited
+                            /= Nothing
                     , showNewColumnUi = False
                     , showNewTrackUi = False
                     , idOfSessionBeingEdited = Nothing
@@ -215,7 +223,21 @@ update msg model =
                 ( updateNewSessionEndTime model (\et -> { et | minute = clamp 0 59 (toInt model new) }), Cmd.none )
 
             DeleteSession sessionId ->
-                ( { model | sessions = List.filter (\s -> s.id /= sessionId) model.sessions }, Cmd.none )
+                let
+                    newSessionsList =
+                        model.sessions
+                            |> List.filter (\s -> s.id /= sessionId)
+
+                    apiUpdate =
+                        { sessions = newSessionsList
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , dates = model.dates
+                        }
+                in
+                    ( { model | sessions = newSessionsList }
+                    , Api.postModelToDb apiUpdate
+                    )
 
             SelectSessionToEdit sessionId ->
                 let
@@ -236,8 +258,43 @@ update msg model =
                                 Nothing
                             else
                                 Just sessionId
-                        , showNewSessionUi = False
-                        , newSession = session
+                        , showNewSessionUi = True
+                        , showNewTrackUi = False
+                        , showNewColumnUi = False
+                        , editSession = session
                       }
                     , Cmd.none
                     )
+
+            EditSession ->
+                case model.idOfSessionBeingEdited of
+                    Just id ->
+                        let
+                            listWithoutSessionBeingEdited =
+                                model.sessions
+                                    |> List.filter (\s -> s.id /= id)
+
+                            editSession =
+                                model.editSession
+
+                            editedSession =
+                                { editSession
+                                    | id = id
+                                }
+
+                            apiUpdate =
+                                { sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                , tracks = model.tracks
+                                , columns = model.columns
+                                , dates = model.dates
+                                }
+                        in
+                            ( { model
+                                | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                , editSession = blankSession 1
+                              }
+                            , Api.postModelToDb apiUpdate
+                            )
+
+                    Nothing ->
+                        ( model, Cmd.none )
