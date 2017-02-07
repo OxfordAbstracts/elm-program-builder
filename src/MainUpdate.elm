@@ -126,7 +126,7 @@ update msg model =
                         | columns = listWithNewId
                         , newColumn = blankColumn 1
                       }
-                    , Api.postModelToDb newColumnToPost
+                    , Api.postModelToDb newColumnToPost model.eventId
                     )
 
             CreateNewSession ->
@@ -145,7 +145,7 @@ update msg model =
                         | sessions = listWithNewId
                         , newSession = blankSession 1
                       }
-                    , Api.postModelToDb newSessionToPost
+                    , Api.postModelToDb newSessionToPost model.eventId
                     )
 
             CreateNewTrack ->
@@ -164,7 +164,7 @@ update msg model =
                         | tracks = listWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Api.postModelToDb newTrackToPost
+                    , Api.postModelToDb newTrackToPost model.eventId
                     )
 
             UpdateModel (Ok apiUpdate) ->
@@ -236,7 +236,7 @@ update msg model =
                         }
                 in
                     ( { model | sessions = newSessionsList }
-                    , Api.postModelToDb apiUpdate
+                    , Api.postModelToDb apiUpdate model.eventId
                     )
 
             SelectSessionToEdit sessionId ->
@@ -293,7 +293,7 @@ update msg model =
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
                                 , editSession = blankSession 1
                               }
-                            , Api.postModelToDb apiUpdate
+                            , Api.postModelToDb apiUpdate model.eventId
                             )
 
                     Nothing ->

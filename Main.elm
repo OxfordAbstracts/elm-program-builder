@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, button, text, program)
+import Html exposing (Html, div, button, text, programWithFlags)
 import Html.Attributes exposing (class)
 import ControlsView exposing (view)
 import MainModel exposing (..)
@@ -15,9 +15,9 @@ import Api
 -- import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel, Api.getModelFromDb )
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { initialModel | eventId = flags.eventId }, Api.getModelFromDb flags.eventId )
 
 
 
@@ -48,9 +48,9 @@ subscriptions model =
 -- MAIN
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    program
+    programWithFlags
         { init = init
         , view = view
         , update = update
