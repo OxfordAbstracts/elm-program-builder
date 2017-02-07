@@ -134,11 +134,27 @@ update msg model =
                     listWithNewId =
                         appendNewElementToList model.sessions model.newSession
 
+                    submissionIdsList =
+                        String.split "," model.submissionIdsInput
+
+                    convertToInt val =
+                        case String.toInt val of
+                            Ok id ->
+                                Just id
+
+                            Err str ->
+                                Nothing
+
+                    submissionIdsToIntList =
+                        submissionIdsList
+                            |> List.filterMap convertToInt
+
                     newSessionToPost =
                         { sessions = listWithNewId
                         , tracks = model.tracks
                         , columns = model.columns
                         , dates = model.dates
+                        , submissionIds = submissionIdsToIntList
                         }
                 in
                     ( { model
@@ -195,6 +211,27 @@ update msg model =
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
 
+            UpdateNewSessionSubmissionIds newSubmissionIdsString ->
+                ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
+
+            -- ( {model | submissionIdsInput = newSubmissionIdsString  })), Cmd.none )
+            -- let
+            --     submissionIdsList =
+            --         String.split "," newSubmissionIds
+            --
+            --     convertToInt val =
+            --         case String.toInt val of
+            --             Ok id ->
+            --                 Just id
+            --
+            --             Err str ->
+            --                 Nothing
+            --
+            --     submissionIdsToIntList =
+            --         submissionIdsList
+            --             |> List.filterMap convertToInt
+            -- in
+            -- ({ model | editSession = (update model.editSession) })
             UpdateNewSessionColumn newColumnId ->
                 ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
 

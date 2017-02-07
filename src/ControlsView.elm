@@ -16,10 +16,16 @@ view model =
         context =
             case model.idOfSessionBeingEdited of
                 Just id ->
-                    NewSessionContext "Edit session" EditSession model.editSession
+                    NewSessionContext "Edit session"
+                        EditSession
+                        model.editSession
+                        (model.editSession.submissionIds
+                            |> List.map toString
+                            |> String.join ","
+                        )
 
                 Nothing ->
-                    NewSessionContext "New session" CreateNewSession model.newSession
+                    NewSessionContext "New session" CreateNewSession model.newSession ""
     in
         div []
             [ viewUiButtons model

@@ -1,6 +1,5 @@
 module NewSessionView exposing (view, newSessionViewWarning, NewSessionContext)
 
-import Date
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -15,6 +14,7 @@ type alias NewSessionContext =
     { buttonText : String
     , onClickAction : Msg
     , session : Session
+    , submissionIdsInput : String
     }
 
 
@@ -191,16 +191,29 @@ view context model =
                                 ]
                                 []
                             ]
-                        ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button
-                            [ class "btn btn-default"
-                            , type_ "button"
-                            , disabled (newSessionViewWarning context model /= "")
-                            , onClick context.onClickAction
+                        , div [ class "input-group" ]
+                            [ label [ for "submissions-input" ]
+                                [ text "Submissions" ]
+                            , textarea
+                                [ class "form-control"
+                                , id "submissions-input"
+                                , attribute "rows" "5"
+                                , attribute "cols" "32"
+                                , value model.submissionIdsInput
+                                , onInput UpdateNewSessionSubmissionIds
+                                ]
+                                [ text model.submissionIdsInput ]
                             ]
-                            [ text context.buttonText ]
+                        , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
+                        , div [ style [ ( "margin-top", "1rem" ) ] ]
+                            [ button
+                                [ class "btn btn-default"
+                                , type_ "button"
+                                , disabled (newSessionViewWarning context model /= "")
+                                , onClick context.onClickAction
+                                ]
+                                [ text context.buttonText ]
+                            ]
                         ]
                     ]
     in
