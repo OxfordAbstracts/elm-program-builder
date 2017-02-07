@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import MainMessages exposing (..)
 import MainModel exposing (..)
-import NewSessionView exposing (..)
+import NewSessionView exposing (NewSessionContext, view)
 import NewColumnView
 import NewTrackView
 
