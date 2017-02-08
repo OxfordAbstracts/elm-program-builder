@@ -73,6 +73,7 @@ trackDecoder =
     decode Track
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
+        |> required "description" Json.Decode.string
 
 
 columnEncoder : Column -> Json.Encode.Value

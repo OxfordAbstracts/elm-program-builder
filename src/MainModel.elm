@@ -29,7 +29,7 @@ type alias Flags =
 initialModel : Model
 initialModel =
     { sessions = initialSessions
-    , tracks = [ Track 1 "track 1", Track 2 "track 2" ]
+    , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
@@ -116,6 +116,7 @@ blankTrack : Int -> Track
 blankTrack id =
     Track id
         ""
+        ""
 
 
 defaultDateWithoutTime : DateWithoutTime
@@ -191,6 +192,7 @@ initialSessions =
 type alias Track =
     { id : TrackId
     , name : String
+    , description : String
     }
 
 
