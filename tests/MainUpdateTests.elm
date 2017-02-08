@@ -86,13 +86,14 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
-                        , submissionIds = []
+                        , submissionIds = [ 1, 4, 5 ]
                         }
 
                     modelWithEditingId =
                         { dummyModel
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
+                            , submissionIdsInput = "1,4,5"
                         }
 
                     modelAfterEdit =
@@ -109,4 +110,26 @@ all =
                             [ .idOfSessionBeingEdited >> Expect.equal (Just 1)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
                             ]
+        , test """addSubmissionIdsInputToSession adds the string submissionIdsInput to the
+          session's submissionIds as a List Int and any invalid submissionIds removed""" <|
+            \() ->
+                let
+                    session =
+                        { id = 1
+                        , name = "new test name"
+                        , description = "new test description"
+                        , date = { year = 2017, month = 1, day = 1 }
+                        , startTime = { hour = 12, minute = 0 }
+                        , endTime = { hour = 9, minute = 0 }
+                        , columnId = 1
+                        , chair = "test chair"
+                        , location = "test location"
+                        , trackId = 1
+                        , submissionIds = []
+                        }
+
+                    updatedSession =
+                        MainUpdate.addSubmissionIdsInputToSession "1,4,test,5,,," session
+                in
+                    Expect.equal updatedSession.submissionIds [ 1, 4, 5 ]
         ]

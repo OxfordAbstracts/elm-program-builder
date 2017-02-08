@@ -14,7 +14,6 @@ type alias NewSessionContext =
     { buttonText : String
     , onClickAction : Msg
     , session : Session
-    , submissionIdsInput : String
     }
 
 
@@ -80,6 +79,21 @@ view context model =
                         ]
                         [ text context.session.description ]
                     ]
+                , div [ class "input-group" ]
+                    [ label [ for "submissions-input" ]
+                        [ text "Submissions" ]
+                    , textarea
+                        [ class "form-control"
+                        , id "submissions-input"
+                        , attribute "rows" "2"
+                        , attribute "cols" "32"
+                        , value model.submissionIdsInput
+                        , onInput UpdateNewSessionSubmissionIds
+                        ]
+                        [ text model.submissionIdsInput ]
+                    ]
+                , span []
+                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned" ]
                 ]
 
         column2 =
@@ -190,19 +204,6 @@ view context model =
                                 , placeholder "00"
                                 ]
                                 []
-                            ]
-                        , div [ class "input-group" ]
-                            [ label [ for "submissions-input" ]
-                                [ text "Submissions" ]
-                            , textarea
-                                [ class "form-control"
-                                , id "submissions-input"
-                                , attribute "rows" "5"
-                                , attribute "cols" "32"
-                                , value model.submissionIdsInput
-                                , onInput UpdateNewSessionSubmissionIds
-                                ]
-                                [ text model.submissionIdsInput ]
                             ]
                         , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
                         , div [ style [ ( "margin-top", "1rem" ) ] ]
