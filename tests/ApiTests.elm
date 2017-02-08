@@ -2,22 +2,52 @@ module ApiTests exposing (..)
 
 import Test exposing (..)
 import Expect
-import DummyTypes exposing (..)
 import Api
 import Json.Decode
-import Json.Encode
+import MainModel exposing (ApiUpdate, Session, Track, Column, DateWithoutTime)
+import Fuzz exposing (int, intRange, string)
 
 
-dummyApiUpdateJson =
+all : Test
+all =
+    describe "Api functions"
+        [ fuzz4 string
+            string
+            int
+            (intRange 1 12)
+            "apiUpdateDecoder should decode JSON from server into an ApiUpdate"
+          <|
+            \sessionName sessionDescription sessionYear sessionMonth ->
+                let
+                    apiJson =
+                        createApiJson sessionName sessionDescription sessionYear sessionMonth
+
+                    decodedApiJson =
+                        case Json.Decode.decodeString Api.apiUpdateDecoder apiJson of
+                            Err str ->
+                                Debug.crash str
+
+                            Ok decodedUpdate ->
+                                decodedUpdate
+
+                    apiUpdate =
+                        createApiUpdate sessionName sessionDescription sessionYear sessionMonth
+                in
+                    Expect.equal (apiUpdate) (decodedApiJson)
+        ]
+
+
+createApiJson : String -> String -> Int -> Int -> String
+createApiJson sessionName sessionDescription sessionYear sessionMonth =
     """{
   "sessions": [
     {
       "id": 1,
-      "name": "Conceptualising diabetes self-management as an occupation",
-      "description": "This a description of the inital session",
+      "name": """ ++ (toString sessionName) ++ """,
+      "description": """ ++ (toString sessionDescription) ++ """,
       "date": {
-        "year": 2017,
-        "month": 1,
+        "year":  """ ++ (toString sessionYear) ++ """,
+        "month": """ ++ (toString sessionMonth) ++ """,
         "day": 1
       },
       "startTime": {
@@ -26,85 +56,65 @@ dummyApiUpdateJson =
       },
       "endTime": {
         "hour": 9,
-        "minute": 1
-      },
-      "columnId": 1,
-      "trackId": 1,
-      "location": "The aquariam",
-      "submissionIds": [],
-      "chair": "Chairman Dave"
-    },
-    {
-      "id": 2,
-      "name": "Computers n stuff sesh 2",
-      "description": "This a description of the second inital session",
-      "date": {
-        "year": 2017,
-        "month": 1,
-        "day": 1
-      },
-      "startTime": {
-        "hour": 10,
         "minute": 30
       },
-      "endTime": {
-        "hour": 11,
-        "minute": 0
-      },
       "columnId": 1,
       "trackId": 1,
-      "location": "The observatory",
+      "location": "This is the location",
       "submissionIds": [],
-      "chair": "Chairwoman Sue"
+      "chair": "This is the chair"
     }
   ],
   "tracks": [
     {
       "id": 1,
-      "name": "Test track"
+      "name": "track 1",
+      "description": "track 1 description"
     }
   ],
   "columns": [
     {
       "id": 1,
-      "name": "Test column"
+      "name": "column 1"
     }
   ],
   "dates": [
     {
-      "year": 2017,
-      "month": 1,
+      "year": """ ++ (toString sessionYear) ++ """,
+      "month":  """ ++ (toString sessionMonth) ++ """,
       "day": 1
     }
   ]
 }"""
 
 
-decodedApiUpdate =
-    case Json.Decode.decodeString Api.apiUpdateDecoder dummyApiUpdateJson of
-        Err str ->
-            Debug.crash str
+createApiUpdate : String -> String -> Int -> Int -> ApiUpdate
+createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
+    ApiUpdate
+        [ createSession sessionName sessionDescription sessionYear sessionMonth ]
+        [ Track 1 "track 1" "track 1 description" ]
+        [ Column 1 "column 1" ]
+        [ DateWithoutTime sessionYear sessionMonth 1 ]
 
-        Ok decodedUpdate ->
-            decodedUpdate
 
-
-all : Test
-all =
-    describe "Api functions"
-        [ test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for sessions" <|
-            \() ->
-                Expect.equal (decodedApiUpdate.sessions) (dummySessions)
-        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for tracks" <|
-            \() ->
-                Expect.equal (decodedApiUpdate.tracks) (dummyTracks)
-        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for columns" <|
-            \() ->
-                Expect.equal (decodedApiUpdate.columns) (dummyColumn)
-        , test "apiUpdateDecoder decodes apiUpdate from a JSON to elm format for dates" <|
-            \() ->
-                Expect.equal (decodedApiUpdate.dates) (dummyDates)
-        , test "encodeApiUpdate encodes apiUpdate from elm format to a JSON" <|
-            \() ->
-                Expect.equal (Json.Encode.encode 2 (Api.encodeApiUpdate dummyApiUpdate)) (dummyApiUpdateJson)
-        ]
+createSession : String -> String -> Int -> Int -> Session
+createSession sessionName sessionDescription sessionYear sessionMonth =
+    Session
+        1
+        sessionName
+        sessionDescription
+        { year = sessionYear
+        , month = sessionMonth
+        , day = 1
+        }
+        { hour = 9
+        , minute = 0
+        }
+        { hour = 9
+        , minute = 30
+        }
+        1
+        1
+        "This is the location"
+        []
+        "This is the chair"

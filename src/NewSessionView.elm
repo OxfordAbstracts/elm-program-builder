@@ -1,6 +1,5 @@
 module NewSessionView exposing (view, newSessionViewWarning, NewSessionContext)
 
-import Date
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -63,7 +62,7 @@ view context model =
                         , id "sesssion-name-input"
                         , type_ "text"
                         , value context.session.name
-                        , onInput (UpdateNewSessionName)
+                        , onInput UpdateNewSessionName
                         ]
                         [ text context.session.name ]
                     ]
@@ -73,13 +72,28 @@ view context model =
                     , textarea
                         [ class "form-control"
                         , id "description-input"
-                        , attribute "rows" "5"
-                        , attribute "cols" "32"
+                        , rows 5
+                        , cols 32
                         , value context.session.description
                         , onInput UpdateNewSessionDescription
                         ]
                         [ text context.session.description ]
                     ]
+                , div [ class "input-group" ]
+                    [ label [ for "submissions-input" ]
+                        [ text "Submissions" ]
+                    , textarea
+                        [ class "form-control"
+                        , id "submissions-input"
+                        , rows 2
+                        , cols 32
+                        , value model.submissionIdsInput
+                        , onInput UpdateNewSessionSubmissionIds
+                        ]
+                        [ text model.submissionIdsInput ]
+                    ]
+                , span []
+                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned" ]
                 ]
 
         column2 =
@@ -191,16 +205,16 @@ view context model =
                                 ]
                                 []
                             ]
-                        ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
-                    , div [ style [ ( "margin-top", "1rem" ) ] ]
-                        [ button
-                            [ class "btn btn-default"
-                            , type_ "button"
-                            , disabled (newSessionViewWarning context model /= "")
-                            , onClick context.onClickAction
+                        , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
+                        , div [ style [ ( "margin-top", "1rem" ) ] ]
+                            [ button
+                                [ class "btn btn-default"
+                                , type_ "button"
+                                , disabled (newSessionViewWarning context model /= "")
+                                , onClick context.onClickAction
+                                ]
+                                [ text context.buttonText ]
                             ]
-                            [ text context.buttonText ]
                         ]
                     ]
     in

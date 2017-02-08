@@ -33,9 +33,13 @@ all =
                 let
                     updatedModel =
                         MainUpdate.updateNewTrack dummyModel
-                            (\ns -> { ns | name = "new track" })
+                            (\ns -> { ns | name = "new track", description = "new track description" })
                 in
-                    Expect.equal updatedModel.newTrack.name "new track"
+                    updatedModel.newTrack
+                        |> Expect.all
+                            [ .name >> Expect.equal "new track"
+                            , .description >> Expect.equal "new track description"
+                            ]
         , test "updateNewSessionStartTime updates the model with the new session start time" <|
             \() ->
                 let
@@ -86,13 +90,14 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
-                        , submissionIds = []
+                        , submissionIds = [ 1, 4, 5 ]
                         }
 
                     modelWithEditingId =
                         { dummyModel
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
+                            , submissionIdsInput = "1,4,5"
                         }
 
                     modelAfterEdit =
@@ -108,5 +113,41 @@ all =
                         |> Expect.all
                             [ .idOfSessionBeingEdited >> Expect.equal (Just 1)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
+                            ]
+        , test "CreateNewSession should add the new session to sessions" <|
+            \() ->
+                let
+                    newSession =
+                        { id = 6
+                        , name = "new test name"
+                        , description = "new test description"
+                        , date = { year = 2017, month = 1, day = 1 }
+                        , startTime = { hour = 12, minute = 0 }
+                        , endTime = { hour = 9, minute = 0 }
+                        , columnId = 1
+                        , chair = "test chair"
+                        , location = "test location"
+                        , trackId = 1
+                        , submissionIds = [ 1, 4, 5 ]
+                        }
+
+                    modelWithNewSession =
+                        { dummyModel
+                            | newSession = newSession
+                            , submissionIdsInput = "1,4,5"
+                        }
+
+                    modelAfterUpdate =
+                        modelWithNewSession
+                            |> MainUpdate.update MainMessages.CreateNewSession
+                            |> Tuple.first
+
+                    addedSession =
+                        modelAfterUpdate
+                            |> .sessions
+                in
+                    modelAfterUpdate
+                        |> Expect.all
+                            [ .sessions >> Utils.last >> Expect.equal (Just newSession)
                             ]
         ]

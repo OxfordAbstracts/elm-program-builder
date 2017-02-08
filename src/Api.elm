@@ -73,6 +73,7 @@ trackDecoder =
     decode Track
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
+        |> required "description" Json.Decode.string
 
 
 columnEncoder : Column -> Json.Encode.Value
@@ -122,11 +123,11 @@ timeEncoder record =
         ]
 
 
-getModelFromDb : Cmd Msg
-getModelFromDb =
+getModelFromDb : String -> Cmd Msg
+getModelFromDb eventId =
     let
         url =
-            "/events/2/program-builder-model"
+            "/events/" ++ eventId ++ "/programme-builder-model"
 
         request =
             Http.get url apiUpdateDecoder
@@ -134,10 +135,13 @@ getModelFromDb =
         Http.send UpdateModel request
 
 
-postModelToDb : ApiUpdate -> Cmd Msg
-postModelToDb apiUpdateModel =
+postModelToDb : ApiUpdate -> String -> Cmd Msg
+postModelToDb apiUpdateModel eventId =
     let
+        requestUrl =
+            "/events/" ++ eventId ++ "/programme-builder-model"
+
         request =
-            Http.post "/events/2/program-builder-model" (Http.jsonBody (encodeApiUpdate apiUpdateModel)) apiUpdateDecoder
+            Http.post requestUrl (Http.jsonBody (encodeApiUpdate apiUpdateModel)) apiUpdateDecoder
     in
         Http.send SaveModel request

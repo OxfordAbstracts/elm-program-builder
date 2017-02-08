@@ -17,13 +17,19 @@ type alias Model =
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
+    , eventId : String
+    , submissionIdsInput : String
     }
+
+
+type alias Flags =
+    { eventId : String }
 
 
 initialModel : Model
 initialModel =
     { sessions = initialSessions
-    , tracks = [ Track 1 "track 1", Track 2 "track 2" ]
+    , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
@@ -34,6 +40,8 @@ initialModel =
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
+    , eventId = ""
+    , submissionIdsInput = ""
     }
 
 
@@ -107,6 +115,7 @@ blankColumn id =
 blankTrack : Int -> Track
 blankTrack id =
     Track id
+        ""
         ""
 
 
@@ -183,6 +192,7 @@ initialSessions =
 type alias Track =
     { id : TrackId
     , name : String
+    , description : String
     }
 
 

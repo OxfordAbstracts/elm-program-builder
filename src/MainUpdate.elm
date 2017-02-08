@@ -6,6 +6,26 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 
 
+addSubmissionIdsInputToSession : String -> Session -> Session
+addSubmissionIdsInputToSession submissionIdsInput session =
+    let
+        submissionIdsToIntList =
+            submissionIdsInput
+                |> String.split ","
+                |> List.filterMap (String.toInt >> Result.toMaybe)
+    in
+        { session
+            | submissionIds = submissionIdsToIntList
+        }
+
+
+submissionIdsToInputText : List Int -> String
+submissionIdsToInputText submissionIds =
+    submissionIds
+        |> List.map toString
+        |> String.join ","
+
+
 updateNewColumn : Model -> (Column -> Column) -> Model
 updateNewColumn model update =
     ({ model | newColumn = (update model.newColumn) })
@@ -126,13 +146,16 @@ update msg model =
                         | columns = listWithNewId
                         , newColumn = blankColumn 1
                       }
-                    , Api.postModelToDb newColumnToPost
+                    , Api.postModelToDb newColumnToPost model.eventId
                     )
 
             CreateNewSession ->
                 let
+                    newSessionWithSubmissionIds =
+                        addSubmissionIdsInputToSession model.submissionIdsInput model.newSession
+
                     listWithNewId =
-                        appendNewElementToList model.sessions model.newSession
+                        appendNewElementToList model.sessions newSessionWithSubmissionIds
 
                     newSessionToPost =
                         { sessions = listWithNewId
@@ -144,27 +167,24 @@ update msg model =
                     ( { model
                         | sessions = listWithNewId
                         , newSession = blankSession 1
+                        , submissionIdsInput = ""
                       }
-                    , Api.postModelToDb newSessionToPost
+                    , Api.postModelToDb newSessionToPost model.eventId
                     )
 
             CreateNewTrack ->
                 let
-                    listWithNewId =
+                    tracksWithNewId =
                         appendNewElementToList model.tracks model.newTrack
 
-                    newTrackToPost =
-                        { sessions = model.sessions
-                        , tracks = model.tracks
-                        , columns = listWithNewId
-                        , dates = model.dates
-                        }
+                    apiUpdate =
+                        ApiUpdate model.sessions tracksWithNewId model.columns model.dates
                 in
                     ( { model
-                        | tracks = listWithNewId
+                        | tracks = tracksWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Api.postModelToDb newTrackToPost
+                    , Api.postModelToDb apiUpdate model.eventId
                     )
 
             UpdateModel (Ok apiUpdate) ->
@@ -184,16 +204,22 @@ update msg model =
                 ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
-                ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )
+                ( (updateNewColumn model (\nc -> { nc | name = newName })), Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession model (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewTrackName newName ->
-                ( (updateNewTrack model (\ns -> { ns | name = newName })), Cmd.none )
+                ( (updateNewTrack model (\nt -> { nt | name = newName })), Cmd.none )
+
+            UpdateNewTrackDescription newDescription ->
+                ( (updateNewTrack model (\nt -> { nt | description = newDescription })), Cmd.none )
 
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
+
+            UpdateNewSessionSubmissionIds newSubmissionIdsString ->
+                ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
             UpdateNewSessionColumn newColumnId ->
                 ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
@@ -236,7 +262,7 @@ update msg model =
                         }
                 in
                     ( { model | sessions = newSessionsList }
-                    , Api.postModelToDb apiUpdate
+                    , Api.postModelToDb apiUpdate model.eventId
                     )
 
             SelectSessionToEdit sessionId ->
@@ -251,6 +277,9 @@ update msg model =
                             |> List.filter (\s -> s.id == sessionId)
                             |> List.head
                             |> Maybe.withDefault (blankSession -1)
+
+                    submissionIdsInput =
+                        submissionIdsToInputText session.submissionIds
                 in
                     ( { model
                         | idOfSessionBeingEdited =
@@ -266,6 +295,7 @@ update msg model =
                         , showNewTrackUi = False
                         , showNewColumnUi = False
                         , editSession = session
+                        , submissionIdsInput = submissionIdsInput
                       }
                     , Cmd.none
                     )
@@ -278,11 +308,11 @@ update msg model =
                                 model.sessions
                                     |> List.filter (\s -> s.id /= id)
 
-                            editSession =
-                                model.editSession
+                            editSessionWithSubmissionIds =
+                                addSubmissionIdsInputToSession model.submissionIdsInput model.editSession
 
                             editedSession =
-                                { editSession
+                                { editSessionWithSubmissionIds
                                     | id = id
                                 }
 
@@ -298,8 +328,9 @@ update msg model =
                                 , editSession = blankSession 1
                                 , showNewSessionUi = False
                                 , idOfSessionBeingEdited = Nothing
+                                , submissionIdsInput = ""
                               }
-                            , Api.postModelToDb apiUpdate
+                            , Api.postModelToDb apiUpdate model.eventId
                             )
 
                     Nothing ->
