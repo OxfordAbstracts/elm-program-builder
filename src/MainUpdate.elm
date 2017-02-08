@@ -258,7 +258,11 @@ update msg model =
                                 Nothing
                             else
                                 Just sessionId
-                        , showNewSessionUi = True
+                        , showNewSessionUi =
+                            if isAlreadySelected then
+                                False
+                            else
+                                True
                         , showNewTrackUi = False
                         , showNewColumnUi = False
                         , editSession = session
@@ -292,6 +296,8 @@ update msg model =
                             ( { model
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
                                 , editSession = blankSession 1
+                                , showNewSessionUi = False
+                                , idOfSessionBeingEdited = Nothing
                               }
                             , Api.postModelToDb apiUpdate
                             )
