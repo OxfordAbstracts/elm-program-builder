@@ -54,7 +54,7 @@ all =
                     context =
                         NewSessionContext "Edit session" EditSession newModel.editSession
                 in
-                    Expect.equal (NewSessionView.newSessionViewWarning context newModel) ("Cannot create: Session end time must be greater than start time")
+                    Expect.equal (NewSessionView.newSessionViewWarning context newModel) "Cannot create: Session end time must be greater than start time"
         , test "newSessionViewWarning shows message when another session overlaps with when editting a session" <|
             \() ->
                 let
