@@ -97,7 +97,9 @@ all =
                         { dummyModel
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
-                            , submissionIdsInput = "1,4,5"
+                            , submissionIdsInput =
+                                "1 , 4,5"
+                                -- numbers with whitespace should be parsed
                         }
 
                     modelAfterEdit =
@@ -111,7 +113,7 @@ all =
                 in
                     modelAfterEdit
                         |> Expect.all
-                            [ .idOfSessionBeingEdited >> Expect.equal (Just 1)
+                            [ .idOfSessionBeingEdited >> Expect.equal (Nothing)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
                             ]
         , test "CreateNewSession should add the new session to sessions" <|

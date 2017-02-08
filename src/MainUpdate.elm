@@ -4,18 +4,19 @@ import Api
 import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
+import String exposing (trim, join, split)
 
 
 addSubmissionIdsInputToSession : String -> Session -> Session
 addSubmissionIdsInputToSession submissionIdsInput session =
     let
-        submissionIdsToIntList =
+        submissionIds =
             submissionIdsInput
-                |> String.split ","
-                |> List.filterMap (String.toInt >> Result.toMaybe)
+                |> split ","
+                |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
     in
         { session
-            | submissionIds = submissionIdsToIntList
+            | submissionIds = submissionIds
         }
 
 
@@ -23,7 +24,7 @@ submissionIdsToInputText : List Int -> String
 submissionIdsToInputText submissionIds =
     submissionIds
         |> List.map toString
-        |> String.join ","
+        |> join ","
 
 
 updateNewColumn : Model -> (Column -> Column) -> Model
