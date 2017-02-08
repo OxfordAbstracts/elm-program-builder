@@ -9,16 +9,10 @@ import MainModel exposing (..)
 addSubmissionIdsInputToSession : String -> Session -> Session
 addSubmissionIdsInputToSession submissionIdsInput session =
     let
-        submissionIdsList =
-            String.split "," submissionIdsInput
-
-        convertToInt val =
-            String.toInt val
-                |> Result.toMaybe
-
         submissionIdsToIntList =
-            submissionIdsList
-                |> List.filterMap convertToInt
+            submissionIdsInput
+                |> String.split ","
+                |> List.filterMap (String.toInt >> Result.toMaybe)
     in
         { session
             | submissionIds = submissionIdsToIntList
