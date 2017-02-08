@@ -131,9 +131,6 @@ update msg model =
 
             CreateNewSession ->
                 let
-                    listWithNewId =
-                        appendNewElementToList model.sessions model.newSession
-
                     submissionIdsList =
                         String.split "," model.submissionIdsInput
 
@@ -149,17 +146,28 @@ update msg model =
                         submissionIdsList
                             |> List.filterMap convertToInt
 
+                    newSession =
+                        model.newSession
+
+                    newSessionWithSubmissionIds =
+                        { newSession
+                            | submissionIds = submissionIdsToIntList
+                        }
+
+                    listWithNewId =
+                        appendNewElementToList model.sessions newSessionWithSubmissionIds
+
                     newSessionToPost =
                         { sessions = listWithNewId
                         , tracks = model.tracks
                         , columns = model.columns
                         , dates = model.dates
-                        , submissionIds = submissionIdsToIntList
                         }
                 in
                     ( { model
                         | sessions = listWithNewId
                         , newSession = blankSession 1
+                        , submissionIdsInput = ""
                       }
                     , Api.postModelToDb newSessionToPost model.eventId
                     )
@@ -214,24 +222,6 @@ update msg model =
             UpdateNewSessionSubmissionIds newSubmissionIdsString ->
                 ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
-            -- ( {model | submissionIdsInput = newSubmissionIdsString  })), Cmd.none )
-            -- let
-            --     submissionIdsList =
-            --         String.split "," newSubmissionIds
-            --
-            --     convertToInt val =
-            --         case String.toInt val of
-            --             Ok id ->
-            --                 Just id
-            --
-            --             Err str ->
-            --                 Nothing
-            --
-            --     submissionIdsToIntList =
-            --         submissionIdsList
-            --             |> List.filterMap convertToInt
-            -- in
-            -- ({ model | editSession = (update model.editSession) })
             UpdateNewSessionColumn newColumnId ->
                 ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
 

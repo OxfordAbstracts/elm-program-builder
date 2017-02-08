@@ -206,5 +206,4 @@ type alias ApiUpdate =
     , columns :
         List Column
     , dates : List DateWithoutTime
-    , submissionIds : List Int
     }
