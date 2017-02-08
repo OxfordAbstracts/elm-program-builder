@@ -110,12 +110,11 @@ all =
                             [ .idOfSessionBeingEdited >> Expect.equal (Just 1)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
                             ]
-        , test """addSubmissionIdsInputToSession adds the string submissionIdsInput to the
-          session's submissionIds as a List Int and any invalid submissionIds removed""" <|
+        , test "CreateNewSession should add the new session to sessions" <|
             \() ->
                 let
-                    session =
-                        { id = 1
+                    newSession =
+                        { id = 6
                         , name = "new test name"
                         , description = "new test description"
                         , date = { year = 2017, month = 1, day = 1 }
@@ -125,11 +124,26 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
-                        , submissionIds = []
+                        , submissionIds = [ 1, 4, 5 ]
                         }
 
-                    updatedSession =
-                        MainUpdate.addSubmissionIdsInputToSession "1,4,test,5,,," session
+                    modelWithNewSession =
+                        { dummyModel
+                            | newSession = newSession
+                            , submissionIdsInput = "1,4,5"
+                        }
+
+                    modelAfterUpdate =
+                        modelWithNewSession
+                            |> MainUpdate.update MainMessages.CreateNewSession
+                            |> Tuple.first
+
+                    addedSession =
+                        modelAfterUpdate
+                            |> .sessions
                 in
-                    Expect.equal updatedSession.submissionIds [ 1, 4, 5 ]
+                    modelAfterUpdate
+                        |> Expect.all
+                            [ .sessions >> Utils.last >> Expect.equal (Just newSession)
+                            ]
         ]

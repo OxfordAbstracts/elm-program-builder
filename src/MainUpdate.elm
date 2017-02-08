@@ -13,12 +13,8 @@ addSubmissionIdsInputToSession submissionIdsInput session =
             String.split "," submissionIdsInput
 
         convertToInt val =
-            case String.toInt val of
-                Ok id ->
-                    Just id
-
-                Err str ->
-                    Nothing
+            String.toInt val
+                |> Result.toMaybe
 
         submissionIdsToIntList =
             submissionIdsList

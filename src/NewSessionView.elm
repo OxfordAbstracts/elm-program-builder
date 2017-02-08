@@ -72,8 +72,8 @@ view context model =
                     , textarea
                         [ class "form-control"
                         , id "description-input"
-                        , attribute "rows" "5"
-                        , attribute "cols" "32"
+                        , rows 5
+                        , cols 32
                         , value context.session.description
                         , onInput UpdateNewSessionDescription
                         ]
@@ -85,8 +85,8 @@ view context model =
                     , textarea
                         [ class "form-control"
                         , id "submissions-input"
-                        , attribute "rows" "2"
-                        , attribute "cols" "32"
+                        , rows 2
+                        , cols 32
                         , value model.submissionIdsInput
                         , onInput UpdateNewSessionSubmissionIds
                         ]
