@@ -27,6 +27,7 @@ type Msg
     | UpdateNewSessionLocation String
     | UpdateNewSessionTrack String
     | UpdateNewSessionDate String
+    | UpdateNewSessionSubmissionIds String
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
     | UpdateNewSessionEndHour String

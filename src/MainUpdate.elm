@@ -6,6 +6,26 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 
 
+addSubmissionIdsInputToSession : String -> Session -> Session
+addSubmissionIdsInputToSession submissionIdsInput session =
+    let
+        submissionIdsToIntList =
+            submissionIdsInput
+                |> String.split ","
+                |> List.filterMap (String.toInt >> Result.toMaybe)
+    in
+        { session
+            | submissionIds = submissionIdsToIntList
+        }
+
+
+submissionIdsToInputText : List Int -> String
+submissionIdsToInputText submissionIds =
+    submissionIds
+        |> List.map toString
+        |> String.join ","
+
+
 updateNewColumn : Model -> (Column -> Column) -> Model
 updateNewColumn model update =
     ({ model | newColumn = (update model.newColumn) })
@@ -131,8 +151,11 @@ update msg model =
 
             CreateNewSession ->
                 let
+                    newSessionWithSubmissionIds =
+                        addSubmissionIdsInputToSession model.submissionIdsInput model.newSession
+
                     listWithNewId =
-                        appendNewElementToList model.sessions model.newSession
+                        appendNewElementToList model.sessions newSessionWithSubmissionIds
 
                     newSessionToPost =
                         { sessions = listWithNewId
@@ -144,6 +167,7 @@ update msg model =
                     ( { model
                         | sessions = listWithNewId
                         , newSession = blankSession 1
+                        , submissionIdsInput = ""
                       }
                     , Api.postModelToDb newSessionToPost model.eventId
                     )
@@ -194,6 +218,9 @@ update msg model =
 
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
+
+            UpdateNewSessionSubmissionIds newSubmissionIdsString ->
+                ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
             UpdateNewSessionColumn newColumnId ->
                 ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
@@ -251,6 +278,9 @@ update msg model =
                             |> List.filter (\s -> s.id == sessionId)
                             |> List.head
                             |> Maybe.withDefault (blankSession -1)
+
+                    submissionIdsInput =
+                        submissionIdsToInputText session.submissionIds
                 in
                     ( { model
                         | idOfSessionBeingEdited =
@@ -262,6 +292,7 @@ update msg model =
                         , showNewTrackUi = False
                         , showNewColumnUi = False
                         , editSession = session
+                        , submissionIdsInput = submissionIdsInput
                       }
                     , Cmd.none
                     )
@@ -274,11 +305,11 @@ update msg model =
                                 model.sessions
                                     |> List.filter (\s -> s.id /= id)
 
-                            editSession =
-                                model.editSession
+                            editSessionWithSubmissionIds =
+                                addSubmissionIdsInputToSession model.submissionIdsInput model.editSession
 
                             editedSession =
-                                { editSession
+                                { editSessionWithSubmissionIds
                                     | id = id
                                 }
 
@@ -292,6 +323,7 @@ update msg model =
                             ( { model
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
                                 , editSession = blankSession 1
+                                , submissionIdsInput = ""
                               }
                             , Api.postModelToDb apiUpdate model.eventId
                             )

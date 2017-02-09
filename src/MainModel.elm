@@ -18,6 +18,7 @@ type alias Model =
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
+    , submissionIdsInput : String
     }
 
 
@@ -40,6 +41,7 @@ initialModel =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
+    , submissionIdsInput = ""
     }
 
 
