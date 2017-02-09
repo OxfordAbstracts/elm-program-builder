@@ -19,11 +19,17 @@ type alias Model =
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInput : String
+    , submissions : List Submission
     }
 
 
 type alias Flags =
     { eventId : String }
+
+
+type alias Submission =
+    { id : Int
+    }
 
 
 initialModel : Model
@@ -42,6 +48,7 @@ initialModel =
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInput = ""
+    , submissions = []
     }
 
 
