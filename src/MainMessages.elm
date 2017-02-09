@@ -8,30 +8,31 @@ import MainModel
 
 
 type Msg
-    = NewTrack
-    | NewColumn
-    | ToggleNewSessionUi
-    | ToggleNewTrackUi
-    | ToggleNewColumnUi
-    | CreateNewColumn
-    | UpdateNewColumnName String
+    = CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
-    | UpdateModel (Result Http.Error MainModel.ApiUpdate)
+    | DeleteSession Int
+    | EditSession
+    | NewColumn
+    | NewTrack
     | SaveModel (Result Http.Error MainModel.ApiUpdate)
-    | UpdateNewSessionName String
-    | UpdateNewTrackName String
-    | UpdateNewSessionDescription String
-    | UpdateNewSessionColumn String
+    | SelectSessionToEdit Int
+    | ToggleNewColumnUi
+    | ToggleNewSessionUi
+    | ToggleNewTrackUi
+    | UpdateModel (Result Http.Error MainModel.ApiUpdate)
+    | UpdateNewColumnName String
     | UpdateNewSessionChair String
-    | UpdateNewSessionLocation String
-    | UpdateNewSessionTrack String
+    | UpdateNewSessionColumn String
     | UpdateNewSessionDate String
-    | UpdateNewSessionSubmissionIds String
-    | UpdateNewSessionStartHour String
-    | UpdateNewSessionStartMinute String
+    | UpdateNewSessionDescription String
     | UpdateNewSessionEndHour String
     | UpdateNewSessionEndMinute String
-    | DeleteSession Int
-    | SelectSessionToEdit Int
-    | EditSession
+    | UpdateNewSessionLocation String
+    | UpdateNewSessionName String
+    | UpdateNewSessionStartHour String
+    | UpdateNewSessionStartMinute String
+    | UpdateNewSessionSubmissionIds String
+    | UpdateNewSessionTrack String
+    | UpdateNewTrackDescription String
+    | UpdateNewTrackName String

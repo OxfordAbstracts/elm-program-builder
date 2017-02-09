@@ -43,6 +43,7 @@ dummyTracks : List MainModel.Track
 dummyTracks =
     [ { id = 1
       , name = "Test track"
+      , description = "Test track description"
       }
     ]
 

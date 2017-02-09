@@ -174,21 +174,17 @@ update msg model =
 
             CreateNewTrack ->
                 let
-                    listWithNewId =
+                    tracksWithNewId =
                         appendNewElementToList model.tracks model.newTrack
 
-                    newTrackToPost =
-                        { sessions = model.sessions
-                        , tracks = model.tracks
-                        , columns = listWithNewId
-                        , dates = model.dates
-                        }
+                    apiUpdate =
+                        ApiUpdate model.sessions tracksWithNewId model.columns model.dates
                 in
                     ( { model
-                        | tracks = listWithNewId
+                        | tracks = tracksWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Api.postModelToDb newTrackToPost model.eventId
+                    , Api.postModelToDb apiUpdate model.eventId
                     )
 
             UpdateModel (Ok apiUpdate) ->
@@ -208,13 +204,16 @@ update msg model =
                 ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
-                ( (updateNewColumn model (\ns -> { ns | name = newName })), Cmd.none )
+                ( (updateNewColumn model (\nc -> { nc | name = newName })), Cmd.none )
 
             UpdateNewSessionName newName ->
                 ( (updateNewSession model (\ns -> { ns | name = newName })), Cmd.none )
 
             UpdateNewTrackName newName ->
-                ( (updateNewTrack model (\ns -> { ns | name = newName })), Cmd.none )
+                ( (updateNewTrack model (\nt -> { nt | name = newName })), Cmd.none )
+
+            UpdateNewTrackDescription newDescription ->
+                ( (updateNewTrack model (\nt -> { nt | description = newDescription })), Cmd.none )
 
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )

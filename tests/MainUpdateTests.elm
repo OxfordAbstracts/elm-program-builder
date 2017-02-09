@@ -33,9 +33,13 @@ all =
                 let
                     updatedModel =
                         MainUpdate.updateNewTrack dummyModel
-                            (\ns -> { ns | name = "new track" })
+                            (\ns -> { ns | name = "new track", description = "new track description" })
                 in
-                    Expect.equal updatedModel.newTrack.name "new track"
+                    updatedModel.newTrack
+                        |> Expect.all
+                            [ .name >> Expect.equal "new track"
+                            , .description >> Expect.equal "new track description"
+                            ]
         , test "updateNewSessionStartTime updates the model with the new session start time" <|
             \() ->
                 let
