@@ -63,13 +63,14 @@ toInt model string =
         |> Result.withDefault 0
 
 
-updateModelWithApiUpdate : Model -> ApiUpdate -> Model
-updateModelWithApiUpdate model apiUpdate =
+updateModelWithApiUpdateGet : Model -> ApiUpdateGet -> Model
+updateModelWithApiUpdateGet model apiUpdateGet =
     ({ model
-        | sessions = apiUpdate.sessions
-        , tracks = apiUpdate.tracks
-        , columns = apiUpdate.columns
-        , dates = apiUpdate.dates
+        | sessions = apiUpdateGet.sessions
+        , tracks = apiUpdateGet.tracks
+        , columns = apiUpdateGet.columns
+        , dates = apiUpdateGet.dates
+        , submissions = apiUpdateGet.submissions
      }
     )
 
@@ -177,20 +178,20 @@ update msg model =
                     tracksWithNewId =
                         appendNewElementToList model.tracks model.newTrack
 
-                    apiUpdate =
-                        ApiUpdate model.sessions tracksWithNewId model.columns model.dates
+                    apiUpdatePost =
+                        ApiUpdatePost model.sessions tracksWithNewId model.columns model.dates
                 in
                     ( { model
                         | tracks = tracksWithNewId
                         , newTrack = blankTrack 1
                       }
-                    , Api.postModelToDb apiUpdate model.eventId
+                    , Api.postModelToDb apiUpdatePost model.eventId
                     )
 
-            UpdateModel (Ok apiUpdate) ->
+            UpdateModel (Ok apiUpdateGet) ->
                 let
                     updatedModel =
-                        updateModelWithApiUpdate model apiUpdate
+                        updateModelWithApiUpdateGet model apiUpdateGet
                 in
                     ( updatedModel, Cmd.none )
 

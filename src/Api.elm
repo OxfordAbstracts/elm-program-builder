@@ -8,17 +8,27 @@ import Http
 import Json.Encode
 
 
-apiUpdateDecoder : Json.Decode.Decoder ApiUpdate
-apiUpdateDecoder =
-    decode ApiUpdate
+apiUpdateGetDecoder : Json.Decode.Decoder ApiUpdateGet
+apiUpdateGetDecoder =
+    decode ApiUpdateGet
+        |> required "sessions" (Json.Decode.list sessionDecoder)
+        |> required "tracks" (Json.Decode.list trackDecoder)
+        |> required "columns" (Json.Decode.list columnDecoder)
+        |> required "dates" (Json.Decode.list dateDecoder)
+        |> required "submissions" (Json.Decode.list submissionDecoder)
+
+
+apiUpdatePostDecoder : Json.Decode.Decoder ApiUpdatePost
+apiUpdatePostDecoder =
+    decode ApiUpdatePost
         |> required "sessions" (Json.Decode.list sessionDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "dates" (Json.Decode.list dateDecoder)
 
 
-encodeApiUpdate : ApiUpdate -> Json.Encode.Value
-encodeApiUpdate record =
+encodeApiUpdatePost : ApiUpdatePost -> Json.Encode.Value
+encodeApiUpdatePost record =
     Json.Encode.object
         [ ( "sessions", Json.Encode.list <| List.map sessionEncoder record.sessions )
         , ( "tracks", Json.Encode.list <| List.map trackEncoder record.tracks )
@@ -123,6 +133,12 @@ timeEncoder record =
         ]
 
 
+submissionDecoder : Json.Decode.Decoder Submission
+submissionDecoder =
+    decode Submission
+        |> required "id" Json.Decode.int
+
+
 getModelFromDb : String -> Cmd Msg
 getModelFromDb eventId =
     let
@@ -130,18 +146,18 @@ getModelFromDb eventId =
             "/events/" ++ eventId ++ "/programme-builder-model"
 
         request =
-            Http.get url apiUpdateDecoder
+            Http.get url apiUpdateGetDecoder
     in
         Http.send UpdateModel request
 
 
-postModelToDb : ApiUpdate -> String -> Cmd Msg
+postModelToDb : ApiUpdatePost -> String -> Cmd Msg
 postModelToDb apiUpdateModel eventId =
     let
         requestUrl =
             "/events/" ++ eventId ++ "/programme-builder-model"
 
         request =
-            Http.post requestUrl (Http.jsonBody (encodeApiUpdate apiUpdateModel)) apiUpdateDecoder
+            Http.post requestUrl (Http.jsonBody (encodeApiUpdatePost apiUpdateModel)) apiUpdatePostDecoder
     in
         Http.send SaveModel request

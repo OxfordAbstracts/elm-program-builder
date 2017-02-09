@@ -207,7 +207,7 @@ type alias TrackId =
     Int
 
 
-type alias ApiUpdate =
+type alias ApiUpdatePost =
     { sessions :
         List Session
     , tracks :
@@ -215,4 +215,16 @@ type alias ApiUpdate =
     , columns :
         List Column
     , dates : List DateWithoutTime
+    }
+
+
+type alias ApiUpdateGet =
+    { sessions :
+        List Session
+    , tracks :
+        List Track
+    , columns :
+        List Column
+    , dates : List DateWithoutTime
+    , submissions : List Submission
     }
