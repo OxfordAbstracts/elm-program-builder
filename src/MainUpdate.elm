@@ -204,11 +204,13 @@ update msg model =
                 in
                     ( updatedModel, Cmd.none )
 
-            UpdateModel (Err _) ->
-                ( model, Cmd.none )
+            UpdateModel (Err str) ->
+                Debug.log (toString str)
+                    ( model, Cmd.none )
 
-            SaveModel (Err _) ->
-                ( model, Cmd.none )
+            SaveModel (Err str) ->
+                Debug.log (toString str)
+                    ( model, Cmd.none )
 
             SaveModel (Ok apiUpdate) ->
                 ( model, Cmd.none )

@@ -75,6 +75,7 @@ trackEncoder record =
     Json.Encode.object
         [ ( "id", Json.Encode.int record.id )
         , ( "name", Json.Encode.string record.name )
+        , ( "description", Json.Encode.string record.description )
         ]
 
 
