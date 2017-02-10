@@ -12,6 +12,7 @@ type alias Model =
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
+    , showManageDatesUi : Bool
     , newSession : Session
     , editSession : Session
     , newColumn : Column
@@ -39,8 +40,9 @@ initialModel =
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
-    , showNewTrackUi = True
+    , showNewTrackUi = False
     , showNewColumnUi = False
+    , showManageDatesUi = True
     , newSession = blankSession 1
     , editSession = blankSession 1
     , newColumn = blankColumn 1

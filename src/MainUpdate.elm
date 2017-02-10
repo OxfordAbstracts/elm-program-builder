@@ -4,26 +4,27 @@ import Api
 import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
+import String exposing (trim, join, split)
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
 addSubmissionIdsInputToSession submissionIdsInput session submissions =
     let
-        submissionIdsToIntList =
+        submissionIds =
             submissionIdsInput
-                |> String.split ","
-                |> List.filterMap (String.toInt >> Result.toMaybe)
+                |> split ","
+                |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
 
         validSubmissionIds =
             List.map .id submissions
 
         -- removes any invalid submissions - i.e. ones that have not been accepted for this event
-        submissionIdsListValid =
-            submissionIdsToIntList
+        submissionIdsValid =
+            submissionIds
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
     in
         { session
-            | submissionIds = submissionIdsListValid
+            | submissionIds = submissionIdsValid
         }
 
 
@@ -31,7 +32,7 @@ submissionIdsToInputText : List Int -> String
 submissionIdsToInputText submissionIds =
     submissionIds
         |> List.map toString
-        |> String.join ","
+        |> join ","
 
 
 updateNewColumn : Model -> (Column -> Column) -> Model
@@ -296,7 +297,11 @@ update msg model =
                                 Nothing
                             else
                                 Just sessionId
-                        , showNewSessionUi = True
+                        , showNewSessionUi =
+                            if isAlreadySelected then
+                                False
+                            else
+                                True
                         , showNewTrackUi = False
                         , showNewColumnUi = False
                         , editSession = session
@@ -331,6 +336,8 @@ update msg model =
                             ( { model
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
                                 , editSession = blankSession 1
+                                , showNewSessionUi = False
+                                , idOfSessionBeingEdited = Nothing
                                 , submissionIdsInput = ""
                               }
                             , Api.postModelToDb apiUpdate model.eventId
