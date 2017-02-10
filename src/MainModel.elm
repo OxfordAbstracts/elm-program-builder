@@ -48,7 +48,7 @@ initialModel =
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInput = ""
-    , submissions = []
+    , submissions = [ Submission 1 ]
     }
 
 

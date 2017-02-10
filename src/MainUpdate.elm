@@ -6,16 +6,24 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 
 
-addSubmissionIdsInputToSession : String -> Session -> Session
-addSubmissionIdsInputToSession submissionIdsInput session =
+addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
+addSubmissionIdsInputToSession submissionIdsInput session submissions =
     let
         submissionIdsToIntList =
             submissionIdsInput
                 |> String.split ","
                 |> List.filterMap (String.toInt >> Result.toMaybe)
+
+        validSubmissionIds =
+            List.map .id submissions
+
+        -- removes any invalid submissions - i.e. ones that have not been accepted for this event
+        submissionIdsListValid =
+            submissionIdsToIntList
+                |> List.filter (\sub -> List.member sub validSubmissionIds)
     in
         { session
-            | submissionIds = submissionIdsToIntList
+            | submissionIds = submissionIdsListValid
         }
 
 
@@ -153,7 +161,7 @@ update msg model =
             CreateNewSession ->
                 let
                     newSessionWithSubmissionIds =
-                        addSubmissionIdsInputToSession model.submissionIdsInput model.newSession
+                        addSubmissionIdsInputToSession model.submissionIdsInput model.newSession model.submissions
 
                     listWithNewId =
                         appendNewElementToList model.sessions newSessionWithSubmissionIds
@@ -306,7 +314,7 @@ update msg model =
                                     |> List.filter (\s -> s.id /= id)
 
                             editSessionWithSubmissionIds =
-                                addSubmissionIdsInputToSession model.submissionIdsInput model.editSession
+                                addSubmissionIdsInputToSession model.submissionIdsInput model.editSession model.submissions
 
                             editedSession =
                                 { editSessionWithSubmissionIds
