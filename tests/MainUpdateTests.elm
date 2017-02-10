@@ -33,9 +33,13 @@ all =
                 let
                     updatedModel =
                         MainUpdate.updateNewTrack dummyModel
-                            (\ns -> { ns | name = "new track" })
+                            (\ns -> { ns | name = "new track", description = "new track description" })
                 in
-                    Expect.equal updatedModel.newTrack.name "new track"
+                    updatedModel.newTrack
+                        |> Expect.all
+                            [ .name >> Expect.equal "new track"
+                            , .description >> Expect.equal "new track description"
+                            ]
         , test "updateNewSessionStartTime updates the model with the new session start time" <|
             \() ->
                 let
@@ -93,7 +97,9 @@ all =
                         { dummyModel
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
-                            , submissionIdsInput = "1,4,5"
+                            , submissionIdsInput =
+                                "1 , 4,5"
+                                -- numbers with whitespace should be parsed
                         }
 
                     modelAfterEdit =
@@ -107,7 +113,7 @@ all =
                 in
                     modelAfterEdit
                         |> Expect.all
-                            [ .idOfSessionBeingEdited >> Expect.equal (Just 1)
+                            [ .idOfSessionBeingEdited >> Expect.equal (Nothing)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
                             ]
         , test "CreateNewSession should add the new session to sessions" <|

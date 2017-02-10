@@ -68,7 +68,8 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
   "tracks": [
     {
       "id": 1,
-      "name": "track 1"
+      "name": "track 1",
+      "description": "track 1 description"
     }
   ],
   "columns": [
@@ -91,7 +92,7 @@ createApiUpdate : String -> String -> Int -> Int -> ApiUpdate
 createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
     ApiUpdate
         [ createSession sessionName sessionDescription sessionYear sessionMonth ]
-        [ Track 1 "track 1" ]
+        [ Track 1 "track 1" "track 1 description" ]
         [ Column 1 "column 1" ]
         [ DateWithoutTime sessionYear sessionMonth 1 ]
 

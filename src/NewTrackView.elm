@@ -37,7 +37,19 @@ view model =
                         , value model.newTrack.name
                         , onInput UpdateNewTrackName
                         ]
-                        [ text model.newColumn.name ]
+                        []
+                    ]
+                , div [ class "input-group" ]
+                    [ label [ for "track-description-input" ]
+                        [ text "Track description" ]
+                    , input
+                        [ class "form-control"
+                        , id "track-description-input"
+                        , type_ "text"
+                        , value model.newTrack.description
+                        , onInput UpdateNewTrackDescription
+                        ]
+                        []
                     ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]

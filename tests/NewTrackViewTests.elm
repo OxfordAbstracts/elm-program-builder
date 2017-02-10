@@ -19,5 +19,5 @@ all =
     describe "newTrackView functions"
         [ test "newTrackWarning shows warning message when track name field is empty" <|
             \() ->
-                Expect.equal (NewTrackView.newTrackWarning dummyModel) ("Cannot create: Track name field is empty")
+                Expect.equal (NewTrackView.newTrackWarning dummyModel) ("")
         ]

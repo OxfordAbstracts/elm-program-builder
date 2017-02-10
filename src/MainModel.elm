@@ -12,6 +12,7 @@ type alias Model =
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
+    , showManageDatesUi : Bool
     , newSession : Session
     , editSession : Session
     , newColumn : Column
@@ -29,12 +30,13 @@ type alias Flags =
 initialModel : Model
 initialModel =
     { sessions = initialSessions
-    , tracks = [ Track 1 "track 1", Track 2 "track 2" ]
+    , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
-    , showNewTrackUi = True
+    , showNewTrackUi = False
     , showNewColumnUi = False
+    , showManageDatesUi = True
     , newSession = blankSession 1
     , editSession = blankSession 1
     , newColumn = blankColumn 1
@@ -116,6 +118,7 @@ blankTrack : Int -> Track
 blankTrack id =
     Track id
         ""
+        ""
 
 
 defaultDateWithoutTime : DateWithoutTime
@@ -191,6 +194,7 @@ initialSessions =
 type alias Track =
     { id : TrackId
     , name : String
+    , description : String
     }
 
 
@@ -199,11 +203,8 @@ type alias TrackId =
 
 
 type alias ApiUpdate =
-    { sessions :
-        List Session
-    , tracks :
-        List Track
-    , columns :
-        List Column
+    { sessions : List Session
+    , tracks : List Track
+    , columns : List Column
     , dates : List DateWithoutTime
     }
