@@ -1,14 +1,55 @@
 <!doctype html>
-<link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/css/pikaday.min.css" />
+
 <body>
-  <div></div>
-  <script src="elm.js"></script>
-  <script>
-  var node = document.querySelector("div");
-  Elm.Main.embed(node,
-    {
-     eventId: window.location.href.split('/events/')[1] ?  window.location.href.split('/events/')[1].split('/')[0]: ""
-   });
-  </script>
+    <div></div>
+    <script src="elm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.min.js"></script>
+    <script>
+        var node = document.querySelector("div");
+        var app = Elm.Main.embed(node, {
+            eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : ""
+        });
+
+        app.ports.openDatepicker.subscribe(function(date) {
+            console.log('date', date);
+            console.log('hiiiii');
+
+            [].forEach.call(document.getElementsByClassName('pikaday-input'), function(pikadayInput) {
+                var picker = new Pikaday({
+                    field: pikadayInput,
+                    format: 'DD-MM-YYYY',
+                    minDate: new Date(),
+                    onSelect: function(date) {
+                        if (picker) {
+                             picker.destroy();
+                        } else {
+                            picker = new Pikaday({ // <---- then create a new instance of Pikaday in the variable 'picker'
+                            field: pikadayInput,
+                            minDate: new Date(),
+                            format: 'DD/MM/YYYY'
+                          });
+                        }
+                    },
+                    onClose: function(date) {
+                        if (picker) {
+                             picker.destroy();
+                        }
+                    }
+                });
+            });
+
+            //  function sendDate (dateString) {
+            //    app.ports.changeDateValue.send(dateString)
+            //  }
+        });
+    </script>
 </body>
+<script>
+    // new Pikaday({
+    //     field: document.getElementById('pikaday-id'),
+    //     format: 'DD-MM-YYYY',
+    //     minDate: new Date()
+    //   });
+</script>

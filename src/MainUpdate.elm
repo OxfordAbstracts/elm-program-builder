@@ -5,6 +5,9 @@ import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import String exposing (trim, join, split)
+import DatePicker exposing (defaultSettings)
+import Date
+import Ports exposing (..)
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
@@ -115,6 +118,7 @@ update msg model =
                             /= Nothing
                     , showNewColumnUi = False
                     , showNewTrackUi = False
+                    , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
@@ -125,6 +129,7 @@ update msg model =
                     | showNewTrackUi = not model.showNewTrackUi
                     , showNewColumnUi = False
                     , showNewSessionUi = False
+                    , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
@@ -135,9 +140,22 @@ update msg model =
                     | showNewColumnUi = not model.showNewColumnUi
                     , showNewSessionUi = False
                     , showNewTrackUi = False
+                    , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
+                )
+
+            ToggleManageDatesUi ->
+                ( { model
+                    | showManageDatesUi = not model.showManageDatesUi
+                    , showNewSessionUi = False
+                    , showNewTrackUi = False
+                    , showNewColumnUi = False
+                    , idOfSessionBeingEdited = Nothing
+                  }
+                  -- , Cmd.none
+                , Ports.openDatepicker ()
                 )
 
             CreateNewColumn ->
@@ -347,3 +365,23 @@ update msg model =
 
                     Nothing ->
                         ( model, Cmd.none )
+
+            -- OpenDatepicker date ->
+            --     model ! [ Ports.openDatepicker () ]
+            -- UpdateDateValue dateString ->
+            --     let
+            --         dates =
+            --             List.append model.dates [ { year = 2017, month = 11, day = 17 } ]
+            --
+            --         -- dateString |> Date.fromString dateString |> Result.toMaybe
+            --     in
+            --         ( { model | dates = dates }, Cmd.none )
+            DatePicked dateString ->
+                let
+                    pickedDates =
+                        if (List.member ((DateUtils.valueStringToDateWithoutTime dateString)) model.pickedDates) then
+                            model.pickedDates
+                        else
+                            List.append model.pickedDates [ DateUtils.valueStringToDateWithoutTime dateString ]
+                in
+                    ( { model | pickedDates = pickedDates }, Cmd.none )

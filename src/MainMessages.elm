@@ -2,6 +2,7 @@ module MainMessages exposing (..)
 
 import Http
 import MainModel
+import Date exposing (Date)
 
 
 -- import MainModel exposing (..)
@@ -11,12 +12,15 @@ type Msg
     = CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
+    | DatePicked String
     | DeleteSession Int
     | EditSession
     | NewColumn
     | NewTrack
+      -- | UpdateDateValue String
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
+    | ToggleManageDatesUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi

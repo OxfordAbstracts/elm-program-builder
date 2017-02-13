@@ -9,6 +9,7 @@ import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
 import Api
+import Ports exposing (..)
 
 
 -- import Json.Decode as Json exposing (int, string, float, Decoder)
@@ -45,6 +46,8 @@ subscriptions model =
 
 
 
+-- changeDateValue UpdateDateValue
+-- Sub.none
 -- MAIN
 
 

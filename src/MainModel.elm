@@ -3,6 +3,9 @@
 
 module MainModel exposing (..)
 
+import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
+import DatePicker exposing (defaultSettings)
+
 
 type alias Model =
     { sessions : List Session
@@ -20,7 +23,9 @@ type alias Model =
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInput : String
-    , submissions : List Submission
+    , submissions :
+        List Submission
+    , pickedDates : List DateWithoutTime
     }
 
 
@@ -35,23 +40,33 @@ type alias Submission =
 
 initialModel : Model
 initialModel =
-    { sessions = initialSessions
-    , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
-    , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
-    , dates = initialDates
-    , showNewSessionUi = False
-    , showNewTrackUi = False
-    , showNewColumnUi = False
-    , showManageDatesUi = True
-    , newSession = blankSession 1
-    , editSession = blankSession 1
-    , newColumn = blankColumn 1
-    , newTrack = blankTrack 1
-    , idOfSessionBeingEdited = Nothing
-    , eventId = ""
-    , submissionIdsInput = ""
-    , submissions = [ Submission 1 ]
-    }
+    let
+        isDisabled date =
+            dayOfWeek date
+                |> flip List.member [ Sat, Sun ]
+
+        ( datePicker, datePickerFx ) =
+            DatePicker.init { defaultSettings | isDisabled = isDisabled }
+    in
+        { sessions = initialSessions
+        , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
+        , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+        , dates = initialDates
+        , showNewSessionUi = False
+        , showNewTrackUi = False
+        , showNewColumnUi = False
+        , showManageDatesUi = False
+        , newSession = blankSession 1
+        , editSession = blankSession 1
+        , newColumn = blankColumn 1
+        , newTrack = blankTrack 1
+        , idOfSessionBeingEdited = Nothing
+        , eventId = ""
+        , submissionIdsInput = ""
+        , submissions =
+            [ Submission 1 ]
+        , pickedDates = []
+        }
 
 
 initialDates : List DateWithoutTime
