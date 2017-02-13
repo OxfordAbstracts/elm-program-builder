@@ -5,8 +5,6 @@ import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import String exposing (trim, join, split)
-import DatePicker exposing (defaultSettings)
-import Date
 import Ports exposing (..)
 
 
@@ -366,22 +364,13 @@ update msg model =
                     Nothing ->
                         ( model, Cmd.none )
 
-            -- OpenDatepicker date ->
-            --     model ! [ Ports.openDatepicker () ]
-            -- UpdateDateValue dateString ->
-            --     let
-            --         dates =
-            --             List.append model.dates [ { year = 2017, month = 11, day = 17 } ]
-            --
-            --         -- dateString |> Date.fromString dateString |> Result.toMaybe
-            --     in
-            --         ( { model | dates = dates }, Cmd.none )
-            DatePicked dateString ->
+            UpdateDateValue pickedDatesList ->
                 let
-                    pickedDates =
-                        if (List.member ((DateUtils.valueStringToDateWithoutTime dateString)) model.pickedDates) then
-                            model.pickedDates
-                        else
-                            List.append model.pickedDates [ DateUtils.valueStringToDateWithoutTime dateString ]
+                    dateWithoutTimeList =
+                        pickedDatesList
+                            |> List.map DateUtils.valueStringToDateWithoutTime
+
+                    dates =
+                        List.append model.dates dateWithoutTimeList
                 in
-                    ( { model | pickedDates = pickedDates }, Cmd.none )
+                    ( { model | dates = dateWithoutTimeList }, Cmd.none )

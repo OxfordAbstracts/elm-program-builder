@@ -6,4 +6,4 @@ port module Ports exposing (..)
 port openDatepicker : () -> Cmd msg
 
 
-port changeDateValue : (String -> msg) -> Sub msg
+port changeDateValue : (List String -> msg) -> Sub msg

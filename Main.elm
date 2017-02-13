@@ -42,11 +42,11 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    -- Sub.none
+    changeDateValue UpdateDateValue
 
 
 
--- changeDateValue UpdateDateValue
 -- Sub.none
 -- MAIN
 

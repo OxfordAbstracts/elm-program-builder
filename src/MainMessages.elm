@@ -12,12 +12,11 @@ type Msg
     = CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
-    | DatePicked String
     | DeleteSession Int
     | EditSession
     | NewColumn
     | NewTrack
-      -- | UpdateDateValue String
+    | UpdateDateValue (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
     | ToggleManageDatesUi

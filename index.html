@@ -20,7 +20,8 @@
                 var picker = new Pikaday({
                     field: pikadayInput,
                     format: 'DD-MM-YYYY',
-                    minDate: new Date(),
+                    minDate: new Date()
+                    ,
                     onSelect: function(date) {
                         if (picker) {
                              picker.destroy();
@@ -40,16 +41,18 @@
                 });
             });
 
-            //  function sendDate (dateString) {
-            //    app.ports.changeDateValue.send(dateString)
-            //  }
+              document.getElementById('save-dates-btn').addEventListener('click', function(e){
+                sendDate();
+              })
+
+             function sendDate () {
+               var pikadayDateArray =
+               [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
+                 return pikaDayInput.value;
+               });
+               console.log('pikadayDateArray', pikadayDateArray);
+               app.ports.changeDateValue.send(pikadayDateArray)
+             }
         });
     </script>
 </body>
-<script>
-    // new Pikaday({
-    //     field: document.getElementById('pikaday-id'),
-    //     format: 'DD-MM-YYYY',
-    //     minDate: new Date()
-    //   });
-</script>
