@@ -14,17 +14,13 @@ addSubmissionIdsInputToSession submissionIdsInput session submissions =
             submissionIdsInput
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
+                |> List.filter (\sub -> List.member sub validSubmissionIds)
 
         validSubmissionIds =
             List.map .id submissions
-
-        -- removes any invalid submissions - i.e. ones that have not been accepted for this event
-        submissionIdsValid =
-            submissionIds
-                |> List.filter (\sub -> List.member sub validSubmissionIds)
     in
         { session
-            | submissionIds = submissionIdsValid
+            | submissionIds = submissionIds
         }
 
 
@@ -205,12 +201,10 @@ update msg model =
                     ( updatedModel, Cmd.none )
 
             UpdateModel (Err str) ->
-                Debug.log (toString str)
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
             SaveModel (Err str) ->
-                Debug.log (toString str)
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
             SaveModel (Ok apiUpdate) ->
                 ( model, Cmd.none )
