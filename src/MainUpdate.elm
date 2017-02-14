@@ -6,6 +6,7 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import String exposing (trim, join, split)
 import Ports exposing (..)
+import Date exposing (now, month, day, year)
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
@@ -378,10 +379,26 @@ update msg model =
                         datesList
                             |> List.map DateUtils.valueStringToDateWithoutTime
 
-                    dates =
-                        List.append model.dates dateWithoutTimeList
+                    -- dates =
+                    --     List.append model.dates dateWithoutTimeList
                 in
                     ( { model | dates = dateWithoutTimeList }, Cmd.none )
 
+            -- GetTodayAndAdd id ->
+            --     ( model, Date.now (AddNewDate id) )
             AddNewDate id ->
-                ( { model | pickedDates = List.append [ { year = 0, month = 0, day = 0 } ] model.pickedDates }, Ports.openDatepicker (id) )
+                -- change to getTodayAndAdd
+                ( { model
+                    | pickedDates =
+                        List.append [ { year = 2017, month = 2, day = 14 } ] model.pickedDates
+                  }
+                , Cmd.batch [ Ports.openDatepicker (id) ]
+                )
+
+            UpdatePickedDates pickedDatesList ->
+                let
+                    dateWithoutTimeList =
+                        pickedDatesList
+                            |> List.map DateUtils.valueStringToDateWithoutTime
+                in
+                    ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )

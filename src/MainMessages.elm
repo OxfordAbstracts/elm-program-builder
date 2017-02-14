@@ -15,8 +15,10 @@ type Msg
     | CreateNewTrack
     | DeleteSession Int
     | EditSession
+      -- | GetTodayAndAdd String
     | NewColumn
     | NewTrack
+    | UpdatePickedDates (List String)
     | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int

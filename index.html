@@ -33,12 +33,23 @@
                 format: 'D MMM YY',
                 minDate: new Date(),
                 defaultDate: new Date(pikadayInput.value),
+                onSelect: function(){
+                  sendPickedDates();
+                }
             });
           });
 
           document.getElementById('save-dates-btn').addEventListener('click', function(e){
             sendDates();
           })
+
+          function sendPickedDates () {
+             var pikadayDateArray =
+             [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
+               return pikaDayInput.value;
+             });
+             app.ports.changePickedDates.send(pikadayDateArray)
+           }
 
         function sendDates () {
            var pikadayDateArray =
