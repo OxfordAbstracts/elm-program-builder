@@ -9,17 +9,18 @@ dummyModel =
     MainModel.initialModel
 
 
-dummyApiUpdate : MainModel.ApiUpdate
-dummyApiUpdate =
+dummyApiUpdateGet : MainModel.ApiUpdateGet
+dummyApiUpdateGet =
     { sessions = dummySessions
     , tracks = dummyTracks
     , columns = dummyColumn
     , dates = dummyDates
+    , submissions = []
     }
 
 
 updatedModel =
-    MainUpdate.updateModelWithApiUpdate dummyModel dummyApiUpdate
+    MainUpdate.updateModelWithApiUpdateGet dummyModel dummyApiUpdateGet
 
 
 dummyColumn : List MainModel.Column

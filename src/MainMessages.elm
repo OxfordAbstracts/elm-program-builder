@@ -15,12 +15,12 @@ type Msg
     | EditSession
     | NewColumn
     | NewTrack
-    | SaveModel (Result Http.Error MainModel.ApiUpdate)
+    | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
-    | UpdateModel (Result Http.Error MainModel.ApiUpdate)
+    | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String
     | UpdateNewSessionColumn String

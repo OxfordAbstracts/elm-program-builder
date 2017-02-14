@@ -20,11 +20,17 @@ type alias Model =
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInput : String
+    , submissions : List Submission
     }
 
 
 type alias Flags =
     { eventId : String }
+
+
+type alias Submission =
+    { id : Int
+    }
 
 
 initialModel : Model
@@ -44,6 +50,7 @@ initialModel =
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInput = ""
+    , submissions = [ Submission 1 ]
     }
 
 
@@ -202,9 +209,24 @@ type alias TrackId =
     Int
 
 
-type alias ApiUpdate =
-    { sessions : List Session
-    , tracks : List Track
-    , columns : List Column
+type alias ApiUpdatePost =
+    { sessions :
+        List Session
+    , tracks :
+        List Track
+    , columns :
+        List Column
     , dates : List DateWithoutTime
+    }
+
+
+type alias ApiUpdateGet =
+    { sessions :
+        List Session
+    , tracks :
+        List Track
+    , columns :
+        List Column
+    , dates : List DateWithoutTime
+    , submissions : List Submission
     }

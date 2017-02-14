@@ -76,7 +76,8 @@ all =
         , test "updateModel updates model with the sessions in apiUpdate" <|
             \() ->
                 Expect.equal (updatedModel.sessions) dummySessions
-        , test "EditSession should remove the edited session and adds a new session with the new data" <|
+        , test """EditSession should remove the edited session and adds a new session with the new data
+                and the invalid submission ids are not added to submissionIds from the submissionIdInput""" <|
             \() ->
                 let
                     editSession =
@@ -90,7 +91,7 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
-                        , submissionIds = [ 1, 4, 5 ]
+                        , submissionIds = [ 1 ]
                         }
 
                     modelWithEditingId =
@@ -116,7 +117,8 @@ all =
                             [ .idOfSessionBeingEdited >> Expect.equal (Nothing)
                             , .sessions >> Utils.last >> Expect.equal (Just editSession)
                             ]
-        , test "CreateNewSession should add the new session to sessions" <|
+        , test """CreateNewSession should add the new session to sessions and the invalid submission
+            ids should not be added to submissionIds from the submissionIdInput""" <|
             \() ->
                 let
                     newSession =
@@ -130,7 +132,7 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
-                        , submissionIds = [ 1, 4, 5 ]
+                        , submissionIds = [ 1 ]
                         }
 
                     modelWithNewSession =
