@@ -23,6 +23,7 @@ type alias Model =
     , submissions :
         List Submission
     , datePickerClosed : Bool
+    , pickedDates : List DateWithoutTime
     }
 
 
@@ -55,6 +56,7 @@ initialModel =
     , submissions =
         [ Submission 1 ]
     , datePickerClosed = True
+    , pickedDates = initialDates
     }
 
 

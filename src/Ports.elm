@@ -3,7 +3,11 @@ port module Ports exposing (..)
 -- import MainModel
 
 
-port openDatepicker : () -> Cmd msg
+port openDatepicker : String -> Cmd msg
 
 
-port changeDateValue : (List String -> msg) -> Sub msg
+port changeDates : (List String -> msg) -> Sub msg
+
+
+
+-- port changePickedDates : (List String -> msg) -> Sub msg

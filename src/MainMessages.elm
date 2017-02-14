@@ -9,14 +9,15 @@ import Date exposing (Date)
 
 
 type Msg
-    = CreateNewColumn
+    = AddNewDate String
+    | CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
     | DeleteSession Int
     | EditSession
     | NewColumn
     | NewTrack
-    | UpdateDateValue (List String)
+    | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
     | ToggleManageDatesUi
@@ -39,3 +40,7 @@ type Msg
     | UpdateNewSessionTrack String
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
+
+
+
+-- | UpdatePickedDates (List String)

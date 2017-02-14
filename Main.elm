@@ -43,10 +43,12 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     -- Sub.none
-    changeDateValue UpdateDateValue
+    changeDates UpdateDates
 
 
 
+-- changePickedDates
+-- UpdatePickedDates
 -- Sub.none
 -- MAIN
 

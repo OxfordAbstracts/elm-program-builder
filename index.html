@@ -13,26 +13,39 @@
             eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : ""
         });
 
-        app.ports.openDatepicker.subscribe(function() {
+        app.ports.openDatepicker.subscribe(function(id) {
+          //adds pikaday to input for newly added date
+          if(id){
+            return setTimeout(function(){
+              var pickNew = document.getElementById('pikaday-instance-' + id);
+                picker = new Pikaday({
+                   field: pickNew,
+                   format: 'D MMM YYYY',
+                   defaultDate: new Date(Date.now()),
+                   minDate: new Date()
+               });
+            }, 100)
+          }
+
           [].forEach.call(document.getElementsByClassName('pikaday-input'), function(pikadayInput) {
-           var picker = new Pikaday({
+            var picker = new Pikaday({
                 field: pikadayInput,
                 format: 'D MMM YY',
                 minDate: new Date(),
-                defaultDate: new Date(pikadayInput.value)
+                defaultDate: new Date(pikadayInput.value),
             });
           });
 
           document.getElementById('save-dates-btn').addEventListener('click', function(e){
-            sendDate();
+            sendDates();
           })
 
-         function sendDate () {
+        function sendDates () {
            var pikadayDateArray =
            [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
              return pikaDayInput.value;
            });
-           app.ports.changeDateValue.send(pikadayDateArray)
+           app.ports.changeDates.send(pikadayDateArray)
          }
       });
     </script>

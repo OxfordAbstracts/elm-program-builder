@@ -148,7 +148,7 @@ update msg model =
                 let
                     command =
                         if (model.datePickerClosed) then
-                            Ports.openDatepicker ()
+                            Ports.openDatepicker ("")
                         else
                             Cmd.none
                 in
@@ -159,8 +159,8 @@ update msg model =
                         , showNewColumnUi = False
                         , idOfSessionBeingEdited = Nothing
                         , datePickerClosed = False
+                        , pickedDates = model.dates
                       }
-                      -- , Cmd.none
                     , command
                     )
 
@@ -372,13 +372,16 @@ update msg model =
                     Nothing ->
                         ( model, Cmd.none )
 
-            UpdateDateValue pickedDatesList ->
+            UpdateDates datesList ->
                 let
                     dateWithoutTimeList =
-                        pickedDatesList
+                        datesList
                             |> List.map DateUtils.valueStringToDateWithoutTime
 
                     dates =
                         List.append model.dates dateWithoutTimeList
                 in
                     ( { model | dates = dateWithoutTimeList }, Cmd.none )
+
+            AddNewDate id ->
+                ( { model | pickedDates = List.append [ { year = 0, month = 0, day = 0 } ] model.pickedDates }, Ports.openDatepicker (id) )

@@ -6,6 +6,7 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import DateUtils exposing (displayDateWithoutTime)
+import Html.Events exposing (onClick)
 
 
 view : Model -> Html Msg
@@ -18,7 +19,7 @@ view model =
                 toString int
 
         datesInputs =
-            model.dates
+            model.pickedDates
                 |> List.indexedMap
                     (\i d ->
                         input
@@ -34,6 +35,15 @@ view model =
                 [ div [ class "input-group" ]
                     datesInputs
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
+                    [ button
+                        [ class "btn btn-default"
+                        , id "add-new-date-btn"
+                        , type_ "button"
+                        , onClick (AddNewDate (toString (List.length model.pickedDates)))
+                        ]
+                        [ text "Add New Date" ]
+                    ]
+                , div [ style [ ( "margin-top", "1rem" ) ] ]
                     [ button [ class "btn btn-default", id "save-dates-btn", type_ "button" ]
                         [ text "Save Dates" ]
                     ]
@@ -42,7 +52,3 @@ view model =
         div [ hidden (not model.showManageDatesUi), class "row" ]
             [ div [ class "col-md-4" ] [ column1 ]
             ]
-
-
-
--- TODO: add year to date string and make it so pikaday can be clicked more than once and make formatting match
