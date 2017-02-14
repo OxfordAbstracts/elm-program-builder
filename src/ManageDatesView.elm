@@ -19,10 +19,11 @@ view model =
 
         datesInputs =
             model.dates
-                |> List.map
-                    (\d ->
+                |> List.indexedMap
+                    (\i d ->
                         input
                             [ class "form-control pikaday-input"
+                            , id ("pikaday-instance-" ++ (toString i))
                             , value (displayDateWithoutTime d)
                             ]
                             []

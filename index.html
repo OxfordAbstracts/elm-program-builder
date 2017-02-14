@@ -5,6 +5,7 @@
 <body>
     <div></div>
     <script src="elm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.min.js"></script>
     <script>
         var node = document.querySelector("div");
@@ -12,47 +13,27 @@
             eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : ""
         });
 
-        app.ports.openDatepicker.subscribe(function(date) {
-            console.log('date', date);
-            console.log('hiiiii');
-
-            [].forEach.call(document.getElementsByClassName('pikaday-input'), function(pikadayInput) {
-                var picker = new Pikaday({
-                    field: pikadayInput,
-                    format: 'DD-MM-YYYY',
-                    minDate: new Date()
-                    ,
-                    onSelect: function(date) {
-                        if (picker) {
-                             picker.destroy();
-                        } else {
-                            picker = new Pikaday({ // <---- then create a new instance of Pikaday in the variable 'picker'
-                            field: pikadayInput,
-                            minDate: new Date(),
-                            format: 'DD/MM/YYYY'
-                          });
-                        }
-                    },
-                    onClose: function(date) {
-                        if (picker) {
-                             picker.destroy();
-                        }
-                    }
-                });
+        app.ports.openDatepicker.subscribe(function() {
+          [].forEach.call(document.getElementsByClassName('pikaday-input'), function(pikadayInput) {
+           var picker = new Pikaday({
+                field: pikadayInput,
+                format: 'D MMM YY',
+                minDate: new Date(),
+                defaultDate: new Date(pikadayInput.value)
             });
+          });
 
-              document.getElementById('save-dates-btn').addEventListener('click', function(e){
-                sendDate();
-              })
+          document.getElementById('save-dates-btn').addEventListener('click', function(e){
+            sendDate();
+          })
 
-             function sendDate () {
-               var pikadayDateArray =
-               [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
-                 return pikaDayInput.value;
-               });
-               console.log('pikadayDateArray', pikadayDateArray);
-               app.ports.changeDateValue.send(pikadayDateArray)
-             }
-        });
+         function sendDate () {
+           var pikadayDateArray =
+           [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
+             return pikaDayInput.value;
+           });
+           app.ports.changeDateValue.send(pikadayDateArray)
+         }
+      });
     </script>
 </body>

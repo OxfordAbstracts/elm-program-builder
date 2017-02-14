@@ -80,7 +80,7 @@ displayDateWithoutTime : DateWithoutTime -> String
 displayDateWithoutTime dateWithoutTime =
     dateWithoutTime
         |> dateWithoutTimeToDate
-        |> (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)))
+        |> (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)) ++ " " ++ (toString (Date.year d)))
 
 
 displayTimeOfDay : TimeOfDay -> String

@@ -145,16 +145,24 @@ update msg model =
                 )
 
             ToggleManageDatesUi ->
-                ( { model
-                    | showManageDatesUi = not model.showManageDatesUi
-                    , showNewSessionUi = False
-                    , showNewTrackUi = False
-                    , showNewColumnUi = False
-                    , idOfSessionBeingEdited = Nothing
-                  }
-                  -- , Cmd.none
-                , Ports.openDatepicker ()
-                )
+                let
+                    command =
+                        if (model.datePickerClosed) then
+                            Ports.openDatepicker ()
+                        else
+                            Cmd.none
+                in
+                    ( { model
+                        | showManageDatesUi = not model.showManageDatesUi
+                        , showNewSessionUi = False
+                        , showNewTrackUi = False
+                        , showNewColumnUi = False
+                        , idOfSessionBeingEdited = Nothing
+                        , datePickerClosed = False
+                      }
+                      -- , Cmd.none
+                    , command
+                    )
 
             CreateNewColumn ->
                 let

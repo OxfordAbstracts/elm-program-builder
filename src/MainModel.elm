@@ -22,6 +22,7 @@ type alias Model =
     , submissionIdsInput : String
     , submissions :
         List Submission
+    , datePickerClosed : Bool
     }
 
 
@@ -53,6 +54,7 @@ initialModel =
     , submissionIdsInput = ""
     , submissions =
         [ Submission 1 ]
+    , datePickerClosed = True
     }
 
 
