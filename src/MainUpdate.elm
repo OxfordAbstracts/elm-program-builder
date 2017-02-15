@@ -186,8 +186,14 @@ update msg model =
 
             CreateNewSession ->
                 let
+                    y =
+                        Debug.log "model.newSession" model.newSession
+
                     newSessionWithSubmissionIds =
                         addSubmissionIdsInputToSession model.submissionIdsInput model.newSession model.submissions
+
+                    x =
+                        Debug.log "newSessionWithSubmissionIds" newSessionWithSubmissionIds
 
                     listWithNewId =
                         appendNewElementToList model.sessions newSessionWithSubmissionIds
