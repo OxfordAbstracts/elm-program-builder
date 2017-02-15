@@ -49,8 +49,14 @@ viewDate sessions columns tracks date =
         sessionsInDate =
             List.filter isInDate sessions
 
+        x =
+            Debug.log "sessionsInDate" sessionsInDate
+
         isInDate session =
             session.date == date
+
+        y =
+            Debug.log "isInDate" isInDate
 
         lengthOfDay =
             Time.hour * 24
@@ -131,6 +137,9 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                 |> Maybe.map .date
                 |> Maybe.withDefault (DateWithoutTime 0 0 0)
 
+        x =
+            Debug.log "sessionDate" sessionDate
+
         endTime =
             sessionStarting
                 |> Maybe.map .endTime
@@ -181,7 +190,7 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                             , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
                             , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
-                            , b [] [ text (" Track: " ++ trackName) ]
+                            , b [] [ text ("FIRST Track: " ++ trackName) ]
                             ]
                         ]
 
