@@ -23,7 +23,7 @@ view model =
                         )
                     ]
                 , tbody []
-                    (List.concatMap (viewDate model.sessions model.columns model.tracks) model.dates)
+                    (List.concatMap (viewDate model.columns model.tracks) model.datesWithSessions)
                 ]
             ]
         ]
@@ -43,20 +43,14 @@ viewColumnHeader column =
     th [] [ text column.name ]
 
 
-viewDate : List Session -> List Column -> List Track -> DateWithoutTime -> List (Html Msg)
-viewDate sessions columns tracks date =
+viewDate : List Column -> List Track -> DateWithSessions -> List (Html Msg)
+viewDate columns tracks dateWithSessions =
     let
+        date =
+            dateWithSessions.date
+
         sessionsInDate =
-            List.filter isInDate sessions
-
-        x =
-            Debug.log "sessionsInDate" sessionsInDate
-
-        isInDate session =
-            session.date == date
-
-        y =
-            Debug.log "isInDate" isInDate
+            dateWithSessions.sessions
 
         lengthOfDay =
             Time.hour * 24
@@ -65,8 +59,8 @@ viewDate sessions columns tracks date =
             sessionsInDate
                 |> List.concatMap
                     (\s ->
-                        [ DateUtils.timeOfDayToTime s.date s.startTime
-                        , DateUtils.timeOfDayToTime s.date s.endTime
+                        [ DateUtils.timeOfDayToTime date s.startTime
+                        , DateUtils.timeOfDayToTime date s.endTime
                         ]
                     )
                 |> Utils.dropDuplicates
@@ -78,18 +72,18 @@ viewDate sessions columns tracks date =
                 |> Maybe.withDefault 8
     in
         [ tr []
-            (viewDateCell date sessionsInDate timeDelimiters firstTime
-                ++ (List.map (appendFirstRowCell sessionsInDate timeDelimiters tracks) columns)
+            (viewDateCell dateWithSessions timeDelimiters firstTime
+                ++ (List.map (appendFirstRowCell dateWithSessions timeDelimiters tracks) columns)
             )
         ]
-            ++ (viewOtherRows sessionsInDate columns tracks (List.drop 1 timeDelimiters))
+            ++ (viewOtherRows dateWithSessions columns tracks (List.drop 1 timeDelimiters))
 
 
-viewDateCell : DateWithoutTime -> List Session -> List Float -> Float -> List (Html msg)
-viewDateCell date sessionsInDate timeDelimiters firstTime =
+viewDateCell : DateWithSessions -> List Float -> Float -> List (Html msg)
+viewDateCell dateWithSessions timeDelimiters firstTime =
     let
         timeDisplay =
-            displayTimeDelimiter sessionsInDate timeDelimiters firstTime
+            displayTimeDelimiter dateWithSessions timeDelimiters firstTime
 
         timeClass =
             if timeDisplay == "" then
@@ -98,7 +92,7 @@ viewDateCell date sessionsInDate timeDelimiters firstTime =
                 ""
 
         elmDate =
-            DateUtils.dateWithoutTimeToDate date
+            DateUtils.dateWithoutTimeToDate dateWithSessions.date
     in
         [ td [ class "active", attribute "rowspan" (toString ((List.length timeDelimiters) - 1)) ]
             [ div [ class "dayofmonth" ]
@@ -113,8 +107,8 @@ viewDateCell date sessionsInDate timeDelimiters firstTime =
         ]
 
 
-appendFirstRowCell : List Session -> List Float -> List Track -> Column -> Html Msg
-appendFirstRowCell sessionsInDate timeDelimiters tracks column =
+appendFirstRowCell : DateWithSessions -> List Float -> List Track -> Column -> Html Msg
+appendFirstRowCell dateWithSessions timeDelimiters tracks column =
     let
         timeDelimiter =
             timeDelimiters
@@ -122,23 +116,15 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                 |> Maybe.withDefault 0
 
         sessionStarting =
-            sessionsInDate
+            dateWithSessions.sessions
                 |> List.filter
                     (\s ->
-                        (DateUtils.timeOfDayToTime s.date s.startTime)
+                        (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                             == timeDelimiter
                             && s.columnId
                             == column.id
                     )
                 |> List.head
-
-        sessionDate =
-            sessionStarting
-                |> Maybe.map .date
-                |> Maybe.withDefault (DateWithoutTime 0 0 0)
-
-        x =
-            Debug.log "sessionDate" sessionDate
 
         endTime =
             sessionStarting
@@ -146,7 +132,7 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                 |> Maybe.withDefault (TimeOfDay 0 0)
 
         rowSpan =
-            getRowSpan timeDelimiters timeDelimiter sessionDate endTime
+            getRowSpan timeDelimiters timeDelimiter dateWithSessions.date endTime
 
         lastTime =
             timeDelimiters
@@ -200,16 +186,16 @@ appendFirstRowCell sessionsInDate timeDelimiters tracks column =
                         ]
 
 
-viewOtherRows : List Session -> List Column -> List Track -> List Float -> List (Html Msg)
-viewOtherRows sessionsInDate columns tracks timeDelimiters =
-    List.map (viewOtherRow sessionsInDate columns tracks timeDelimiters) timeDelimiters
+viewOtherRows : DateWithSessions -> List Column -> List Track -> List Float -> List (Html Msg)
+viewOtherRows dateWithSessions columns tracks timeDelimiters =
+    List.map (viewOtherRow dateWithSessions columns tracks timeDelimiters) timeDelimiters
 
 
-viewOtherRow : List Session -> List Column -> List Track -> List Float -> Float -> Html Msg
-viewOtherRow sessionsInDate columns tracks timeDelimiters timeDelimiter =
+viewOtherRow : DateWithSessions -> List Column -> List Track -> List Float -> Float -> Html Msg
+viewOtherRow dateWithSessions columns tracks timeDelimiters timeDelimiter =
     let
         timeDisplay =
-            displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter
+            displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
 
         timeClass =
             if timeDisplay == "" then
@@ -227,30 +213,31 @@ viewOtherRow sessionsInDate columns tracks timeDelimiters timeDelimiter =
         else
             tr []
                 ([ td [ class timeClass ]
-                    [ text (displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter) ]
+                    [ text (displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter) ]
                  ]
-                    ++ (viewCells sessionsInDate columns tracks timeDelimiters timeDelimiter)
+                    ++ (viewCells dateWithSessions columns tracks timeDelimiters timeDelimiter)
                 )
 
 
-viewCells : List Session -> List Column -> List Track -> List Float -> Float -> List (Html Msg)
-viewCells sessionsInDate columns tracks timeDelimiters timeDelimiter =
+viewCells : DateWithSessions -> List Column -> List Track -> List Float -> Float -> List (Html Msg)
+viewCells dateWithSessions columns tracks timeDelimiters timeDelimiter =
     columns
-        |> List.map (viewCell sessionsInDate tracks timeDelimiters timeDelimiter)
+        |> List.map (viewCell dateWithSessions tracks timeDelimiters timeDelimiter)
 
 
-viewCell : List Session -> List Track -> List Float -> Float -> Column -> Html Msg
-viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
+viewCell : DateWithSessions -> List Track -> List Float -> Float -> Column -> Html Msg
+viewCell dateWithSessions tracks timeDelimiters timeDelimiter column =
     let
         sessionsInColumn =
-            sessionsInDate
+            dateWithSessions
+                |> .sessions
                 |> List.filter (\s -> s.columnId == column.id)
 
         sessionStarting =
             sessionsInColumn
                 |> List.filter
                     (\s ->
-                        (DateUtils.timeOfDayToTime s.date s.startTime)
+                        (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                             == timeDelimiter
                             && s.columnId
                             == column.id
@@ -258,9 +245,7 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                 |> List.head
 
         sessionDate =
-            sessionStarting
-                |> Maybe.map .date
-                |> Maybe.withDefault (DateWithoutTime 0 0 0)
+            dateWithSessions.date
 
         endTime =
             sessionStarting
@@ -323,9 +308,9 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
                     if
                         List.any
                             (\s ->
-                                (DateUtils.timeOfDayToTime s.date s.startTime)
+                                (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                                     <= timeDelimiter
-                                    && (DateUtils.timeOfDayToTime s.date s.endTime)
+                                    && (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
                                     > timeDelimiter
                             )
                             sessionsInColumn
@@ -341,8 +326,8 @@ viewCell sessionsInDate tracks timeDelimiters timeDelimiter column =
 -- HELPERS
 
 
-displayTimeDelimiter : List Session -> List Float -> Float -> String
-displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
+displayTimeDelimiter : DateWithSessions -> List Float -> Float -> String
+displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
     let
         nextDelimiter =
             timeDelimiters
@@ -353,12 +338,12 @@ displayTimeDelimiter sessionsInDate timeDelimiters timeDelimiter =
         if
             List.any
                 (\s ->
-                    (DateUtils.timeOfDayToTime s.date s.startTime)
+                    (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                         == timeDelimiter
-                        || (DateUtils.timeOfDayToTime s.date s.endTime)
+                        || (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
                         == nextDelimiter
                 )
-                sessionsInDate
+                dateWithSessions.sessions
         then
             DateUtils.displayTime timeDelimiter ++ " - " ++ DateUtils.displayTime nextDelimiter
         else

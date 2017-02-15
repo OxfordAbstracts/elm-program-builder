@@ -5,8 +5,8 @@ module MainModel exposing (..)
 
 
 type alias Model =
-    { sessions : List Session
-    , tracks : List Track
+    { -- sessions : List Session
+      tracks : List Track
     , columns : List Column
     , dates : List DateWithoutTime
     , showNewSessionUi : Bool
@@ -20,10 +20,10 @@ type alias Model =
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInput : String
-    , submissions :
-        List Submission
+    , submissions : List Submission
     , datePickerClosed : Bool
     , pickedDates : List DateWithoutTime
+    , datesWithSessions : List DateWithSessions
     }
 
 
@@ -38,8 +38,8 @@ type alias Submission =
 
 initialModel : Model
 initialModel =
-    { sessions = initialSessions
-    , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
+    { -- sessions = initialSessions
+      tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , dates = initialDates
     , showNewSessionUi = False
@@ -57,6 +57,7 @@ initialModel =
         [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
+    , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
     }
 
 
@@ -68,8 +69,9 @@ initialDates =
 type alias Session =
     { id : Int
     , name : String
-    , description : String
-    , date : DateWithoutTime
+    , description :
+        String
+        -- , date : DateWithoutTime
     , startTime : TimeOfDay
     , endTime : TimeOfDay
     , columnId : ColumnId
@@ -77,6 +79,12 @@ type alias Session =
     , location : String
     , submissionIds : List Int
     , chair : String
+    }
+
+
+type alias DateWithSessions =
+    { date : DateWithoutTime
+    , sessions : List Session
     }
 
 
@@ -108,10 +116,10 @@ blankSession id =
     Session id
         ""
         ""
-        (initialDates
-            |> List.head
-            |> Maybe.withDefault defaultDateWithoutTime
-        )
+        -- (initialDates
+        --     |> List.head
+        --     |> Maybe.withDefault defaultDateWithoutTime
+        -- )
         (TimeOfDay 9 0)
         (TimeOfDay 12 0)
         1
@@ -145,7 +153,7 @@ initialSessions =
         1
         "Conceptualising diabetes self-management as an occupation"
         "This a description of the inital session"
-        (DateWithoutTime 2017 1 1)
+        -- (DateWithoutTime 2017 1 1)
         (TimeOfDay 9 0)
         (TimeOfDay 9 1)
         1
@@ -157,7 +165,7 @@ initialSessions =
         2
         "Computers n stuff sesh 2"
         "This a description of the second inital session"
-        (DateWithoutTime 2017 1 1)
+        -- (DateWithoutTime 2017 1 1)
         (TimeOfDay 10 30)
         (TimeOfDay 11 0)
         1
@@ -169,7 +177,7 @@ initialSessions =
         3
         "Sessioning hard 3"
         "This a description of the third inital session"
-        (DateWithoutTime 2017 1 1)
+        -- (DateWithoutTime 2017 1 1)
         (TimeOfDay 13 30)
         (TimeOfDay 15 0)
         1
@@ -181,7 +189,7 @@ initialSessions =
         4
         "Other column sesh 4"
         "This a description of the fourth inital session"
-        (DateWithoutTime 2017 1 1)
+        -- (DateWithoutTime 2017 1 1)
         (TimeOfDay 13 0)
         (TimeOfDay 15 30)
         2
@@ -193,7 +201,7 @@ initialSessions =
         5
         "first column 1 day 2 sesh 5"
         "This a description of the fifth inital session"
-        (DateWithoutTime 2017 1 2)
+        -- (DateWithoutTime 2017 1 2)
         (TimeOfDay 11 0)
         (TimeOfDay 14 30)
         1
