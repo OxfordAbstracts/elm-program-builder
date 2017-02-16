@@ -13,8 +13,8 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
-    , newSession : Session
-    , editSession : Session
+    , newSession : DateWithNewSession
+    , editSession : DateWithNewSession
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
@@ -46,8 +46,8 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
-    , newSession = blankSession 1
-    , editSession = blankSession 1
+    , newSession = { date = DateWithoutTime 2017 1 1, session = blankSession 1 }
+    , editSession = { date = DateWithoutTime 2017 1 1, session = blankSession 1 }
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
@@ -85,6 +85,12 @@ type alias Session =
 type alias DateWithSessions =
     { date : DateWithoutTime
     , sessions : List Session
+    }
+
+
+type alias DateWithNewSession =
+    { date : DateWithoutTime
+    , session : Session
     }
 
 
@@ -224,23 +230,23 @@ type alias TrackId =
 
 
 type alias ApiUpdatePost =
-    { sessions :
-        List Session
+    { datesWithSessions :
+        List DateWithSessions
     , tracks :
         List Track
     , columns :
         List Column
-    , dates : List DateWithoutTime
+        -- , dates : List DateWithoutTime
     }
 
 
 type alias ApiUpdateGet =
-    { sessions :
-        List Session
+    { datesWithSessions :
+        List DateWithSessions
     , tracks :
         List Track
     , columns :
         List Column
-    , dates : List DateWithoutTime
+        -- , dates : List DateWithoutTime
     , submissions : List Submission
     }
