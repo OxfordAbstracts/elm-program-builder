@@ -207,7 +207,7 @@ update msg model =
                 in
                     ( { model
                         | sessions = listWithNewId
-                        , newSession = blankSession 1
+                        , newSession = blankNewSession 1
                         , submissionIdsInput = ""
                       }
                     , Api.postModelToDb newSessionToPost model.eventId
@@ -319,7 +319,7 @@ update msg model =
                         model.sessions
                             |> List.filter (\s -> s.id == sessionId)
                             |> List.head
-                            |> Maybe.withDefault (blankSession -1)
+                            |> Maybe.withDefault (blankNewSession -1)
 
                     submissionIdsInput =
                         submissionIdsToInputText session.submissionIds
@@ -368,7 +368,7 @@ update msg model =
                         in
                             ( { model
                                 | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
-                                , editSession = blankSession 1
+                                , editSession = blankNewSession 1
                                 , showNewSessionUi = False
                                 , idOfSessionBeingEdited = Nothing
                                 , submissionIdsInput = ""

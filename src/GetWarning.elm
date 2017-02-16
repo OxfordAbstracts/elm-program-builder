@@ -16,26 +16,27 @@ endNotMoreThanStart newSession =
         >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
 
 
-sessionsAreOverLapping : Session -> List Session -> Maybe Int -> Bool
-sessionsAreOverLapping newSession sessions idOfSessionBeingEdited =
-    sessions
-        |> List.filter (\s -> s.columnId == newSession.columnId)
+sessionsAreOverLapping : NewSession -> List DateWithSessions -> Maybe Int -> Bool
+sessionsAreOverLapping newSession datesWithSessions idOfSessionBeingEdited =
+    datesWithSessions
+        |> List.map .sessions
+        |> List.filter (\s -> s.columnId == newSession.session.columnId)
         |> List.filter (\s -> s.id /= (Maybe.withDefault -1 idOfSessionBeingEdited))
         |> List.any (overLappingTime newSession)
 
 
-overLappingTime newSession session =
+overLappingTime newSession dateWithSessions =
     let
         newSessionStart =
-            DateUtils.timeOfDayToTime newSession.date newSession.startTime
+            DateUtils.timeOfDayToTime newSession.date newSession.session.startTime
 
         newSessionEnd =
-            DateUtils.timeOfDayToTime newSession.date newSession.endTime
+            DateUtils.timeOfDayToTime newSession.date newSession.session.endTime
 
         sessionStart =
-            DateUtils.timeOfDayToTime session.date session.startTime
+            DateUtils.timeOfDayToTime newSession.date newSession.session.startTime
 
         sessionEnd =
-            DateUtils.timeOfDayToTime session.date session.endTime
+            DateUtils.timeOfDayToTime newSession.date newSession.session.endTime
     in
         newSessionStart < sessionEnd && newSessionEnd > sessionStart

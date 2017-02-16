@@ -13,8 +13,8 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
-    , newSession : Session
-    , editSession : Session
+    , newSession : NewSession
+    , editSession : NewSession
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
@@ -46,8 +46,8 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
-    , newSession = blankSession 1
-    , editSession = blankSession 1
+    , newSession = blankNewSession 1
+    , editSession = blankNewSession 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
@@ -64,6 +64,21 @@ initialModel =
 initialDates : List DateWithoutTime
 initialDates =
     [ DateWithoutTime 2017 1 1, DateWithoutTime 2017 1 2 ]
+
+
+type alias NewSession =
+    { id : Int
+    , name : String
+    , description : String
+    , date : DateWithoutTime
+    , startTime : TimeOfDay
+    , endTime : TimeOfDay
+    , columnId : ColumnId
+    , trackId : TrackId
+    , location : String
+    , submissionIds : List Int
+    , chair : String
+    }
 
 
 type alias Session =
@@ -111,15 +126,15 @@ type alias TimeOfDay =
     }
 
 
-blankSession : Int -> Session
-blankSession id =
-    Session id
+blankNewSession : Int -> NewSession
+blankNewSession id =
+    NewSession id
         ""
         ""
-        -- (initialDates
-        --     |> List.head
-        --     |> Maybe.withDefault defaultDateWithoutTime
-        -- )
+        (initialDates
+            |> List.head
+            |> Maybe.withDefault defaultDateWithoutTime
+        )
         (TimeOfDay 9 0)
         (TimeOfDay 12 0)
         1
@@ -224,23 +239,23 @@ type alias TrackId =
 
 
 type alias ApiUpdatePost =
-    { sessions :
-        List Session
+    { datesWithSessions :
+        List DateWithSessions
     , tracks :
         List Track
     , columns :
         List Column
-    , dates : List DateWithoutTime
+        -- , dates : List DateWithoutTime
     }
 
 
 type alias ApiUpdateGet =
-    { sessions :
-        List Session
+    { datesWithSessions :
+        List DateWithSessions
     , tracks :
         List Track
     , columns :
         List Column
-    , dates : List DateWithoutTime
+        -- , dates : List DateWithoutTime
     , submissions : List Submission
     }

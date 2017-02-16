@@ -11,29 +11,33 @@ import Json.Encode
 apiUpdateGetDecoder : Json.Decode.Decoder ApiUpdateGet
 apiUpdateGetDecoder =
     decode ApiUpdateGet
-        |> required "sessions" (Json.Decode.list sessionDecoder)
+        |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
-        |> required "dates" (Json.Decode.list dateDecoder)
-        |> required "submissions" (Json.Decode.list submissionDecoder)
+        -- |> required "dates" (Json.Decode.list dateDecoder)
+        |>
+            required "submissions" (Json.Decode.list submissionDecoder)
 
 
 apiUpdatePostDecoder : Json.Decode.Decoder ApiUpdatePost
 apiUpdatePostDecoder =
     decode ApiUpdatePost
-        |> required "sessions" (Json.Decode.list sessionDecoder)
+        |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
-        |> required "dates" (Json.Decode.list dateDecoder)
+
+
+
+-- |> required "dates" (Json.Decode.list dateDecoder)
 
 
 encodeApiUpdatePost : ApiUpdatePost -> Json.Encode.Value
 encodeApiUpdatePost record =
     Json.Encode.object
-        [ ( "sessions", Json.Encode.list <| List.map sessionEncoder record.sessions )
+        [ ( "datesWithSessions", Json.Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
         , ( "tracks", Json.Encode.list <| List.map trackEncoder record.tracks )
         , ( "columns", Json.Encode.list <| List.map columnEncoder record.columns )
-        , ( "dates", Json.Encode.list <| List.map dateEncoder record.dates )
+          -- , ( "dates", Json.Encode.list <| List.map dateEncoder record.dates )
         ]
 
 
@@ -43,7 +47,7 @@ sessionEncoder record =
         [ ( "id", Json.Encode.int record.id )
         , ( "name", Json.Encode.string record.name )
         , ( "description", Json.Encode.string record.description )
-        , ( "date", dateEncoder record.date )
+          -- , ( "date", dateEncoder record.date )
         , ( "startTime", timeEncoder record.startTime )
         , ( "endTime", timeEncoder record.endTime )
         , ( "columnId", Json.Encode.int record.columnId )
@@ -54,14 +58,30 @@ sessionEncoder record =
         ]
 
 
+dateWithSessionsEncoder : DateWithSessions -> Json.Encode.Value
+dateWithSessionsEncoder record =
+    Json.Encode.object
+        [ ( "date", dateEncoder record.date )
+        , ( "sessions", Json.Encode.list <| List.map sessionEncoder record.sessions )
+        ]
+
+
+dateWithSessionsDecoder : Json.Decode.Decoder DateWithSessions
+dateWithSessionsDecoder =
+    decode DateWithSessions
+        |> required "date" dateDecoder
+        |> required "sessions" (Json.Decode.list sessionDecoder)
+
+
 sessionDecoder : Json.Decode.Decoder Session
 sessionDecoder =
     decode Session
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
         |> required "description" Json.Decode.string
-        |> required "date" dateDecoder
-        |> required "startTime" timeDecoder
+        -- |> required "date" dateDecoder
+        |>
+            required "startTime" timeDecoder
         |> required "endTime" timeDecoder
         |> required "columnId" Json.Decode.int
         |> required "trackId" Json.Decode.int
