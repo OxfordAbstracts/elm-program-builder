@@ -17,10 +17,18 @@ view model =
         context =
             case model.idOfSessionBeingEdited of
                 Just id ->
-                    NewSessionContext "Edit session" EditSession model.editSession
+                    NewSessionContext
+                        "Edit session"
+                        EditSession
+                        model.editSession
+                        model.editSessionDate
 
                 Nothing ->
-                    NewSessionContext "New session" CreateNewSession model.newSession
+                    NewSessionContext
+                        "New session"
+                        CreateNewSession
+                        model.newSession
+                        model.newSessionDate
     in
         div []
             [ viewUiButtons model

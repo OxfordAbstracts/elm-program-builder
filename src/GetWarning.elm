@@ -12,31 +12,41 @@ getWarning warningSuffix model =
 
 
 endNotMoreThanStart newSession =
-    (DateUtils.timeOfDayToTime newSession.date newSession.startTime)
-        >= (DateUtils.timeOfDayToTime newSession.date newSession.endTime)
+    timeIsGreaterThan newSession.startTime newSession.endTime
 
 
-sessionsAreOverLapping : DateWithNewSession -> List DateWithSessions -> Maybe Int -> Bool
-sessionsAreOverLapping dateWithNewSession datesWithSessions idOfSessionBeingEdited =
+timeIsGreaterThan time1 time2 =
+    (time2.hour < time1.hour)
+        || (time2.hour == time1.hour && time2.minute < time1.minute)
+
+
+sessionsAreOverLapping : Session -> DateWithoutTime -> List DateWithSessions -> Maybe Int -> Bool
+sessionsAreOverLapping newSession newDate datesWithSessions idOfSessionBeingEdited =
     datesWithSessions
-        |> List.map .sessions
-        |> List.filter (\s -> s.columnId == dateWithNewSession.session.columnId)
+        |> List.filter (\d -> d.date == newDate)
+        |> List.concatMap .sessions
+        |> List.filter (\s -> s.columnId == newSession.columnId)
         |> List.filter (\s -> s.id /= (Maybe.withDefault -1 idOfSessionBeingEdited))
-        |> List.any (overLappingTime dateWithNewSession)
+        |> List.any (overLappingTime newSession)
 
 
-overLappingTime dateWithNewSession dateWithSessions =
-    let
-        newSessionStart =
-            DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
+overLappingTime newSession session =
+    -- let
+    --     newSessionStart =
+    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
+    --
+    --     newSessionEnd =
+    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
+    --
+    --     sessionStart =
+    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
+    --
+    --     sessionEnd =
+    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
+    -- in
+    (timeIsGreaterThan session.endTime newSession.startTime)
+        && (timeIsGreaterThan newSession.endTime session.endTime)
 
-        newSessionEnd =
-            DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
 
-        sessionStart =
-            DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
 
-        sessionEnd =
-            DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
-    in
-        newSessionStart < sessionEnd && newSessionEnd > sessionStart
+-- newSessionStart < sessionEnd && newSessionEnd > sessionStart

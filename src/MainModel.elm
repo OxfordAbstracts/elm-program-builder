@@ -8,13 +8,14 @@ type alias Model =
     { -- sessions : List Session
       tracks : List Track
     , columns : List Column
-    , dates : List DateWithoutTime
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
-    , newSession : DateWithNewSession
-    , editSession : DateWithNewSession
+    , newSession : Session
+    , newSessionDate : DateWithoutTime
+    , editSession : Session
+    , editSessionDate : DateWithoutTime
     , newColumn : Column
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
@@ -41,20 +42,20 @@ initialModel =
     { -- sessions = initialSessions
       tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
-    , dates = initialDates
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
-    , newSession = { date = DateWithoutTime 2017 1 1, session = blankSession 1 }
-    , editSession = { date = DateWithoutTime 2017 1 1, session = blankSession 1 }
+    , newSession = blankSession 1
+    , newSessionDate = DateWithoutTime 2017 1 1
+    , editSession = blankSession 1
+    , editSessionDate = DateWithoutTime 2017 1 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInput = ""
-    , submissions =
-        [ Submission 1 ]
+    , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
@@ -69,9 +70,7 @@ initialDates =
 type alias Session =
     { id : Int
     , name : String
-    , description :
-        String
-        -- , date : DateWithoutTime
+    , description : String
     , startTime : TimeOfDay
     , endTime : TimeOfDay
     , columnId : ColumnId
@@ -85,12 +84,6 @@ type alias Session =
 type alias DateWithSessions =
     { date : DateWithoutTime
     , sessions : List Session
-    }
-
-
-type alias DateWithNewSession =
-    { date : DateWithoutTime
-    , session : Session
     }
 
 
@@ -197,9 +190,9 @@ initialSessions =
         "This a description of the fourth inital session"
         -- (DateWithoutTime 2017 1 1)
         (TimeOfDay 13 0)
-        (TimeOfDay 15 30)
-        2
-        2
+        (TimeOfDay 13 30)
+        1
+        1
         "The mystery room"
         []
         ""
@@ -209,7 +202,7 @@ initialSessions =
         "This a description of the fifth inital session"
         -- (DateWithoutTime 2017 1 2)
         (TimeOfDay 11 0)
-        (TimeOfDay 14 30)
+        (TimeOfDay 11 30)
         1
         1
         "The mystery room 4"
