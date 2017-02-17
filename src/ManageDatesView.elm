@@ -18,6 +18,17 @@ view model =
             else
                 toString int
 
+        datesHaveSessions =
+            model.datesWithSessions
+                |> List.filter (\d -> List.length d.sessions > 1)
+                |> List.map .date
+
+        disableInput date =
+            if List.member date datesHaveSessions then
+                disabled True
+            else
+                disabled False
+
         datesInputs =
             model.pickedDates
                 |> List.indexedMap
@@ -26,6 +37,7 @@ view model =
                             [ class "form-control pikaday-input"
                             , id ("pikaday-instance-" ++ (toString i))
                             , value (displayDateWithoutTime d)
+                            , disableInput d
                             ]
                             []
                     )

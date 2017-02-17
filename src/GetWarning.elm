@@ -31,22 +31,5 @@ sessionsAreOverLapping newSession newDate datesWithSessions idOfSessionBeingEdit
 
 
 overLappingTime newSession session =
-    -- let
-    --     newSessionStart =
-    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
-    --
-    --     newSessionEnd =
-    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
-    --
-    --     sessionStart =
-    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.startTime
-    --
-    --     sessionEnd =
-    --         DateUtils.timeOfDayToTime dateWithNewSession.date dateWithNewSession.session.endTime
-    -- in
     (timeIsGreaterThan session.endTime newSession.startTime)
         && (timeIsGreaterThan newSession.endTime session.endTime)
-
-
-
--- newSessionStart < sessionEnd && newSessionEnd > sessionStart
