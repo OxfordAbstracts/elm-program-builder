@@ -403,17 +403,31 @@ update msg model =
                         ( model, Cmd.none )
 
             UpdateDates datesList ->
-                ( model, Cmd.none )
+                -- ( model, Cmd.none )
+                let
+                    changedDateWithoutTimeList =
+                        datesList
+                            |> List.map DateUtils.valueStringToDateWithoutTime
 
-            -- let
-            --     dateWithoutTimeList =
-            --         datesList
-            --             |> List.map DateUtils.valueStringToDateWithoutTime
-            --
-            --     -- dates =
-            --     --     List.append model.dates dateWithoutTimeList
-            -- in
-            --     ( { model | dates = dateWithoutTimeList }, Cmd.none )
+                    allExistingDates =
+                        model.datesWithSessions
+                            |> List.map .date
+
+                    newDates =
+                        changedDateWithoutTimeList
+                            |> List.filter (\d -> not (List.member d allExistingDates))
+
+                    -- if List.member dateElement allDates
+                    -- dateWithoutTimeList
+                    -- |> List.map
+                    newDatesWithSessions =
+                        List.map (\d -> { date = d, sessions = [ blankSession 1 ] }) newDates
+
+                    datesWithSessionsWithNewDates =
+                        List.append model.datesWithSessions newDatesWithSessions
+                in
+                    ( { model | datesWithSessions = datesWithSessionsWithNewDates }, Cmd.none )
+
             -- GetTodayAndAdd id ->
             --     ( model, Date.now (AddNewDate id) )
             AddNewDate id ->
