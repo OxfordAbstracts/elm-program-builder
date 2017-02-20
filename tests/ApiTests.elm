@@ -40,30 +40,29 @@ all =
 createApiJson : String -> String -> Int -> Int -> String
 createApiJson sessionName sessionDescription sessionYear sessionMonth =
     """{
-  "sessions": [
-    {
-      "id": 1,
-      "name": """ ++ (toString sessionName) ++ """,
-      "description": """ ++ (toString sessionDescription) ++ """,
-      "date": {
-        "year":  """ ++ (toString sessionYear) ++ """,
-        "month": """ ++ (toString sessionMonth) ++ """,
-        "day": 1
-      },
-      "startTime": {
-        "hour": 9,
-        "minute": 0
-      },
-      "endTime": {
-        "hour": 9,
-        "minute": 30
-      },
-      "columnId": 1,
-      "trackId": 1,
-      "location": "This is the location",
-      "submissionIds": [],
-      "chair": "This is the chair"
-    }
+    "datesWithSessions": [
+        {"date": {"year":2017, "month": 1, "day": 1},
+        "sessions": [
+          {
+            "id": 1,
+            "name": """ ++ (toString sessionName) ++ """,
+            "description": """ ++ (toString sessionDescription) ++ """,
+            "startTime": {
+              "hour": 9,
+              "minute": 0
+            },
+            "endTime": {
+              "hour": 9,
+              "minute": 30
+            },
+            "columnId": 1,
+            "trackId": 1,
+            "location": "This is the location",
+            "submissionIds": [],
+            "chair": "This is the chair"
+          }
+        ]
+      }
   ],
   "tracks": [
     {
@@ -78,13 +77,6 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
       "name": "column 1"
     }
   ],
-  "dates": [
-    {
-      "year": """ ++ (toString sessionYear) ++ """,
-      "month":  """ ++ (toString sessionMonth) ++ """,
-      "day": 1
-    }
-  ],
 "submissions": [
   {"id": 1}
 ]
@@ -94,10 +86,9 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
 createApiUpdate : String -> String -> Int -> Int -> ApiUpdateGet
 createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
     ApiUpdateGet
-        [ createSession sessionName sessionDescription sessionYear sessionMonth ]
+        [ { date = { year = 2017, month = 1, day = 1 }, sessions = [ createSession sessionName sessionDescription sessionYear sessionMonth ] } ]
         [ Track 1 "track 1" "track 1 description" ]
         [ Column 1 "column 1" ]
-        [ DateWithoutTime sessionYear sessionMonth 1 ]
         [ Submission 1 ]
 
 
@@ -107,10 +98,6 @@ createSession sessionName sessionDescription sessionYear sessionMonth =
         1
         sessionName
         sessionDescription
-        { year = sessionYear
-        , month = sessionMonth
-        , day = 1
-        }
         { hour = 9
         , minute = 0
         }

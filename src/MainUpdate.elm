@@ -412,7 +412,7 @@ update msg model =
                             |> List.filter (\d -> not (List.member d allExistingDates))
 
                     newDatesWithSessions =
-                        List.map (\d -> { date = d, sessions = [ blankSession 1 ] }) newDates
+                        List.map (\d -> { date = d, sessions = [] }) newDates
 
                     datesWithSessionsWithNewDates =
                         List.append model.datesWithSessions newDatesWithSessions

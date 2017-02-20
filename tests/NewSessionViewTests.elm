@@ -25,7 +25,7 @@ all =
                         { model | showNewTrackUi = False, showNewSessionUi = True }
 
                     context =
-                        NewSessionContext "Edit session" EditSession model.editSession
+                        NewSessionContext "Edit session" EditSession model.editSession model.editSessionDate
                 in
                     Expect.equal (NewSessionView.newSessionViewWarning context newModel) ("Cannot create: Session name field is empty")
         , test "newSessionViewWarning shows when end time is less than the start time" <|
@@ -40,7 +40,6 @@ all =
                                 { id = 1
                                 , name = "jj"
                                 , description = "jj"
-                                , date = { year = 2017, month = 1, day = 1 }
                                 , startTime = { hour = 12, minute = 0 }
                                 , endTime = { hour = 9, minute = 0 }
                                 , columnId = 1
@@ -49,10 +48,11 @@ all =
                                 , trackId = 1
                                 , submissionIds = []
                                 }
+                            , editSessionDate = { year = 2017, month = 1, day = 1 }
                         }
 
                     context =
-                        NewSessionContext "Edit session" EditSession newModel.editSession
+                        NewSessionContext "Edit session" EditSession newModel.editSession newModel.editSessionDate
                 in
                     Expect.equal (NewSessionView.newSessionViewWarning context newModel) "Cannot create: Session end time must be greater than start time"
         , test "newSessionViewWarning shows message when another session overlaps with when editting a session" <|
@@ -66,7 +66,6 @@ all =
                                 { id = 1
                                 , name = "jj"
                                 , description = "jj"
-                                , date = { year = 2017, month = 1, day = 1 }
                                 , startTime = { hour = 12, minute = 0 }
                                 , endTime = { hour = 14, minute = 0 }
                                 , columnId = 1
@@ -75,10 +74,11 @@ all =
                                 , trackId = 1
                                 , submissionIds = []
                                 }
+                            , newSessionDate = { year = 2017, month = 1, day = 1 }
                         }
 
                     context =
-                        NewSessionContext "Create session" CreateNewSession newModel.newSession
+                        NewSessionContext "Create session" CreateNewSession newModel.newSession newModel.newSessionDate
                 in
                     Expect.equal (NewSessionView.newSessionViewWarning context newModel) ("Cannot create: Session times overlap another session in the same column")
         ]

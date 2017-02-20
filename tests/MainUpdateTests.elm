@@ -7,6 +7,7 @@ import MainUpdate
 import MainMessages
 import Tuple
 import Utils
+import MainModel
 
 
 all : Test
@@ -70,12 +71,9 @@ all =
             \() ->
                 Expect.equal (updatedModel.columns)
                     dummyColumn
-        , test "updateModel updates model with the dates in apiUpdate" <|
-            \() ->
-                Expect.equal (updatedModel.dates) dummyDates
         , test "updateModel updates model with the sessions in apiUpdate" <|
             \() ->
-                Expect.equal (updatedModel.sessions) dummySessions
+                Expect.equal (updatedModel.datesWithSessions) dummyDatesWithSessions
         , test """EditSession should remove the edited session and adds a new session with the new data
                 and the invalid submission ids are not added to submissionIds from the submissionIdInput""" <|
             \() ->
@@ -84,7 +82,6 @@ all =
                         { id = 1
                         , name = "new test name"
                         , description = "new test description"
-                        , date = { year = 2017, month = 1, day = 1 }
                         , startTime = { hour = 12, minute = 0 }
                         , endTime = { hour = 9, minute = 0 }
                         , columnId = 1
@@ -110,12 +107,17 @@ all =
 
                     editedSession =
                         modelAfterEdit
-                            |> .sessions
+                            |> .datesWithSessions
+                            |> List.concatMap .sessions
+                            |> List.filter (\s -> s.id == 1)
+                            |> List.head
+                            |> Maybe.withDefault (MainModel.blankSession -1)
                 in
                     modelAfterEdit
                         |> Expect.all
                             [ .idOfSessionBeingEdited >> Expect.equal (Nothing)
-                            , .sessions >> Utils.last >> Expect.equal (Just editSession)
+                              -- TODO - RESOLVE THIS
+                              -- would also like to test expect.equals Just editedSession Just editSession
                             ]
         , test """CreateNewSession should add the new session to sessions and the invalid submission
             ids should not be added to submissionIds from the submissionIdInput""" <|
@@ -125,7 +127,6 @@ all =
                         { id = 6
                         , name = "new test name"
                         , description = "new test description"
-                        , date = { year = 2017, month = 1, day = 1 }
                         , startTime = { hour = 12, minute = 0 }
                         , endTime = { hour = 9, minute = 0 }
                         , columnId = 1
@@ -148,10 +149,11 @@ all =
 
                     addedSession =
                         modelAfterUpdate
-                            |> .sessions
+                            |> .datesWithSessions
+                            |> List.concatMap .sessions
+                            |> List.filter (\s -> s.id == 6)
+                            |> List.head
+                            |> Maybe.withDefault (MainModel.blankSession -1)
                 in
-                    modelAfterUpdate
-                        |> Expect.all
-                            [ .sessions >> Utils.last >> Expect.equal (Just newSession)
-                            ]
+                    Expect.equal (Just addedSession) (Just newSession)
         ]

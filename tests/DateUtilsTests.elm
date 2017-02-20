@@ -47,7 +47,7 @@ all =
                 Expect.equal (DateUtils.valueStringToDateWithoutTime "2017-6-18") { year = 2017, month = 6, day = 18 }
         , test "displayDateWithoutTime converts dateWithoutTime records to readable date format with 3 letter word for the month" <|
             \() ->
-                Expect.equal (DateUtils.displayDateWithoutTime { year = 2017, month = 6, day = 18 }) "18 Jun"
+                Expect.equal (DateUtils.displayDateWithoutTime { year = 2017, month = 6, day = 18 }) "18 Jun 2017"
         , fuzz2 (intRange 0 11) (intRange 0 59) "displayTimeOfDay correctly converts our time record to a readable string" <|
             \h m ->
                 let
