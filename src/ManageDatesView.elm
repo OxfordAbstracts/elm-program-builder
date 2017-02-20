@@ -59,6 +59,8 @@ view model =
                     [ button [ class "btn btn-default", id "save-dates-btn", type_ "button" ]
                         [ text "Save Dates" ]
                     ]
+                , span []
+                    [ text "You will be unable to change any dates that have sessions" ]
                 ]
     in
         div [ hidden (not model.showManageDatesUi), class "row" ]
