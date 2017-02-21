@@ -25,9 +25,6 @@ addSubmissionIdsInputToSession submissionIdsInput session submissions =
         submissionIdsValid =
             submissionIds
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
-
-        x =
-            Debug.log "submissionIdsValid" submissionIdsValid
     in
         { session
             | submissionIds = submissionIdsValid
@@ -241,12 +238,10 @@ update msg model =
                     ( updatedModel, Cmd.none )
 
             UpdateModel (Err str) ->
-                Debug.log (toString str)
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
             SaveModel (Err str) ->
-                Debug.log (toString str)
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
             SaveModel (Ok apiUpdate) ->
                 ( model, Cmd.none )
@@ -423,9 +418,6 @@ update msg model =
 
             AddNewDate id date ->
                 let
-                    x =
-                        Debug.log "time" date
-
                     dateRecord =
                         DateUtils.dateToDateWithoutTime date
                 in

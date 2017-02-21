@@ -2,7 +2,6 @@ module MainMessages exposing (..)
 
 import Http
 import MainModel
-import Date
 import Date exposing (Date)
 
 
