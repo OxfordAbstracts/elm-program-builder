@@ -105,6 +105,13 @@ view context model =
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
                         (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
+                    , input
+                        [ class "form-control"
+                        , type_ "checkbox"
+                        , value context.session.location
+                        , onInput UpdateNewSessionLocation
+                        ]
+                        []
                     ]
                   -- if newSession.columnId == c.id the selected
                 , div [ class "input-group" ]
