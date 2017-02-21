@@ -86,7 +86,10 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
 createApiUpdate : String -> String -> Int -> Int -> ApiUpdateGet
 createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
     ApiUpdateGet
-        [ { date = { year = 2017, month = 1, day = 1 }, sessions = [ createSession sessionName sessionDescription sessionYear sessionMonth ] } ]
+        [ { date = { year = 2017, month = 1, day = 1 }
+          , sessions = [ createSession sessionName sessionDescription sessionYear sessionMonth ]
+          }
+        ]
         [ Track 1 "track 1" "track 1 description" ]
         [ Column 1 "column 1" ]
         [ Submission 1 ]

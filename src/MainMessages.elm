@@ -5,9 +5,6 @@ import MainModel
 import Date exposing (Date)
 
 
--- import MainModel exposing (..)
-
-
 type Msg
     = AddNewDate String Date
     | CreateNewColumn
@@ -17,7 +14,6 @@ type Msg
     | DeleteSession Int
     | EditSession
     | GetDateAndThenAddDate String
-      -- | GetTodayAndAdd String
     | NewColumn
     | NewTrack
     | UpdatePickedDates (List String)
