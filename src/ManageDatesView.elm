@@ -20,7 +20,7 @@ view model =
 
         datesHaveSessions =
             model.datesWithSessions
-                |> List.filter (\d -> List.length d.sessions > 1)
+                |> List.filter (\d -> List.length d.sessions > 0)
                 |> List.map .date
 
         disableInput date =
