@@ -2,19 +2,22 @@ module MainMessages exposing (..)
 
 import Http
 import MainModel
+import Date
+import Date exposing (Date)
 
 
 -- import MainModel exposing (..)
 
 
 type Msg
-    = AddNewDate String
+    = AddNewDate String Date
     | CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
     | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
     | EditSession
+    | GetDateAndThenAddDate String
       -- | GetTodayAndAdd String
     | NewColumn
     | NewTrack

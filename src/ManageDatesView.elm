@@ -54,7 +54,7 @@ view model =
                         [ class "btn btn-default"
                         , id "add-new-date-btn"
                         , type_ "button"
-                        , onClick (AddNewDate (toString (List.length model.pickedDates)))
+                        , onClick (GetDateAndThenAddDate (toString (List.length model.pickedDates)))
                         ]
                         [ text "Add New Date" ]
                     ]

@@ -6,6 +6,8 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import String exposing (trim, join, split)
 import Ports exposing (..)
+import Task
+import Date exposing (Date)
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
@@ -419,14 +421,20 @@ update msg model =
                 in
                     ( { model | datesWithSessions = datesWithSessionsWithNewDates }, Cmd.none )
 
-            AddNewDate id ->
-                -- change to getTodayAndAdd
-                ( { model
-                    | pickedDates =
-                        List.append [ { year = 2017, month = 2, day = 14 } ] model.pickedDates
-                  }
-                , Cmd.batch [ Ports.openDatepicker (id) ]
-                )
+            AddNewDate id date ->
+                let
+                    x =
+                        Debug.log "time" date
+
+                    dateRecord =
+                        DateUtils.dateToDateWithoutTime date
+                in
+                    ( { model
+                        | pickedDates =
+                            List.append [ dateRecord ] model.pickedDates
+                      }
+                    , Cmd.batch [ Ports.openDatepicker (id) ]
+                    )
 
             UpdatePickedDates pickedDatesList ->
                 let
@@ -452,3 +460,6 @@ update msg model =
                       }
                     , Cmd.none
                     )
+
+            GetDateAndThenAddDate id ->
+                model ! [ Task.perform (AddNewDate id) Date.now ]

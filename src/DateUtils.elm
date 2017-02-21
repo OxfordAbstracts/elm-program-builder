@@ -101,15 +101,6 @@ displayTime =
     Date.fromTime >> dateToTimeOfDay >> displayTimeOfDay
 
 
-
--- displayTime = function(time) {
---   var x = fromTime (time)
---   var y = dateToTimeOfDay(x)
---   var z = displayTimeOfDay(y)
---   return z
--- }
-
-
 getDateMonthInt : Date.Date -> Int
 getDateMonthInt date =
     case (Date.month date) of
