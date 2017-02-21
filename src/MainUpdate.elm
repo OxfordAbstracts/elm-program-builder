@@ -435,3 +435,20 @@ update msg model =
                             |> List.map DateUtils.valueStringToDateWithoutTime
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
+
+            DeleteDate date ->
+                let
+                    updatedDatesWithSessions =
+                        model.datesWithSessions
+                            |> List.filter (\s -> s.date /= date)
+
+                    updatedPickedDates =
+                        model.pickedDates
+                            |> List.filter (\d -> d /= date)
+                in
+                    ( { model
+                        | datesWithSessions = updatedDatesWithSessions
+                        , pickedDates = updatedPickedDates
+                      }
+                    , Cmd.none
+                    )

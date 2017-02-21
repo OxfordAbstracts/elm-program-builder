@@ -33,13 +33,16 @@ view model =
             model.pickedDates
                 |> List.indexedMap
                     (\i d ->
-                        input
-                            [ class "form-control pikaday-input"
-                            , id ("pikaday-instance-" ++ (toString i))
-                            , value (displayDateWithoutTime d)
-                            , disableInput d
+                        div []
+                            [ input
+                                [ class "form-control pikaday-input"
+                                , id ("pikaday-instance-" ++ (toString i))
+                                , value (displayDateWithoutTime d)
+                                , disableInput d
+                                ]
+                                []
+                            , button [ onClick (DeleteDate d), style [ ( "margin-left", "0.2rem" ) ], disableInput d ] [ text "Delete" ]
                             ]
-                            []
                     )
 
         column1 =

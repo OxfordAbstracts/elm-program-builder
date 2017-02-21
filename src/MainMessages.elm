@@ -12,6 +12,7 @@ type Msg
     | CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
+    | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
     | EditSession
       -- | GetTodayAndAdd String
