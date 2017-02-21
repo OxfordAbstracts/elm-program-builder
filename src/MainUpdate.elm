@@ -111,18 +111,26 @@ update msg model =
                 ( model, Cmd.none )
 
             ToggleNewSessionUi ->
-                ( { model
-                    | showNewSessionUi =
-                        not model.showNewSessionUi
-                            || model.idOfSessionBeingEdited
-                            /= Nothing
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
-                    , showManageDatesUi = False
-                    , idOfSessionBeingEdited = Nothing
-                  }
-                , Cmd.none
-                )
+                let
+                    firstDate =
+                        model.datesWithSessions
+                            |> List.map .date
+                            |> List.head
+                            |> Maybe.withDefault (DateWithoutTime 2017 1 1)
+                in
+                    ( { model
+                        | showNewSessionUi =
+                            not model.showNewSessionUi
+                                || model.idOfSessionBeingEdited
+                                /= Nothing
+                        , showNewColumnUi = False
+                        , showNewTrackUi = False
+                        , showManageDatesUi = False
+                        , idOfSessionBeingEdited = Nothing
+                        , newSessionDate = firstDate
+                      }
+                    , Cmd.none
+                    )
 
             ToggleNewTrackUi ->
                 ( { model
@@ -326,6 +334,13 @@ update msg model =
                             |> List.head
                             |> Maybe.withDefault (blankSession -1)
 
+                    sessionDate =
+                        model.datesWithSessions
+                            |> List.filter (\s -> List.member session s.sessions)
+                            |> List.map .date
+                            |> List.head
+                            |> Maybe.withDefault (DateWithoutTime 2017 1 1)
+
                     submissionIdsInput =
                         submissionIdsToInputText session.submissionIds
                 in
@@ -344,6 +359,7 @@ update msg model =
                         , showNewColumnUi = False
                         , editSession = session
                         , submissionIdsInput = submissionIdsInput
+                        , editSessionDate = sessionDate
                       }
                     , Cmd.none
                     )
