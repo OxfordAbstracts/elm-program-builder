@@ -5,19 +5,22 @@ import DateUtils
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import String exposing (trim, join, split)
+import Ports exposing (..)
+import Task
+import Date exposing (Date)
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
 addSubmissionIdsInputToSession submissionIdsInput session submissions =
     let
+        validSubmissionIds =
+            List.map .id submissions
+
         submissionIds =
             submissionIdsInput
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
-
-        validSubmissionIds =
-            List.map .id submissions
     in
         { session
             | submissionIds = submissionIds
@@ -71,10 +74,9 @@ toInt model string =
 updateModelWithApiUpdateGet : Model -> ApiUpdateGet -> Model
 updateModelWithApiUpdateGet model apiUpdateGet =
     ({ model
-        | sessions = apiUpdateGet.sessions
+        | datesWithSessions = apiUpdateGet.datesWithSessions
         , tracks = apiUpdateGet.tracks
         , columns = apiUpdateGet.columns
-        , dates = apiUpdateGet.dates
         , submissions = apiUpdateGet.submissions
      }
     )
@@ -104,23 +106,33 @@ update msg model =
                 ( model, Cmd.none )
 
             ToggleNewSessionUi ->
-                ( { model
-                    | showNewSessionUi =
-                        not model.showNewSessionUi
-                            || model.idOfSessionBeingEdited
-                            /= Nothing
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
-                    , idOfSessionBeingEdited = Nothing
-                  }
-                , Cmd.none
-                )
+                let
+                    firstDate =
+                        model.datesWithSessions
+                            |> List.map .date
+                            |> List.head
+                            |> Maybe.withDefault (DateWithoutTime 2017 1 1)
+                in
+                    ( { model
+                        | showNewSessionUi =
+                            not model.showNewSessionUi
+                                || model.idOfSessionBeingEdited
+                                /= Nothing
+                        , showNewColumnUi = False
+                        , showNewTrackUi = False
+                        , showManageDatesUi = False
+                        , idOfSessionBeingEdited = Nothing
+                        , newSessionDate = firstDate
+                      }
+                    , Cmd.none
+                    )
 
             ToggleNewTrackUi ->
                 ( { model
                     | showNewTrackUi = not model.showNewTrackUi
                     , showNewColumnUi = False
                     , showNewSessionUi = False
+                    , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
@@ -131,10 +143,31 @@ update msg model =
                     | showNewColumnUi = not model.showNewColumnUi
                     , showNewSessionUi = False
                     , showNewTrackUi = False
+                    , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                   }
                 , Cmd.none
                 )
+
+            ToggleManageDatesUi ->
+                let
+                    command =
+                        if model.datePickerClosed then
+                            Ports.openDatepicker ""
+                        else
+                            Cmd.none
+                in
+                    ( { model
+                        | showManageDatesUi = not model.showManageDatesUi
+                        , showNewSessionUi = False
+                        , showNewTrackUi = False
+                        , showNewColumnUi = False
+                        , idOfSessionBeingEdited = Nothing
+                        , datePickerClosed = False
+                        , pickedDates = List.map .date model.datesWithSessions
+                      }
+                    , command
+                    )
 
             CreateNewColumn ->
                 let
@@ -142,10 +175,9 @@ update msg model =
                         appendNewElementToList model.columns model.newColumn
 
                     newColumnToPost =
-                        { sessions = model.sessions
+                        { datesWithSessions = model.datesWithSessions
                         , tracks = model.tracks
                         , columns = listWithNewId
-                        , dates = model.dates
                         }
                 in
                     ( { model
@@ -160,18 +192,26 @@ update msg model =
                     newSessionWithSubmissionIds =
                         addSubmissionIdsInputToSession model.submissionIdsInput model.newSession model.submissions
 
-                    listWithNewId =
-                        appendNewElementToList model.sessions newSessionWithSubmissionIds
+                    updateDatesWithSessions =
+                        List.map updateDateWithSessions model.datesWithSessions
+
+                    updateDateWithSessions dateWithSessions =
+                        { dateWithSessions
+                            | sessions =
+                                if dateWithSessions.date == model.newSessionDate then
+                                    newSessionWithSubmissionIds :: dateWithSessions.sessions
+                                else
+                                    dateWithSessions.sessions
+                        }
 
                     newSessionToPost =
-                        { sessions = listWithNewId
+                        { datesWithSessions = updateDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
-                        , dates = model.dates
                         }
                 in
                     ( { model
-                        | sessions = listWithNewId
+                        | datesWithSessions = updateDatesWithSessions
                         , newSession = blankSession 1
                         , submissionIdsInput = ""
                       }
@@ -184,7 +224,7 @@ update msg model =
                         appendNewElementToList model.tracks model.newTrack
 
                     apiUpdatePost =
-                        ApiUpdatePost model.sessions tracksWithNewId model.columns model.dates
+                        ApiUpdatePost model.datesWithSessions tracksWithNewId model.columns
                 in
                     ( { model
                         | tracks = tracksWithNewId
@@ -240,7 +280,7 @@ update msg model =
                 ( (updateNewSession model (\ns -> { ns | trackId = (toInt model newTrackId) })), Cmd.none )
 
             UpdateNewSessionDate newDate ->
-                ( (updateNewSession model (\ns -> { ns | date = (DateUtils.valueStringToDateWithoutTime newDate) })), Cmd.none )
+                ( { model | newSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )
 
             UpdateNewSessionStartHour new ->
                 ( updateNewSessionStartTime model (\st -> { st | hour = clamp 0 23 (toInt model new) }), Cmd.none )
@@ -256,18 +296,22 @@ update msg model =
 
             DeleteSession sessionId ->
                 let
-                    newSessionsList =
-                        model.sessions
-                            |> List.filter (\s -> s.id /= sessionId)
+                    newDatesWithSessions =
+                        model.datesWithSessions
+                            |> List.map filterDateWithSessions
+
+                    filterDateWithSessions dateWithSessions =
+                        { dateWithSessions
+                            | sessions = List.filter (\s -> s.id /= sessionId) dateWithSessions.sessions
+                        }
 
                     apiUpdate =
-                        { sessions = newSessionsList
+                        { datesWithSessions = newDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
-                        , dates = model.dates
                         }
                 in
-                    ( { model | sessions = newSessionsList }
+                    ( { model | datesWithSessions = newDatesWithSessions }
                     , Api.postModelToDb apiUpdate model.eventId
                     )
 
@@ -279,10 +323,18 @@ update msg model =
                             |> (\id -> id == sessionId)
 
                     session =
-                        model.sessions
+                        model.datesWithSessions
+                            |> List.concatMap .sessions
                             |> List.filter (\s -> s.id == sessionId)
                             |> List.head
                             |> Maybe.withDefault (blankSession -1)
+
+                    sessionDate =
+                        model.datesWithSessions
+                            |> List.filter (\s -> List.member session s.sessions)
+                            |> List.map .date
+                            |> List.head
+                            |> Maybe.withDefault (DateWithoutTime 2017 1 1)
 
                     submissionIdsInput =
                         submissionIdsToInputText session.submissionIds
@@ -302,6 +354,7 @@ update msg model =
                         , showNewColumnUi = False
                         , editSession = session
                         , submissionIdsInput = submissionIdsInput
+                        , editSessionDate = sessionDate
                       }
                     , Cmd.none
                     )
@@ -310,12 +363,23 @@ update msg model =
                 case model.idOfSessionBeingEdited of
                     Just id ->
                         let
-                            listWithoutSessionBeingEdited =
-                                model.sessions
-                                    |> List.filter (\s -> s.id /= id)
-
                             editSessionWithSubmissionIds =
                                 addSubmissionIdsInputToSession model.submissionIdsInput model.editSession model.submissions
+
+                            updateDatesWithSessions =
+                                List.map updateDateWithSessions model.datesWithSessions
+
+                            updateDateWithSessions dateWithSessions =
+                                { dateWithSessions
+                                    | sessions =
+                                        if dateWithSessions.date == model.editSessionDate then
+                                            dateWithSessions
+                                                |> .sessions
+                                                |> List.filter (\s -> s.id /= id)
+                                                |> (::) editSessionWithSubmissionIds
+                                        else
+                                            dateWithSessions.sessions
+                                }
 
                             editedSession =
                                 { editSessionWithSubmissionIds
@@ -323,14 +387,13 @@ update msg model =
                                 }
 
                             apiUpdate =
-                                { sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                { datesWithSessions = updateDatesWithSessions
                                 , tracks = model.tracks
                                 , columns = model.columns
-                                , dates = model.dates
                                 }
                         in
                             ( { model
-                                | sessions = listWithoutSessionBeingEdited ++ [ editedSession ]
+                                | datesWithSessions = updateDatesWithSessions
                                 , editSession = blankSession 1
                                 , showNewSessionUi = False
                                 , idOfSessionBeingEdited = Nothing
@@ -341,3 +404,56 @@ update msg model =
 
                     Nothing ->
                         ( model, Cmd.none )
+
+            UpdateDates datesList ->
+                let
+                    allExistingDates =
+                        model.datesWithSessions
+                            |> List.map .date
+
+                    -- adds new dates to datesWithsessions
+                    datesWithSessionsWithNewDates =
+                        datesList
+                            |> List.map DateUtils.valueStringToDateWithoutTime
+                            |> List.filter (\d -> not (List.member d allExistingDates))
+                            |> List.map (\d -> { date = d, sessions = [] })
+                            |> List.append model.datesWithSessions
+                in
+                    ( { model | datesWithSessions = datesWithSessionsWithNewDates }, Cmd.none )
+
+            AddNewDate id date ->
+                let
+                    dateRecord =
+                        DateUtils.dateToDateWithoutTime date
+                in
+                    ( { model
+                        | pickedDates =
+                            List.append [ dateRecord ] model.pickedDates
+                      }
+                    , Cmd.batch [ Ports.openDatepicker id ]
+                    )
+
+            UpdatePickedDates pickedDatesList ->
+                let
+                    dateWithoutTimeList =
+                        List.map DateUtils.valueStringToDateWithoutTime pickedDatesList
+                in
+                    ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
+
+            DeleteDate date ->
+                let
+                    updatedDatesWithSessions =
+                        List.filter (\s -> s.date /= date) model.datesWithSessions
+
+                    updatedPickedDates =
+                        List.filter (\d -> d /= date) model.pickedDates
+                in
+                    ( { model
+                        | datesWithSessions = updatedDatesWithSessions
+                        , pickedDates = updatedPickedDates
+                      }
+                    , Cmd.none
+                    )
+
+            GetDateAndThenAddDate id ->
+                model ! [ Task.perform (AddNewDate id) Date.now ]

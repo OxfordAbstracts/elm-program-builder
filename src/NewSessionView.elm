@@ -14,6 +14,7 @@ type alias NewSessionContext =
     { buttonText : String
     , onClickAction : Msg
     , session : Session
+    , date : DateWithoutTime
     }
 
 
@@ -27,7 +28,8 @@ newSessionViewWarning context model =
         model.showNewSessionUi
             && sessionsAreOverLapping
                 context.session
-                model.sessions
+                context.date
+                model.datesWithSessions
                 model.idOfSessionBeingEdited
     then
         getWarning "Session times overlap another session in the same column" model
@@ -140,12 +142,13 @@ view context model =
         column3 =
             let
                 dayOptions =
-                    model.dates
+                    model.datesWithSessions
+                        |> List.map .date
                         |> List.map
                             (\d ->
                                 option
                                     [ value (DateUtils.dateWithoutTimeToValueString d)
-                                    , selected (context.session.date == d)
+                                    , selected (context.date == d)
                                     ]
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )

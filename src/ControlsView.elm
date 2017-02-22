@@ -8,6 +8,7 @@ import MainModel exposing (..)
 import NewSessionView exposing (NewSessionContext, view)
 import NewColumnView
 import NewTrackView
+import ManageDatesView
 
 
 view : Model -> Html Msg
@@ -16,16 +17,25 @@ view model =
         context =
             case model.idOfSessionBeingEdited of
                 Just id ->
-                    NewSessionContext "Edit session" EditSession model.editSession
+                    NewSessionContext
+                        "Edit session"
+                        EditSession
+                        model.editSession
+                        model.editSessionDate
 
                 Nothing ->
-                    NewSessionContext "New session" CreateNewSession model.newSession
+                    NewSessionContext
+                        "New session"
+                        CreateNewSession
+                        model.newSession
+                        model.newSessionDate
     in
         div []
             [ viewUiButtons model
             , NewSessionView.view context model
             , NewColumnView.view model
             , NewTrackView.view model
+            , ManageDatesView.view model
             ]
 
 
@@ -64,7 +74,7 @@ viewUiButtons model =
                     [ text "New Track" ]
                 , button [ class toggleNewColumnClass, type_ "button", onClick ToggleNewColumnUi ]
                     [ text "New Column" ]
-                , button [ class toggleManageDatesClass, type_ "button", onClick ToggleNewColumnUi ]
+                , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
                     [ text "Manage Dates" ]
                 ]
             ]

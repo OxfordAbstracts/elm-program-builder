@@ -80,7 +80,7 @@ displayDateWithoutTime : DateWithoutTime -> String
 displayDateWithoutTime dateWithoutTime =
     dateWithoutTime
         |> dateWithoutTimeToDate
-        |> (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)))
+        |> (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)) ++ " " ++ (toString (Date.year d)))
 
 
 displayTimeOfDay : TimeOfDay -> String
@@ -99,15 +99,6 @@ displayTimeOfDay timeOfDay =
 displayTime : Time.Time -> String
 displayTime =
     Date.fromTime >> dateToTimeOfDay >> displayTimeOfDay
-
-
-
--- displayTime = function(time) {
---   var x = fromTime (time)
---   var y = dateToTimeOfDay(x)
---   var z = displayTimeOfDay(y)
---   return z
--- }
 
 
 getDateMonthInt : Date.Date -> Int

@@ -11,14 +11,14 @@ dummyModel =
 
 dummyApiUpdateGet : MainModel.ApiUpdateGet
 dummyApiUpdateGet =
-    { sessions = dummySessions
+    { datesWithSessions = dummyDatesWithSessions
     , tracks = dummyTracks
     , columns = dummyColumn
-    , dates = dummyDates
     , submissions = []
     }
 
 
+updatedModel : MainModel.Model
 updatedModel =
     MainUpdate.updateModelWithApiUpdateGet dummyModel dummyApiUpdateGet
 
@@ -49,13 +49,17 @@ dummyTracks =
     ]
 
 
+dummyDatesWithSessions : List MainModel.DateWithSessions
+dummyDatesWithSessions =
+    [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = dummySessions } ]
+
+
 dummySessions : List MainModel.Session
 dummySessions =
     [ MainModel.Session
         1
         "Conceptualising diabetes self-management as an occupation"
         "This a description of the inital session"
-        (MainModel.DateWithoutTime 2017 1 1)
         (MainModel.TimeOfDay 9 0)
         (MainModel.TimeOfDay 9 1)
         1
@@ -67,7 +71,6 @@ dummySessions =
         2
         "Computers n stuff sesh 2"
         "This a description of the second inital session"
-        (MainModel.DateWithoutTime 2017 1 1)
         (MainModel.TimeOfDay 10 30)
         (MainModel.TimeOfDay 11 0)
         1

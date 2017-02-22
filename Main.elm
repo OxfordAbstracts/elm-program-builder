@@ -9,6 +9,7 @@ import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
 import Api
+import Ports exposing (..)
 
 
 -- import Json.Decode as Json exposing (int, string, float, Decoder)
@@ -41,7 +42,10 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch
+        [ changeDates UpdateDates
+        , changePickedDates UpdatePickedDates
+        ]
 
 
 

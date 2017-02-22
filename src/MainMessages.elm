@@ -2,21 +2,25 @@ module MainMessages exposing (..)
 
 import Http
 import MainModel
-
-
--- import MainModel exposing (..)
+import Date exposing (Date)
 
 
 type Msg
-    = CreateNewColumn
+    = AddNewDate String Date
+    | CreateNewColumn
     | CreateNewSession
     | CreateNewTrack
+    | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
     | EditSession
+    | GetDateAndThenAddDate String
     | NewColumn
     | NewTrack
+    | UpdatePickedDates (List String)
+    | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
+    | ToggleManageDatesUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
@@ -36,3 +40,7 @@ type Msg
     | UpdateNewSessionTrack String
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
+
+
+
+-- | UpdatePickedDates (List String)
