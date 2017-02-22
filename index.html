@@ -7,57 +7,5 @@
     <script src="elm.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.min.js"></script>
-    <script>
-        var node = document.querySelector("div");
-        var app = Elm.Main.embed(node, {
-            eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : ""
-        });
-
-        app.ports.openDatepicker.subscribe(function(id) {
-          //adds pikaday to input for newly added date
-          if(id){
-            return setTimeout(function(){
-              var pickNew = document.getElementById('pikaday-instance-' + id);
-                picker = new Pikaday({
-                   field: pickNew,
-                   format: 'D MMM YYYY',
-                   defaultDate: new Date(Date.now()),
-                   minDate: new Date()
-               });
-            }, 100)
-          }
-
-          [].forEach.call(document.getElementsByClassName('pikaday-input'), function(pikadayInput) {
-            var picker = new Pikaday({
-                field: pikadayInput,
-                format: 'D MMM YY',
-                minDate: new Date(),
-                defaultDate: new Date(pikadayInput.value),
-                onSelect: function(){
-                  sendPickedDates();
-                }
-            });
-          });
-
-          document.getElementById('save-dates-btn').addEventListener('click', function(e){
-            sendDates();
-          })
-
-          function sendPickedDates () {
-             var pikadayDateArray =
-             [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
-               return pikaDayInput.value;
-             });
-             app.ports.changePickedDates.send(pikadayDateArray)
-           }
-
-        function sendDates () {
-           var pikadayDateArray =
-           [].map.call(document.getElementsByClassName('pikaday-input'),function(pikaDayInput){
-             return pikaDayInput.value;
-           });
-           app.ports.changeDates.send(pikadayDateArray)
-         }
-      });
-    </script>
+    <script src="main.js"></script>
 </body>

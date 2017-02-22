@@ -105,7 +105,7 @@ all =
                             |> MainUpdate.update MainMessages.EditSession
                             |> Tuple.first
 
-                    editedSession =
+                    editedSession modelAfterEdit =
                         modelAfterEdit
                             |> .datesWithSessions
                             |> List.concatMap .sessions
@@ -116,8 +116,7 @@ all =
                     modelAfterEdit
                         |> Expect.all
                             [ .idOfSessionBeingEdited >> Expect.equal (Nothing)
-                              -- TODO - RESOLVE THIS
-                              -- would also like to test expect.equals Just editedSession Just editSession
+                            , editedSession >> Expect.equal (editSession)
                             ]
         , test """CreateNewSession should add the new session to sessions and the invalid submission
             ids should not be added to submissionIds from the submissionIdInput""" <|

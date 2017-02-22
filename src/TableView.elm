@@ -46,21 +46,15 @@ viewColumnHeader column =
 viewDate : List Column -> List Track -> DateWithSessions -> List (Html Msg)
 viewDate columns tracks dateWithSessions =
     let
-        date =
-            dateWithSessions.date
-
-        sessionsInDate =
-            dateWithSessions.sessions
-
         lengthOfDay =
             Time.hour * 24
 
         timeDelimiters =
-            sessionsInDate
+            dateWithSessions.sessions
                 |> List.concatMap
                     (\s ->
-                        [ DateUtils.timeOfDayToTime date s.startTime
-                        , DateUtils.timeOfDayToTime date s.endTime
+                        [ DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
+                        , DateUtils.timeOfDayToTime dateWithSessions.date s.endTime
                         ]
                     )
                 |> Utils.dropDuplicates
@@ -176,7 +170,7 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks column =
                             , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
                             , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
-                            , b [] [ text ("FIRST Track: " ++ trackName) ]
+                            , b [] [ text ("Track: " ++ trackName) ]
                             ]
                         ]
 

@@ -41,7 +41,12 @@ view model =
                                 , disableInput d
                                 ]
                                 []
-                            , button [ onClick (DeleteDate d), style [ ( "margin-left", "0.2rem" ) ], disableInput d ] [ text "Delete" ]
+                            , button
+                                [ onClick (DeleteDate d)
+                                , style [ ( "margin-left", "0.2rem" ) ]
+                                , disableInput d
+                                ]
+                                [ text "Delete" ]
                             ]
                     )
 
@@ -54,7 +59,7 @@ view model =
                         [ class "btn btn-default"
                         , id "add-new-date-btn"
                         , type_ "button"
-                        , onClick (GetDateAndThenAddDate (toString (List.length model.pickedDates)))
+                        , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
                         ]
                         [ text "Add New Date" ]
                     ]

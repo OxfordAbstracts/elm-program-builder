@@ -13,21 +13,17 @@ import Date exposing (Date)
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
 addSubmissionIdsInputToSession submissionIdsInput session submissions =
     let
+        validSubmissionIds =
+            List.map .id submissions
+
         submissionIds =
             submissionIdsInput
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
-
-        validSubmissionIds =
-            List.map .id submissions
-
-        -- removes any invalid submissions - i.e. ones that have not been accepted for this event
-        submissionIdsValid =
-            submissionIds
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
     in
         { session
-            | submissionIds = submissionIdsValid
+            | submissionIds = submissionIds
         }
 
 
@@ -80,8 +76,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
     ({ model
         | datesWithSessions = apiUpdateGet.datesWithSessions
         , tracks = apiUpdateGet.tracks
-        , columns =
-            apiUpdateGet.columns
+        , columns = apiUpdateGet.columns
         , submissions = apiUpdateGet.submissions
      }
     )
@@ -157,8 +152,8 @@ update msg model =
             ToggleManageDatesUi ->
                 let
                     command =
-                        if (model.datePickerClosed) then
-                            Ports.openDatepicker ("")
+                        if model.datePickerClosed then
+                            Ports.openDatepicker ""
                         else
                             Cmd.none
                 in
@@ -412,23 +407,17 @@ update msg model =
 
             UpdateDates datesList ->
                 let
-                    changedDateWithoutTimeList =
-                        datesList
-                            |> List.map DateUtils.valueStringToDateWithoutTime
-
                     allExistingDates =
                         model.datesWithSessions
                             |> List.map .date
 
-                    newDates =
-                        changedDateWithoutTimeList
-                            |> List.filter (\d -> not (List.member d allExistingDates))
-
-                    newDatesWithSessions =
-                        List.map (\d -> { date = d, sessions = [] }) newDates
-
+                    -- adds new dates to datesWithsessions
                     datesWithSessionsWithNewDates =
-                        List.append model.datesWithSessions newDatesWithSessions
+                        datesList
+                            |> List.map DateUtils.valueStringToDateWithoutTime
+                            |> List.filter (\d -> not (List.member d allExistingDates))
+                            |> List.map (\d -> { date = d, sessions = [] })
+                            |> List.append model.datesWithSessions
                 in
                     ( { model | datesWithSessions = datesWithSessionsWithNewDates }, Cmd.none )
 
@@ -441,26 +430,23 @@ update msg model =
                         | pickedDates =
                             List.append [ dateRecord ] model.pickedDates
                       }
-                    , Cmd.batch [ Ports.openDatepicker (id) ]
+                    , Cmd.batch [ Ports.openDatepicker id ]
                     )
 
             UpdatePickedDates pickedDatesList ->
                 let
                     dateWithoutTimeList =
-                        pickedDatesList
-                            |> List.map DateUtils.valueStringToDateWithoutTime
+                        List.map DateUtils.valueStringToDateWithoutTime pickedDatesList
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
 
             DeleteDate date ->
                 let
                     updatedDatesWithSessions =
-                        model.datesWithSessions
-                            |> List.filter (\s -> s.date /= date)
+                        List.filter (\s -> s.date /= date) model.datesWithSessions
 
                     updatedPickedDates =
-                        model.pickedDates
-                            |> List.filter (\d -> d /= date)
+                        List.filter (\d -> d /= date) model.pickedDates
                 in
                     ( { model
                         | datesWithSessions = updatedDatesWithSessions
