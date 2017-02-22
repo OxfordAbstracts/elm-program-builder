@@ -216,16 +216,16 @@ viewOtherRow dateWithSessions columns tracks timeDelimiters timeDelimiter =
 viewCells : DateWithSessions -> List Column -> List Track -> List Float -> Float -> List (Html Msg)
 viewCells dateWithSessions columns tracks timeDelimiters timeDelimiter =
     columns
-        |> List.map (viewCell dateWithSessions tracks timeDelimiters timeDelimiter)
+        |> List.indexedMap (viewCell dateWithSessions tracks timeDelimiters timeDelimiter)
 
 
-viewCell : DateWithSessions -> List Track -> List Float -> Float -> Column -> Html Msg
-viewCell dateWithSessions tracks timeDelimiters timeDelimiter column =
+viewCell : DateWithSessions -> List Track -> List Float -> Float -> Int -> Column -> Html Msg
+viewCell dateWithSessions tracks timeDelimiters timeDelimiter index column =
     let
         sessionsInColumn =
             dateWithSessions
                 |> .sessions
-                |> List.filter (\s -> s.columnId == ColumnId column.id)
+                |> List.filter (\s -> (s.columnId == ColumnId column.id) || (s.columnId == AllColumns))
 
         sessionStarting =
             sessionsInColumn
@@ -233,8 +233,11 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter column =
                     (\s ->
                         (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                             == timeDelimiter
-                            && s.columnId
-                            == ColumnId column.id
+                            && ((s.columnId
+                                    == ColumnId column.id
+                                )
+                                    || (index == 0 && (s.columnId == AllColumns))
+                               )
                     )
                 |> List.head
 
