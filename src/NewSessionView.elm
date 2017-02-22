@@ -3,7 +3,7 @@ module NewSessionView exposing (view, newSessionViewWarning, NewSessionContext)
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onBlur)
+import Html.Events exposing (onClick, onInput, onBlur, targetChecked, on)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
@@ -62,6 +62,14 @@ view context model =
                 AllColumns _ ->
                     []
 
+        selectedAllColumnsValue =
+            case context.session.columnId of
+                ColumnId columnIdInt ->
+                    False
+
+                AllColumns _ ->
+                    True
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
@@ -113,16 +121,14 @@ view context model =
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
                         selectedColumn
-                      -- (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
                     , input
                         [ class "form-control"
                         , type_ "checkbox"
-                        , value context.session.location
-                        , onInput UpdateNewSessionLocation
+                        , checked selectedAllColumnsValue
+                        , onClick UpdateNewSessionColumnsAll
                         ]
                         []
                     ]
-                  -- if newSession.columnId == c.id the selected
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []

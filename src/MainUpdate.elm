@@ -275,6 +275,14 @@ update msg model =
                     Err _ ->
                         ( model, Cmd.none )
 
+            UpdateNewSessionColumnsAll ->
+                case model.newSession.columnId of
+                    AllColumns allColumnsValue ->
+                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns allColumnsValue })), Cmd.none )
+
+                    ColumnId _ ->
+                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns True })), Cmd.none )
+
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
 
