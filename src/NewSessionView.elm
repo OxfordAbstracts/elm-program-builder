@@ -127,6 +127,9 @@ view context model =
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
                         selectedColumn
+                    ]
+                , div [ class "input-group" ]
+                    [ label [ for "all-column-input" ] [ text "All Columns" ]
                     , input
                         [ class "form-control"
                         , type_ "checkbox"
