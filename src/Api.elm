@@ -42,12 +42,32 @@ sessionEncoder record =
         , ( "description", Json.Encode.string record.description )
         , ( "startTime", timeEncoder record.startTime )
         , ( "endTime", timeEncoder record.endTime )
-        , ( "columnId", Json.Encode.int record.columnId )
+        , ( "columnId", sessionColumnEncoder record.columnId )
         , ( "trackId", Json.Encode.int record.trackId )
         , ( "location", Json.Encode.string record.location )
         , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int record.submissionIds )
         , ( "chair", Json.Encode.string record.chair )
         ]
+
+
+sessionColumnEncoder : SessionColumn -> Json.Encode.Value
+sessionColumnEncoder record =
+    case record of
+        ColumnId int ->
+            encodeColumnId int
+
+        AllColumns bool ->
+            encodeAllColumns bool
+
+
+encodeColumnId : ColumnId -> Json.Encode.Value
+encodeColumnId columnId =
+    Json.Encode.int columnId
+
+
+encodeAllColumns : AllColumns -> Json.Encode.Value
+encodeAllColumns allColumns =
+    Json.Encode.bool allColumns
 
 
 dateWithSessionsEncoder : DateWithSessions -> Json.Encode.Value
@@ -65,6 +85,27 @@ dateWithSessionsDecoder =
         |> required "sessions" (Json.Decode.list sessionDecoder)
 
 
+sessionColumnDecoder : Json.Decode.Decoder SessionColumn
+sessionColumnDecoder =
+    -- decode SessionColumn
+    Json.Decode.oneOf
+        [ decodeColumnId
+        , decodeAllColumns
+        ]
+
+
+decodeColumnId : Json.Decode.Decoder SessionColumn
+decodeColumnId =
+    decode ColumnId
+        |> required "columnId" Json.Decode.int
+
+
+decodeAllColumns : Json.Decode.Decoder SessionColumn
+decodeAllColumns =
+    decode AllColumns
+        |> required "AllColumns" Json.Decode.bool
+
+
 sessionDecoder : Json.Decode.Decoder Session
 sessionDecoder =
     decode Session
@@ -73,7 +114,7 @@ sessionDecoder =
         |> required "description" Json.Decode.string
         |> required "startTime" timeDecoder
         |> required "endTime" timeDecoder
-        |> required "columnId" Json.Decode.int
+        |> required "columnId" sessionColumnDecoder
         |> required "trackId" Json.Decode.int
         |> required "location" Json.Decode.string
         |> required "submissionIds" (Json.Decode.list Json.Decode.int)

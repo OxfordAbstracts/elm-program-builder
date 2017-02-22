@@ -116,7 +116,7 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks column =
                         (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                             == timeDelimiter
                             && s.columnId
-                            == column.id
+                            == ColumnId column.id
                     )
                 |> List.head
 
@@ -225,7 +225,7 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter column =
         sessionsInColumn =
             dateWithSessions
                 |> .sessions
-                |> List.filter (\s -> s.columnId == column.id)
+                |> List.filter (\s -> s.columnId == ColumnId column.id)
 
         sessionStarting =
             sessionsInColumn
@@ -234,7 +234,7 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter column =
                         (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                             == timeDelimiter
                             && s.columnId
-                            == column.id
+                            == ColumnId column.id
                     )
                 |> List.head
 

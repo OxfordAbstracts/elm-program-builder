@@ -268,7 +268,12 @@ update msg model =
                 ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
             UpdateNewSessionColumn newColumnId ->
-                ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
+                case (String.toInt newColumnId) of
+                    Ok columnIdInt ->
+                        ( (updateNewSession model (\ns -> { ns | columnId = (ColumnId columnIdInt) })), Cmd.none )
+
+                    Err _ ->
+                        ( model, Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )

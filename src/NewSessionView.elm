@@ -54,6 +54,14 @@ view context model =
                 Just val ->
                     True
 
+        selectedColumn =
+            case context.session.columnId of
+                ColumnId columnIdInt ->
+                    (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
+
+                AllColumns _ ->
+                    []
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
@@ -104,7 +112,8 @@ view context model =
                     [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                        (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
+                        selectedColumn
+                      -- (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
                     , input
                         [ class "form-control"
                         , type_ "checkbox"
