@@ -277,11 +277,14 @@ update msg model =
 
             UpdateNewSessionColumnsAll ->
                 case model.newSession.columnId of
-                    AllColumns allColumnsValue ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns allColumnsValue })), Cmd.none )
+                    AllColumns ->
+                        ( (updateNewSession model (\ns -> { ns | columnId = NoColumns })), Cmd.none )
+
+                    NoColumns ->
+                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns })), Cmd.none )
 
                     ColumnId _ ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns True })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns })), Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )

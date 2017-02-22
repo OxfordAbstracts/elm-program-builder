@@ -38,11 +38,8 @@ type alias Submission =
 
 type SessionColumn
     = ColumnId Int
-    | AllColumns Bool
-
-
-type alias AllColumns =
-    Bool
+    | AllColumns
+    | NoColumns
 
 
 initialModel : Model
@@ -201,7 +198,7 @@ initialSessions =
         "This a description of the fifth inital session"
         (TimeOfDay 11 0)
         (TimeOfDay 11 30)
-        (AllColumns True)
+        AllColumns
         1
         "The mystery room 4"
         []

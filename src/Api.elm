@@ -35,18 +35,18 @@ encodeApiUpdatePost record =
 
 
 sessionEncoder : Session -> Json.Encode.Value
-sessionEncoder record =
+sessionEncoder session =
     Json.Encode.object
-        [ ( "id", Json.Encode.int record.id )
-        , ( "name", Json.Encode.string record.name )
-        , ( "description", Json.Encode.string record.description )
-        , ( "startTime", timeEncoder record.startTime )
-        , ( "endTime", timeEncoder record.endTime )
-        , ( "columnId", sessionColumnEncoder record.columnId )
-        , ( "trackId", Json.Encode.int record.trackId )
-        , ( "location", Json.Encode.string record.location )
-        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int record.submissionIds )
-        , ( "chair", Json.Encode.string record.chair )
+        [ ( "id", Json.Encode.int session.id )
+        , ( "name", Json.Encode.string session.name )
+        , ( "description", Json.Encode.string session.description )
+        , ( "startTime", timeEncoder session.startTime )
+        , ( "endTime", timeEncoder session.endTime )
+        , ( "columnId", sessionColumnEncoder session.columnId )
+        , ( "trackId", Json.Encode.int session.trackId )
+        , ( "location", Json.Encode.string session.location )
+        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int session.submissionIds )
+        , ( "chair", Json.Encode.string session.chair )
         ]
 
 
@@ -54,20 +54,13 @@ sessionColumnEncoder : SessionColumn -> Json.Encode.Value
 sessionColumnEncoder record =
     case record of
         ColumnId int ->
-            encodeColumnId int
+            Json.Encode.int int
 
-        AllColumns bool ->
-            encodeAllColumns bool
+        AllColumns ->
+            Json.Encode.string "All columns"
 
-
-encodeColumnId : ColumnId -> Json.Encode.Value
-encodeColumnId columnId =
-    Json.Encode.int columnId
-
-
-encodeAllColumns : AllColumns -> Json.Encode.Value
-encodeAllColumns allColumns =
-    Json.Encode.bool allColumns
+        NoColumns ->
+            Json.Encode.null
 
 
 dateWithSessionsEncoder : DateWithSessions -> Json.Encode.Value
@@ -85,25 +78,15 @@ dateWithSessionsDecoder =
         |> required "sessions" (Json.Decode.list sessionDecoder)
 
 
-sessionColumnDecoder : Json.Decode.Decoder SessionColumn
-sessionColumnDecoder =
-    -- decode SessionColumn
-    Json.Decode.oneOf
-        [ decodeColumnId
-        , decodeAllColumns
-        ]
 
-
-decodeColumnId : Json.Decode.Decoder SessionColumn
-decodeColumnId =
-    decode ColumnId
-        |> required "columnId" Json.Decode.int
-
-
-decodeAllColumns : Json.Decode.Decoder SessionColumn
-decodeAllColumns =
-    decode AllColumns
-        |> required "AllColumns" Json.Decode.bool
+-- decode SessionColumn
+-- Json.Decode.oneOf
+--     [ decodeColumnId
+--     , decodeAllColumns AllColumns
+--     , decodeNoColumns NoColumns
+--     ]
+-- Json.Decode.map3 SessionColumn
+--     (Json.Decode.field "columnId" Json.Decode.Int)
 
 
 sessionDecoder : Json.Decode.Decoder Session
@@ -119,6 +102,24 @@ sessionDecoder =
         |> required "location" Json.Decode.string
         |> required "submissionIds" (Json.Decode.list Json.Decode.int)
         |> required "chair" Json.Decode.string
+
+
+sessionColumnDecoder : Json.Decode.Decoder SessionColumn
+sessionColumnDecoder =
+    Json.Decode.oneOf
+        [ Json.Decode.map ColumnId Json.Decode.int
+        , Json.Decode.map stringColumnDecoder Json.Decode.string
+        , Json.Decode.null NoColumns
+        ]
+
+
+stringColumnDecoder string =
+    case string of
+        "All columns" ->
+            AllColumns
+
+        _ ->
+            Debug.log "ahhhh what do we do!!!!!" NoColumns
 
 
 trackEncoder : Track -> Json.Encode.Value
