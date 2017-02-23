@@ -77,7 +77,7 @@ type alias Session =
     , description : String
     , startTime : TimeOfDay
     , endTime : TimeOfDay
-    , columnId : SessionColumn
+    , sessionColumn : SessionColumn
     , trackId : TrackId
     , location : String
     , submissionIds : List Int

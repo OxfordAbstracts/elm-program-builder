@@ -37,7 +37,7 @@ sessionAcrossAllColumns sessionsInColumn sessionStarting index =
     let
         sessionsAllColumns =
             sessionsInColumn
-                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+                |> List.filter (\s -> index == 0 && (s.sessionColumn == AllColumns))
     in
         List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
 
@@ -120,10 +120,10 @@ getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index 
             (\s ->
                 (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
                     == timeDelimiter
-                    && ((s.columnId
+                    && ((s.sessionColumn
                             == ColumnId column.id
                         )
-                            || (index == 0 && s.columnId == AllColumns)
+                            || (index == 0 && s.sessionColumn == AllColumns)
                        )
             )
         |> List.head
@@ -140,7 +140,7 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index colum
         sessionsInColumn =
             dateWithSessions
                 |> .sessions
-                |> List.filter (\s -> (s.columnId == ColumnId column.id) || (s.columnId == AllColumns))
+                |> List.filter (\s -> (s.sessionColumn == ColumnId column.id) || (s.sessionColumn == AllColumns))
 
         sessionStarting =
             getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
@@ -274,7 +274,7 @@ getSessionAcrossAllColumns sessionsInColumn sessionStarting index =
     let
         sessionsAllColumns =
             sessionsInColumn
-                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+                |> List.filter (\s -> index == 0 && (s.sessionColumn == AllColumns))
     in
         List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
 
@@ -285,7 +285,7 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
         sessionsInColumn =
             dateWithSessions
                 |> .sessions
-                |> List.filter (\s -> (s.columnId == ColumnId column.id) || (s.columnId == AllColumns))
+                |> List.filter (\s -> (s.sessionColumn == ColumnId column.id) || (s.sessionColumn == AllColumns))
 
         sessionStarting =
             getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index

@@ -42,7 +42,7 @@ sessionEncoder session =
         , ( "description", Json.Encode.string session.description )
         , ( "startTime", timeEncoder session.startTime )
         , ( "endTime", timeEncoder session.endTime )
-        , ( "columnId", sessionColumnEncoder session.columnId )
+        , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
         , ( "trackId", Json.Encode.int session.trackId )
         , ( "location", Json.Encode.string session.location )
         , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int session.submissionIds )

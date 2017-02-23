@@ -25,7 +25,7 @@ sessionsAreOverLapping newSession newDate datesWithSessions idOfSessionBeingEdit
     datesWithSessions
         |> List.filter (\d -> d.date == newDate)
         |> List.concatMap .sessions
-        |> List.filter (\s -> s.columnId == newSession.columnId)
+        |> List.filter (\s -> s.sessionColumn == newSession.sessionColumn)
         |> List.filter (\s -> s.id /= (Maybe.withDefault -1 idOfSessionBeingEdited))
         |> List.any (overLappingTime newSession)
 

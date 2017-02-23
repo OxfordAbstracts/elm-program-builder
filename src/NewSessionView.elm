@@ -55,7 +55,7 @@ view context model =
                     True
 
         selectedColumn =
-            case context.session.columnId of
+            case context.session.sessionColumn of
                 ColumnId columnIdInt ->
                     (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
 
@@ -66,7 +66,7 @@ view context model =
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
         selectedAllColumnsValue =
-            case context.session.columnId of
+            case context.session.sessionColumn of
                 ColumnId _ ->
                     False
 

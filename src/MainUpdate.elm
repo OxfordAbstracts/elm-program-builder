@@ -270,21 +270,21 @@ update msg model =
             UpdateNewSessionColumn newColumnId ->
                 case (String.toInt newColumnId) of
                     Ok columnIdInt ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = (ColumnId columnIdInt) })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
 
                     Err _ ->
                         ( model, Cmd.none )
 
             UpdateNewSessionColumnsAll ->
-                case model.newSession.columnId of
+                case model.newSession.sessionColumn of
                     AllColumns ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = NoColumns })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | sessionColumn = NoColumns })), Cmd.none )
 
                     NoColumns ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
 
                     ColumnId _ ->
-                        ( (updateNewSession model (\ns -> { ns | columnId = AllColumns })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
