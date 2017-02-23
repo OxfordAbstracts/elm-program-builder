@@ -13,20 +13,24 @@ import Utils
 
 view : Model -> Html Msg
 view model =
-    div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
-        [ div [ class "table-responsive" ]
-            [ table [ class "table table-condensed table-bordered" ]
-                [ thead []
-                    [ tr []
-                        (defaultHeaders
-                            ++ (List.map viewColumnHeader model.columns)
-                        )
+    let
+        numColumns =
+            List.length model.columns
+    in
+        div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
+            [ div [ class "table-responsive" ]
+                [ table [ class "table table-condensed table-bordered" ]
+                    [ thead []
+                        [ tr []
+                            (defaultHeaders
+                                ++ (List.map viewColumnHeader model.columns)
+                            )
+                        ]
+                    , tbody []
+                        (List.concatMap (viewDate model.columns model.tracks numColumns) model.datesWithSessions)
                     ]
-                , tbody []
-                    (List.concatMap (viewDate model.columns model.tracks) model.datesWithSessions)
                 ]
             ]
-        ]
 
 
 defaultHeaders : List (Html msg)
@@ -43,8 +47,8 @@ viewColumnHeader column =
     th [] [ text column.name ]
 
 
-viewDate : List Column -> List Track -> DateWithSessions -> List (Html Msg)
-viewDate columns tracks dateWithSessions =
+viewDate : List Column -> List Track -> Int -> DateWithSessions -> List (Html Msg)
+viewDate columns tracks numColumns dateWithSessions =
     let
         lengthOfDay =
             Time.hour * 24
@@ -70,7 +74,7 @@ viewDate columns tracks dateWithSessions =
                 ++ (List.map (appendFirstRowCell dateWithSessions timeDelimiters tracks) columns)
             )
         ]
-            ++ (viewOtherRows dateWithSessions columns tracks (List.drop 1 timeDelimiters))
+            ++ (viewOtherRows dateWithSessions columns tracks (List.drop 1 timeDelimiters) numColumns)
 
 
 viewDateCell : DateWithSessions -> List Float -> Float -> List (Html msg)
@@ -180,13 +184,13 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks column =
                         ]
 
 
-viewOtherRows : DateWithSessions -> List Column -> List Track -> List Float -> List (Html Msg)
-viewOtherRows dateWithSessions columns tracks timeDelimiters =
-    List.map (viewOtherRow dateWithSessions columns tracks timeDelimiters) timeDelimiters
+viewOtherRows : DateWithSessions -> List Column -> List Track -> List Float -> Int -> List (Html Msg)
+viewOtherRows dateWithSessions columns tracks timeDelimiters numColumns =
+    List.map (viewOtherRow dateWithSessions columns tracks timeDelimiters numColumns) timeDelimiters
 
 
-viewOtherRow : DateWithSessions -> List Column -> List Track -> List Float -> Float -> Html Msg
-viewOtherRow dateWithSessions columns tracks timeDelimiters timeDelimiter =
+viewOtherRow : DateWithSessions -> List Column -> List Track -> List Float -> Int -> Float -> Html Msg
+viewOtherRow dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter =
     let
         timeDisplay =
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
@@ -209,18 +213,18 @@ viewOtherRow dateWithSessions columns tracks timeDelimiters timeDelimiter =
                 ([ td [ class timeClass ]
                     [ text (displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter) ]
                  ]
-                    ++ (viewCells dateWithSessions columns tracks timeDelimiters timeDelimiter)
+                    ++ (viewCells dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter)
                 )
 
 
-viewCells : DateWithSessions -> List Column -> List Track -> List Float -> Float -> List (Html Msg)
-viewCells dateWithSessions columns tracks timeDelimiters timeDelimiter =
+viewCells : DateWithSessions -> List Column -> List Track -> List Float -> Int -> Float -> List (Html Msg)
+viewCells dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter =
     columns
-        |> List.indexedMap (viewCell dateWithSessions tracks timeDelimiters timeDelimiter)
+        |> List.indexedMap (viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter)
 
 
-viewCell : DateWithSessions -> List Track -> List Float -> Float -> Int -> Column -> Html Msg
-viewCell dateWithSessions tracks timeDelimiters timeDelimiter index column =
+viewCell : DateWithSessions -> List Track -> List Float -> Int -> Float -> Int -> Column -> Html Msg
+viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index column =
     let
         sessionsInColumn =
             dateWithSessions
@@ -241,6 +245,10 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter index column =
                     )
                 |> List.head
 
+        sessionsAllColumns =
+            sessionsInColumn
+                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+
         sessionDate =
             dateWithSessions.date
 
@@ -254,6 +262,15 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter index column =
                 |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
                 |> toString
+
+        sessionAcrossAllColumns =
+            List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
+
+        colSpan =
+            if sessionAcrossAllColumns then
+                2
+            else
+                1
 
         lastTime =
             timeDelimiters
@@ -277,7 +294,7 @@ viewCell dateWithSessions tracks timeDelimiters timeDelimiter index column =
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ attribute "rowspan" rowSpan ]
+                    td [ attribute "rowspan" rowSpan, attribute "colspan" (toString colSpan) ]
                         [ div []
                             [ span []
                                 [ text
