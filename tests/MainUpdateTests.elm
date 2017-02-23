@@ -83,7 +83,7 @@ all =
                         , description = "new test description"
                         , startTime = { hour = 12, minute = 0 }
                         , endTime = { hour = 9, minute = 0 }
-                        , columnId = MainModel.ColumnId 1
+                        , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
@@ -127,7 +127,7 @@ all =
                         , description = "new test description"
                         , startTime = { hour = 12, minute = 0 }
                         , endTime = { hour = 9, minute = 0 }
-                        , columnId = MainModel.ColumnId 1
+                        , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = 1
