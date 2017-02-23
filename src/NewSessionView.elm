@@ -55,15 +55,20 @@ view context model =
                     True
 
         selectedColumn =
-            case context.session.sessionColumn of
-                ColumnId columnIdInt ->
-                    (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
+            let
+                allColumnsDropdownOption =
+                    option [ value ("ALL COLUMNS"), selected (context.session.sessionColumn == AllColumns) ] [ text "ALL COLUMNS" ]
+            in
+                case context.session.sessionColumn of
+                    ColumnId columnIdInt ->
+                        allColumnsDropdownOption
+                            ,(List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
 
-                NoColumns ->
-                    (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
+                    NoColumns ->
+                        (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
-                AllColumns ->
-                    (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
+                    AllColumns ->
+                        (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
         selectedAllColumnsValue =
             case context.session.sessionColumn of
@@ -74,7 +79,7 @@ view context model =
                     True
 
                 NoColumns ->
-                    True
+                    False
 
         column1 =
             div [ class "form-group" ]
@@ -128,16 +133,16 @@ view context model =
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
                         selectedColumn
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "all-column-input" ] [ text "All Columns" ]
-                    , input
-                        [ class "form-control"
-                        , type_ "checkbox"
-                        , checked selectedAllColumnsValue
-                        , onClick UpdateNewSessionColumnsAll
-                        ]
-                        []
-                    ]
+                  -- , div [ class "input-group" ]
+                  --     [ label [ for "all-column-input" ] [ text "All Columns" ]
+                  --     , input
+                  --         [ class "form-control"
+                  --         , type_ "checkbox"
+                  --         , checked selectedAllColumnsValue
+                  --         , onClick (UpdateNewSessionColumn "all")
+                  --         ]
+                  --         []
+                  --     ]
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []

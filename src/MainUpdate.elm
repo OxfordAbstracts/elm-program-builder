@@ -34,6 +34,15 @@ submissionIdsToInputText submissionIds =
         |> join ","
 
 
+getSession model =
+    case model.idOfSessionBeingEdited of
+        Just id ->
+            model.editSession
+
+        Nothing ->
+            model.newSession
+
+
 updateNewColumn : Model -> (Column -> Column) -> Model
 updateNewColumn model update =
     ({ model | newColumn = (update model.newColumn) })
@@ -276,15 +285,19 @@ update msg model =
                         ( model, Cmd.none )
 
             UpdateNewSessionColumnsAll ->
-                case model.newSession.sessionColumn of
-                    AllColumns ->
-                        ( (updateNewSession model (\ns -> { ns | sessionColumn = NoColumns })), Cmd.none )
+                let
+                    session =
+                        getSession model
+                in
+                    case session.sessionColumn of
+                        AllColumns ->
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = NoColumns })), Cmd.none )
 
-                    NoColumns ->
-                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                        NoColumns ->
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
 
-                    ColumnId _ ->
-                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                        ColumnId _ ->
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
