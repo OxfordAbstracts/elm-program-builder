@@ -62,7 +62,7 @@ dummySessions =
         "This a description of the inital session"
         (MainModel.TimeOfDay 9 0)
         (MainModel.TimeOfDay 9 1)
-        1
+        (MainModel.ColumnId 1)
         1
         "The aquariam"
         []
@@ -73,7 +73,7 @@ dummySessions =
         "This a description of the second inital session"
         (MainModel.TimeOfDay 10 30)
         (MainModel.TimeOfDay 11 0)
-        1
+        (MainModel.ColumnId 1)
         1
         "The observatory"
         []
