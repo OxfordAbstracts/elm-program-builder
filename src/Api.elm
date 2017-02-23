@@ -78,17 +78,6 @@ dateWithSessionsDecoder =
         |> required "sessions" (Json.Decode.list sessionDecoder)
 
 
-
--- decode SessionColumn
--- Json.Decode.oneOf
---     [ decodeColumnId
---     , decodeAllColumns AllColumns
---     , decodeNoColumns NoColumns
---     ]
--- Json.Decode.map3 SessionColumn
---     (Json.Decode.field "columnId" Json.Decode.Int)
-
-
 sessionDecoder : Json.Decode.Decoder Session
 sessionDecoder =
     decode Session
