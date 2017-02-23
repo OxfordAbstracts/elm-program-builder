@@ -33,6 +33,15 @@ view model =
             ]
 
 
+sessionAcrossAllColumns sessionsInColumn sessionStarting index =
+    let
+        sessionsAllColumns =
+            sessionsInColumn
+                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+    in
+        List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
+
+
 defaultHeaders : List (Html msg)
 defaultHeaders =
     [ th []
@@ -71,7 +80,7 @@ viewDate columns tracks numColumns dateWithSessions =
     in
         [ tr []
             (viewDateCell dateWithSessions timeDelimiters firstTime
-                ++ (List.map (appendFirstRowCell dateWithSessions timeDelimiters tracks) columns)
+                ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns) columns)
             )
         ]
             ++ (viewOtherRows dateWithSessions columns tracks (List.drop 1 timeDelimiters) numColumns)
@@ -105,24 +114,45 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
         ]
 
 
-appendFirstRowCell : DateWithSessions -> List Float -> List Track -> Column -> Html Msg
-appendFirstRowCell dateWithSessions timeDelimiters tracks column =
+getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index =
+    sessionsInColumn
+        |> List.filter
+            (\s ->
+                (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
+                    == timeDelimiter
+                    && ((s.columnId
+                            == ColumnId column.id
+                        )
+                            || (index == 0 && s.columnId == AllColumns)
+                       )
+            )
+        |> List.head
+
+
+appendFirstRowCell : DateWithSessions -> List Float -> List Track -> Int -> Int -> Column -> Html Msg
+appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index column =
     let
         timeDelimiter =
             timeDelimiters
                 |> List.head
                 |> Maybe.withDefault 0
 
+        sessionsInColumn =
+            dateWithSessions
+                |> .sessions
+                |> List.filter (\s -> (s.columnId == ColumnId column.id) || (s.columnId == AllColumns))
+
         sessionStarting =
-            dateWithSessions.sessions
-                |> List.filter
-                    (\s ->
-                        (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                            == timeDelimiter
-                            && s.columnId
-                            == ColumnId column.id
-                    )
-                |> List.head
+            getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
+
+        sessionIsAcrossAllColumns =
+            sessionAcrossAllColumns sessionsInColumn sessionStarting index
+
+        colSpan =
+            if sessionIsAcrossAllColumns then
+                numColumns
+            else
+                1
 
         endTime =
             sessionStarting
@@ -154,7 +184,7 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks column =
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ attribute "rowspan" rowSpan ]
+                    td [ attribute "rowspan" rowSpan, attribute "colspan" (toString colSpan) ]
                         [ div []
                             [ span []
                                 [ text
@@ -179,9 +209,26 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks column =
                         ]
 
                 Nothing ->
-                    td [ class "agenda-date active", attribute "rowspan" rowSpan ]
-                        [ div [ class "agenda-event" ] []
-                        ]
+                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn
+
+
+noSessionInDateCellView : Float -> DateWithSessions -> String -> List Session -> Html Msg
+noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn =
+    if
+        List.any
+            (\s ->
+                (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
+                    <= timeDelimiter
+                    && (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
+                    > timeDelimiter
+            )
+            sessionsInColumn
+    then
+        text ""
+    else
+        td [ class "agenda-date active", attribute "rowspan" rowSpan ]
+            [ div [ class "agenda-event" ] []
+            ]
 
 
 viewOtherRows : DateWithSessions -> List Column -> List Track -> List Float -> Int -> List (Html Msg)
@@ -223,6 +270,15 @@ viewCells dateWithSessions columns tracks timeDelimiters numColumns timeDelimite
         |> List.indexedMap (viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter)
 
 
+getSessionAcrossAllColumns sessionsInColumn sessionStarting index =
+    let
+        sessionsAllColumns =
+            sessionsInColumn
+                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+    in
+        List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
+
+
 viewCell : DateWithSessions -> List Track -> List Float -> Int -> Float -> Int -> Column -> Html Msg
 viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index column =
     let
@@ -232,22 +288,16 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                 |> List.filter (\s -> (s.columnId == ColumnId column.id) || (s.columnId == AllColumns))
 
         sessionStarting =
-            sessionsInColumn
-                |> List.filter
-                    (\s ->
-                        (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                            == timeDelimiter
-                            && ((s.columnId
-                                    == ColumnId column.id
-                                )
-                                    || (index == 0 && (s.columnId == AllColumns))
-                               )
-                    )
-                |> List.head
+            getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
 
-        sessionsAllColumns =
-            sessionsInColumn
-                |> List.filter (\s -> index == 0 && (s.columnId == AllColumns))
+        sessionAcrossAllColumns =
+            getSessionAcrossAllColumns sessionsInColumn sessionStarting index
+
+        colSpan =
+            if sessionAcrossAllColumns then
+                numColumns
+            else
+                1
 
         sessionDate =
             dateWithSessions.date
@@ -262,15 +312,6 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                 |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
                 |> toString
-
-        sessionAcrossAllColumns =
-            List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
-
-        colSpan =
-            if sessionAcrossAllColumns then
-                2
-            else
-                1
 
         lastTime =
             timeDelimiters
@@ -319,21 +360,7 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                         ]
 
                 Nothing ->
-                    if
-                        List.any
-                            (\s ->
-                                (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                                    <= timeDelimiter
-                                    && (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
-                                    > timeDelimiter
-                            )
-                            sessionsInColumn
-                    then
-                        text ""
-                    else
-                        td [ class "agenda-date active", attribute "rowspan" rowSpan ]
-                            [ div [ class "agenda-event" ] []
-                            ]
+                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn
 
 
 
