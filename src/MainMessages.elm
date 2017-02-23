@@ -28,7 +28,7 @@ type Msg
     | UpdateNewColumnName String
     | UpdateNewSessionChair String
     | UpdateNewSessionColumn String
-    | UpdateNewSessionColumnsAll
+      -- | UpdateNewSessionColumnsAll
     | UpdateNewSessionDate String
     | UpdateNewSessionDescription String
     | UpdateNewSessionEndHour String

@@ -281,23 +281,9 @@ update msg model =
                     Ok columnIdInt ->
                         ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
 
+                    -- Error if "ALL COLUMNS" sent
                     Err _ ->
-                        ( model, Cmd.none )
-
-            UpdateNewSessionColumnsAll ->
-                let
-                    session =
-                        getSession model
-                in
-                    case session.sessionColumn of
-                        AllColumns ->
-                            ( (updateNewSession model (\ns -> { ns | sessionColumn = NoColumns })), Cmd.none )
-
-                        NoColumns ->
-                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
-
-                        ColumnId _ ->
-                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
