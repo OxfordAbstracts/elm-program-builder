@@ -108,7 +108,7 @@ stringColumnDecoder string =
             AllColumns
 
         _ ->
-            Debug.log "ahhhh what do we do!!!!!" NoColumns
+            NoColumns
 
 
 trackEncoder : Track -> Json.Encode.Value

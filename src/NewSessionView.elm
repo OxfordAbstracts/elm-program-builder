@@ -62,10 +62,7 @@ view context model =
                 ColumnId columnIdInt ->
                     (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
 
-                NoColumns ->
-                    (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
-
-                AllColumns ->
+                _ ->
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
         selectedAllColumnsValue =
