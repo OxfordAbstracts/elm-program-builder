@@ -27,12 +27,19 @@ init flags =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container" ]
-        [ Html.h2 [] [ text "Program builder" ]
-        , Stylesheet.view
-        , ControlsView.view model
-        , TableView.view model
-        ]
+    if model.showPublishUi then
+        div [ class "container" ]
+            [ Html.h2 [] [ text "Programme builder" ]
+            , Stylesheet.view
+            , TableView.view model
+            ]
+    else
+        div [ class "container" ]
+            [ Html.h2 [] [ text "Programme builder" ]
+            , Stylesheet.view
+            , ControlsView.view model
+            , TableView.view model
+            ]
 
 
 

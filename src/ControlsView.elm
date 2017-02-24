@@ -65,6 +65,12 @@ viewUiButtons model =
                 "btn btn-default active"
             else
                 "btn btn-default"
+
+        togglePreviewUiClass =
+            if model.showPreviewUi then
+                "btn btn-default active"
+            else
+                "btn btn-default"
     in
         div [ class "btn-toolbar", attribute "role" "toolbar", style [ ( "margin", "3rem" ) ] ]
             [ div [ class "btn-group btn-group-lg", attribute "role" "group" ]
@@ -76,5 +82,9 @@ viewUiButtons model =
                     [ text "New Column" ]
                 , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
                     [ text "Manage Dates" ]
+                , button [ class togglePreviewUiClass, type_ "button", onClick TogglePreviewUi ]
+                    [ text "Preview" ]
+                , button [ class "btn btn-default", type_ "button", onClick PublishProgrammeBuilder ]
+                    [ text "Publish" ]
                 ]
             ]
