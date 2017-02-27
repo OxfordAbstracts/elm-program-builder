@@ -311,16 +311,16 @@ update msg model =
                 ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
             UpdateNewSessionColumn newColumn ->
-                case (String.toInt newColumn) of
-                    -- a column id integer was passed to the update
-                    Ok columnIdInt ->
-                        ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
+                if newColumn == "ALL COLUMNS" then
+                    -- "ALL COLUMNS" was passed to the update
+                    ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                else
+                    case (String.toInt newColumn) of
+                        -- a column id integer was passed to the update
+                        Ok columnIdInt ->
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
 
-                    Err _ ->
-                        if newColumn == "ALL COLUMNS" then
-                            -- "ALL COLUMNS" was passed to the update
-                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
-                        else
+                        Err _ ->
                             ( model, Cmd.none )
 
             UpdateNewSessionChair newChair ->
