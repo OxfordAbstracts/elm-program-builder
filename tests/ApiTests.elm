@@ -55,7 +55,7 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
               "hour": 9,
               "minute": 30
             },
-            "columnId": 1,
+            "sessionColumn": 1,
             "trackId": 1,
             "location": "This is the location",
             "submissionIds": [],

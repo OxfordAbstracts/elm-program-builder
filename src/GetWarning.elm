@@ -43,18 +43,5 @@ sessionsAreOverLapping newSession newDate datesWithSessions idOfSessionBeingEdit
 
 
 overLappingTime newSession session =
-    let
-        x =
-            Debug.log "session" session
-
-        y =
-            Debug.log "newSession" session
-
-        z =
-            Debug.log "gadf"
-                ((timeIsGreaterThan session.endTime newSession.startTime)
-                    && (timeIsGreaterThan newSession.endTime session.endTime)
-                )
-    in
-        (timeIsGreaterThan session.endTime newSession.startTime)
-            && (timeIsGreaterThan newSession.endTime session.endTime)
+    (timeIsGreaterThan session.endTime newSession.startTime)
+        && (timeIsGreaterThan newSession.endTime session.endTime)
