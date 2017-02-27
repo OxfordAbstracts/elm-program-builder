@@ -33,13 +33,18 @@ view model =
             ]
 
 
-sessionAcrossAllColumns sessionsInColumn sessionStarting index =
-    let
-        sessionsAllColumns =
-            sessionsInColumn
-                |> List.filter (\s -> index == 0 && (s.sessionColumn == AllColumns))
-    in
-        List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
+sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
+    case sessionStarting of
+        Just session ->
+            let
+                sessionsAllColumns =
+                    sessionsInColumn
+                        |> List.filter (\s -> index == 0 && (s.sessionColumn == AllColumns))
+            in
+                List.member session sessionsAllColumns
+
+        Nothing ->
+            False
 
 
 defaultHeaders : List (Html msg)
@@ -121,18 +126,22 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
 
 
 getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index =
-    sessionsInColumn
-        |> List.filter
-            (\s ->
-                (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                    == timeDelimiter
-                    && ((s.sessionColumn
-                            == ColumnId column.id
-                        )
-                            || (index == 0 && s.sessionColumn == AllColumns)
-                       )
+    let
+        sessionInFirstOrAllColumns session =
+            ((session.sessionColumn
+                == ColumnId column.id
+             )
+                || (index == 0 && session.sessionColumn == AllColumns)
             )
-        |> List.head
+    in
+        sessionsInColumn
+            |> List.filter
+                (\s ->
+                    (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
+                        == timeDelimiter
+                        && (sessionInFirstOrAllColumns s)
+                )
+            |> List.head
 
 
 appendFirstRowCell : DateWithSessions -> List Float -> Model -> Int -> Int -> Column -> Html Msg
@@ -151,11 +160,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         sessionStarting =
             getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
 
-        sessionIsAcrossAllColumns =
-            sessionAcrossAllColumns sessionsInColumn sessionStarting index
-
-        colSpan =
-            if sessionIsAcrossAllColumns then
+        colSpanVal =
+            if sessionIsAcrossAllColumns sessionsInColumn sessionStarting index then
                 numColumns
             else
                 1
@@ -165,7 +171,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> Maybe.map .endTime
                 |> Maybe.withDefault (TimeOfDay 0 0)
 
-        rowSpan =
+        rowSpanVal =
             getRowSpan timeDelimiters timeDelimiter dateWithSessions.date endTime
 
         lastTime =
@@ -193,7 +199,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ attribute "rowspan" rowSpan, attribute "colspan" (toString colSpan) ]
+                    td [ rowspan rowSpanVal, colspan colSpanVal ]
                         [ div []
                             [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text
@@ -218,11 +224,11 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                         ]
 
                 Nothing ->
-                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn
+                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn
 
 
-noSessionInDateCellView : Float -> DateWithSessions -> String -> List Session -> Html Msg
-noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn =
+noSessionInDateCellView : Float -> DateWithSessions -> Int -> List Session -> Html Msg
+noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn =
     if
         List.any
             (\s ->
@@ -235,7 +241,7 @@ noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn 
     then
         text ""
     else
-        td [ class "agenda-date active", attribute "rowspan" rowSpan ]
+        td [ class "agenda-date active", rowspan rowSpanVal ]
             [ div [ class "agenda-event" ] []
             ]
 
@@ -285,15 +291,6 @@ viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter =
         |> List.indexedMap (viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter)
 
 
-getSessionAcrossAllColumns sessionsInColumn sessionStarting index =
-    let
-        sessionsAllColumns =
-            sessionsInColumn
-                |> List.filter (\s -> index == 0 && (s.sessionColumn == AllColumns))
-    in
-        List.member (Maybe.withDefault (blankSession 1) sessionStarting) sessionsAllColumns
-
-
 viewCell : DateWithSessions -> Model -> List Float -> Int -> Float -> Int -> Column -> Html Msg
 viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index column =
     let
@@ -305,11 +302,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
         sessionStarting =
             getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
 
-        sessionAcrossAllColumns =
-            getSessionAcrossAllColumns sessionsInColumn sessionStarting index
-
-        colSpan =
-            if sessionAcrossAllColumns then
+        colSpanVal =
+            if sessionIsAcrossAllColumns sessionsInColumn sessionStarting index then
                 numColumns
             else
                 1
@@ -322,11 +316,10 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> Maybe.map .endTime
                 |> Maybe.withDefault (TimeOfDay 0 0)
 
-        rowSpan =
+        rowSpanVal =
             timeDelimiters
                 |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
-                |> toString
 
         lastTime =
             timeDelimiters
@@ -353,7 +346,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ attribute "rowspan" rowSpan, attribute "colspan" (toString colSpan) ]
+                    td [ rowspan rowSpanVal, colspan colSpanVal ]
                         [ div []
                             [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text
@@ -378,7 +371,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                         ]
 
                 Nothing ->
-                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpan sessionsInColumn
+                    noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn
 
 
 
@@ -393,8 +386,8 @@ displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
                 |> List.filter (\t -> t > timeDelimiter)
                 |> List.head
                 |> Maybe.withDefault 0
-    in
-        if
+
+        sessionExistsInTimeDelimiter =
             List.any
                 (\s ->
                     (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
@@ -403,7 +396,8 @@ displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
                         == nextDelimiter
                 )
                 dateWithSessions.sessions
-        then
+    in
+        if sessionExistsInTimeDelimiter then
             DateUtils.displayTime timeDelimiter ++ " - " ++ DateUtils.displayTime nextDelimiter
         else
             ""
@@ -423,4 +417,3 @@ getRowSpan timeDelimiters timeDelimiter sessionDate endTime =
                     < (DateUtils.timeOfDayToTime sessionDate endTime)
             )
         |> List.length
-        |> toString

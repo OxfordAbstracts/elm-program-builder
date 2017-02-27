@@ -55,9 +55,9 @@ view context model =
                     True
 
         allColumnsDropdownOption =
-            [ option [ value ("ALL COLUMNS"), selected (context.session.sessionColumn == AllColumns) ] [ text "ALL COLUMNS" ] ]
+            option [ value ("ALL COLUMNS"), selected (context.session.sessionColumn == AllColumns) ] [ text "ALL COLUMNS" ]
 
-        selectedColumn =
+        columnOptions =
             case context.session.sessionColumn of
                 ColumnId columnIdInt ->
                     (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
@@ -126,10 +126,7 @@ view context model =
                     [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                        (List.append
-                            allColumnsDropdownOption
-                            selectedColumn
-                        )
+                        (allColumnsDropdownOption :: columnOptions)
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]

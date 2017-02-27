@@ -310,14 +310,18 @@ update msg model =
             UpdateNewSessionSubmissionIds newSubmissionIdsString ->
                 ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
-            UpdateNewSessionColumn newColumnId ->
-                case (String.toInt newColumnId) of
+            UpdateNewSessionColumn newColumn ->
+                case (String.toInt newColumn) of
+                    -- a column id integer was passed to the update
                     Ok columnIdInt ->
                         ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
 
-                    -- Error if "ALL COLUMNS" sent
                     Err _ ->
-                        ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                        if newColumn == "ALL COLUMNS" then
+                            -- "ALL COLUMNS" was passed to the update
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                        else
+                            ( model, Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )

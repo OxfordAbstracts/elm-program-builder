@@ -86,7 +86,7 @@ sessionDecoder =
         |> required "description" Json.Decode.string
         |> required "startTime" timeDecoder
         |> required "endTime" timeDecoder
-        |> required "columnId" sessionColumnDecoder
+        |> required "sessionColumn" sessionColumnDecoder
         |> required "trackId" Json.Decode.int
         |> required "location" Json.Decode.string
         |> required "submissionIds" (Json.Decode.list Json.Decode.int)
