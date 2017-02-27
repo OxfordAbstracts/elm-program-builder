@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/OxfordAbstracts/elm-program-builder#readme",
   "dependencies": {
-    "elm": "^0.18.0",
     "elm-test": "^0.18.2"
   }
 }
