@@ -65,17 +65,6 @@ view context model =
                 _ ->
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
-        selectedAllColumnsValue =
-            case context.session.sessionColumn of
-                ColumnId _ ->
-                    False
-
-                AllColumns ->
-                    True
-
-                NoColumns ->
-                    False
-
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
