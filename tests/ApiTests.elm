@@ -55,7 +55,7 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
               "hour": 9,
               "minute": 30
             },
-            "columnId": 1,
+            "sessionColumn": 1,
             "trackId": 1,
             "location": "This is the location",
             "submissionIds": [],
@@ -107,7 +107,7 @@ createSession sessionName sessionDescription sessionYear sessionMonth =
         { hour = 9
         , minute = 30
         }
-        1
+        (MainModel.ColumnId 1)
         1
         "This is the location"
         []

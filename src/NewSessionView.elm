@@ -3,7 +3,7 @@ module NewSessionView exposing (view, newSessionViewWarning, NewSessionContext)
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onBlur)
+import Html.Events exposing (onClick, onInput, onBlur, targetChecked, on)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
@@ -53,6 +53,17 @@ view context model =
 
                 Just val ->
                     True
+
+        allColumnsDropdownOption =
+            option [ value ("ALL COLUMNS"), selected (context.session.sessionColumn == AllColumns) ] [ text "ALL COLUMNS" ]
+
+        columnOptions =
+            case context.session.sessionColumn of
+                ColumnId columnIdInt ->
+                    (List.map (\c -> option [ value (toString c.id), selected (columnIdInt == c.id) ] [ text c.name ]) model.columns)
+
+                _ ->
+                    (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
         column1 =
             div [ class "form-group" ]
@@ -104,9 +115,8 @@ view context model =
                     [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn ]
-                        (List.map (\c -> option [ value (toString c.id), selected (context.session.columnId == c.id) ] [ text c.name ]) model.columns)
+                        (allColumnsDropdownOption :: columnOptions)
                     ]
-                  -- if newSession.columnId == c.id the selected
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []

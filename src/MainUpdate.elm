@@ -34,6 +34,15 @@ submissionIdsToInputText submissionIds =
         |> join ","
 
 
+getSession model =
+    case model.idOfSessionBeingEdited of
+        Just id ->
+            model.editSession
+
+        Nothing ->
+            model.newSession
+
+
 updateNewColumn : Model -> (Column -> Column) -> Model
 updateNewColumn model update =
     ({ model | newColumn = (update model.newColumn) })
@@ -267,8 +276,18 @@ update msg model =
             UpdateNewSessionSubmissionIds newSubmissionIdsString ->
                 ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
 
-            UpdateNewSessionColumn newColumnId ->
-                ( (updateNewSession model (\ns -> { ns | columnId = (toInt model newColumnId) })), Cmd.none )
+            UpdateNewSessionColumn newColumn ->
+                if newColumn == "ALL COLUMNS" then
+                    -- "ALL COLUMNS" was passed to the update
+                    ( (updateNewSession model (\ns -> { ns | sessionColumn = AllColumns })), Cmd.none )
+                else
+                    case (String.toInt newColumn) of
+                        -- a column id integer was passed to the update
+                        Ok columnIdInt ->
+                            ( (updateNewSession model (\ns -> { ns | sessionColumn = (ColumnId columnIdInt) })), Cmd.none )
+
+                        Err _ ->
+                            ( model, Cmd.none )
 
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )

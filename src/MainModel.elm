@@ -36,6 +36,12 @@ type alias Submission =
     }
 
 
+type SessionColumn
+    = ColumnId Int
+    | AllColumns
+    | NoColumns
+
+
 initialModel : Model
 initialModel =
     { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
@@ -71,7 +77,7 @@ type alias Session =
     , description : String
     , startTime : TimeOfDay
     , endTime : TimeOfDay
-    , columnId : ColumnId
+    , sessionColumn : SessionColumn
     , trackId : TrackId
     , location : String
     , submissionIds : List Int
@@ -115,7 +121,7 @@ blankSession id =
         ""
         (TimeOfDay 9 0)
         (TimeOfDay 12 0)
-        1
+        (ColumnId 1)
         1
         ""
         []
@@ -148,7 +154,7 @@ initialSessions =
         "This a description of the inital session"
         (TimeOfDay 9 0)
         (TimeOfDay 9 1)
-        1
+        (ColumnId 1)
         1
         "The aquariam"
         []
@@ -159,7 +165,7 @@ initialSessions =
         "This a description of the second inital session"
         (TimeOfDay 10 30)
         (TimeOfDay 11 0)
-        1
+        (ColumnId 1)
         1
         "The observatory"
         []
@@ -170,7 +176,7 @@ initialSessions =
         "This a description of the third inital session"
         (TimeOfDay 13 30)
         (TimeOfDay 15 0)
-        1
+        (ColumnId 1)
         1
         "The games room"
         []
@@ -181,7 +187,7 @@ initialSessions =
         "This a description of the fourth inital session"
         (TimeOfDay 13 0)
         (TimeOfDay 13 30)
-        1
+        (ColumnId 1)
         1
         "The mystery room"
         []
@@ -192,7 +198,7 @@ initialSessions =
         "This a description of the fifth inital session"
         (TimeOfDay 11 0)
         (TimeOfDay 11 30)
-        1
+        AllColumns
         1
         "The mystery room 4"
         []

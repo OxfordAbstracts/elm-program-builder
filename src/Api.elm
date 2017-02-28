@@ -35,19 +35,32 @@ encodeApiUpdatePost record =
 
 
 sessionEncoder : Session -> Json.Encode.Value
-sessionEncoder record =
+sessionEncoder session =
     Json.Encode.object
-        [ ( "id", Json.Encode.int record.id )
-        , ( "name", Json.Encode.string record.name )
-        , ( "description", Json.Encode.string record.description )
-        , ( "startTime", timeEncoder record.startTime )
-        , ( "endTime", timeEncoder record.endTime )
-        , ( "columnId", Json.Encode.int record.columnId )
-        , ( "trackId", Json.Encode.int record.trackId )
-        , ( "location", Json.Encode.string record.location )
-        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int record.submissionIds )
-        , ( "chair", Json.Encode.string record.chair )
+        [ ( "id", Json.Encode.int session.id )
+        , ( "name", Json.Encode.string session.name )
+        , ( "description", Json.Encode.string session.description )
+        , ( "startTime", timeEncoder session.startTime )
+        , ( "endTime", timeEncoder session.endTime )
+        , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
+        , ( "trackId", Json.Encode.int session.trackId )
+        , ( "location", Json.Encode.string session.location )
+        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int session.submissionIds )
+        , ( "chair", Json.Encode.string session.chair )
         ]
+
+
+sessionColumnEncoder : SessionColumn -> Json.Encode.Value
+sessionColumnEncoder record =
+    case record of
+        ColumnId int ->
+            Json.Encode.int int
+
+        AllColumns ->
+            Json.Encode.string "All columns"
+
+        NoColumns ->
+            Json.Encode.null
 
 
 dateWithSessionsEncoder : DateWithSessions -> Json.Encode.Value
@@ -73,11 +86,29 @@ sessionDecoder =
         |> required "description" Json.Decode.string
         |> required "startTime" timeDecoder
         |> required "endTime" timeDecoder
-        |> required "columnId" Json.Decode.int
+        |> required "sessionColumn" sessionColumnDecoder
         |> required "trackId" Json.Decode.int
         |> required "location" Json.Decode.string
         |> required "submissionIds" (Json.Decode.list Json.Decode.int)
         |> required "chair" Json.Decode.string
+
+
+sessionColumnDecoder : Json.Decode.Decoder SessionColumn
+sessionColumnDecoder =
+    Json.Decode.oneOf
+        [ Json.Decode.map ColumnId Json.Decode.int
+        , Json.Decode.map stringColumnDecoder Json.Decode.string
+        , Json.Decode.null NoColumns
+        ]
+
+
+stringColumnDecoder string =
+    case string of
+        "All columns" ->
+            AllColumns
+
+        _ ->
+            NoColumns
 
 
 trackEncoder : Track -> Json.Encode.Value
