@@ -510,3 +510,18 @@ update msg model =
 
             GetDateAndThenAddDate id ->
                 model ! [ Task.perform (AddNewDate id) Date.now ]
+
+            DeleteTrack trackId ->
+                let
+                    newTracks =
+                        List.filter (\t -> t.id /= trackId) model.tracks
+
+                    apiUpdate =
+                        { datesWithSessions = model.datesWithSessions
+                        , tracks = newTracks
+                        , columns = model.columns
+                        }
+                in
+                    ( { model | tracks = newTracks }
+                    , Api.postModelToDb apiUpdate model.eventId
+                    )

@@ -12,6 +12,7 @@ type Msg
     | CreateNewTrack
     | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
+    | DeleteTrack MainModel.TrackId
     | EditSession
     | GetDateAndThenAddDate String
     | NewColumn

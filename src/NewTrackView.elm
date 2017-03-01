@@ -25,6 +25,28 @@ view model =
             else
                 toString int
 
+        disableInput t =
+            disabled True
+
+        listTracks =
+            model.tracks
+                |> List.map
+                    (\t ->
+                        div []
+                            [ p
+                                [ class "form-control"
+                                , value (t.name)
+                                ]
+                                []
+                            , button
+                                [ onClick (DeleteTrack t.id)
+                                , style [ ( "margin-left", "0.2rem" ) ]
+                                , disableInput t.id
+                                ]
+                                [ text "Delete" ]
+                            ]
+                    )
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
