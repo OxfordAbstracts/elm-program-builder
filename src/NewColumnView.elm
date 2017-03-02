@@ -10,10 +10,16 @@ import GetWarning exposing (..)
 
 
 newColumnWarning model =
-    if model.showNewColumnUi && model.newColumn.name == "" then
-        getWarning "Column name field is empty" model
-    else
-        ""
+    let
+        blankPickedColumn =
+            model.pickedColumns
+                |> List.map .name
+                |> List.any (\n -> n == "")
+    in
+        if model.showNewColumnUi && blankPickedColumn then
+            getWarning "Column name fields cannot be empty" model
+        else
+            ""
 
 
 view : Model -> Html Msg
@@ -25,24 +31,57 @@ view model =
             else
                 toString int
 
+        disableInput columnId =
+            let
+                columnsWithSessions =
+                    model.datesWithSessions
+                        |> List.concatMap .sessions
+                        |> List.map .sessionColumn
+                        |> List.filter (\c -> c /= AllColumns)
+            in
+                if List.member (columnId) columnsWithSessions then
+                    disabled True
+                else
+                    disabled False
+
+        listColumns =
+            model.pickedColumns
+                |> List.sortBy .id
+                |> List.map
+                    (\c ->
+                        div []
+                            [ input
+                                [ class "form-control"
+                                , value c.name
+                                , onInput (UpdatePickedColumn c.id)
+                                ]
+                                []
+                            , button
+                                [ onClick (DeleteColumn c.id)
+                                , style [ ( "margin-left", "0.2rem" ) ]
+                                , disableInput (ColumnId c.id)
+                                ]
+                                [ text "Delete" ]
+                            ]
+                    )
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
-                    [ label [ for "column-name-input" ]
-                        [ text "Column name" ]
-                    , input
-                        [ class "form-control"
-                        , id "column-name-input"
-                        , type_ "text"
-                        , value model.newColumn.name
-                        , onInput UpdateNewColumnName
+                    listColumns
+                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                    [ button
+                        [ class "btn btn-default"
+                        , id "add-new-date-btn"
+                        , type_ "button"
+                        , onClick AddNewColumn
                         ]
-                        [ text model.newColumn.name ]
+                        [ text "Add New Column" ]
                     ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newColumnWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (newColumnWarning model /= ""), onClick CreateNewColumn ]
-                        [ text "Create Column" ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
+                        [ text "Save Changes" ]
                     ]
                 ]
     in

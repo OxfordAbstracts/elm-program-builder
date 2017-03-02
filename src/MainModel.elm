@@ -26,6 +26,7 @@ type alias Model =
     , datePickerClosed : Bool
     , pickedDates : List DateWithoutTime
     , pickedTracks : List Track
+    , pickedColumns : List Column
     , datesWithSessions : List DateWithSessions
     }
 
@@ -68,6 +69,7 @@ initialModel =
     , datePickerClosed = True
     , pickedDates = initialDates
     , pickedTracks = []
+    , pickedColumns = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
     }
 

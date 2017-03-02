@@ -23,7 +23,7 @@ view model =
                     [ thead []
                         [ tr []
                             (defaultHeaders
-                                ++ (List.map viewColumnHeader model.columns)
+                                ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
                             )
                         ]
                     , tbody []

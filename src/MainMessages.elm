@@ -6,11 +6,13 @@ import Date exposing (Date)
 
 
 type Msg
-    = AddNewDate String Date
+    = AddNewColumn
+    | AddNewDate String Date
     | AddNewTrack
-    | CreateNewColumn
+    | UpdateColumns
     | CreateNewSession
     | UpdateTracks
+    | DeleteColumn Int
     | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
@@ -44,8 +46,5 @@ type Msg
     | UpdateNewSessionTrack String
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
+    | UpdatePickedColumn Int String
     | UpdatePickedTrack Int String String
-
-
-
--- | UpdatePickedDates (List String)
