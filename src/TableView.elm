@@ -27,7 +27,7 @@ view model =
                             )
                         ]
                     , tbody []
-                        (List.concatMap (viewDate model.columns model.tracks numColumns) model.datesWithSessions)
+                        (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                     ]
                 ]
             ]
@@ -61,8 +61,8 @@ viewColumnHeader column =
     th [] [ text column.name ]
 
 
-viewDate : List Column -> List Track -> Int -> DateWithSessions -> List (Html Msg)
-viewDate columns tracks numColumns dateWithSessions =
+viewDate : Model -> Int -> DateWithSessions -> List (Html Msg)
+viewDate model numColumns dateWithSessions =
     let
         lengthOfDay =
             Time.hour * 24
@@ -85,10 +85,10 @@ viewDate columns tracks numColumns dateWithSessions =
     in
         [ tr []
             (viewDateCell dateWithSessions timeDelimiters firstTime
-                ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns) columns)
+                ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters model numColumns) model.columns)
             )
         ]
-            ++ (viewOtherRows dateWithSessions columns tracks (List.drop 1 timeDelimiters) numColumns)
+            ++ (viewOtherRows dateWithSessions model (List.drop 1 timeDelimiters) numColumns)
 
 
 viewDateCell : DateWithSessions -> List Float -> Float -> List (Html msg)
@@ -138,8 +138,8 @@ getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index 
             |> List.head
 
 
-appendFirstRowCell : DateWithSessions -> List Float -> List Track -> Int -> Int -> Column -> Html Msg
-appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index column =
+appendFirstRowCell : DateWithSessions -> List Float -> Model -> Int -> Int -> Column -> Html Msg
+appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column =
     let
         timeDelimiter =
             timeDelimiters
@@ -179,11 +179,14 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index colum
                 |> Maybe.withDefault 0
 
         trackName =
-            tracks
+            model.tracks
                 |> List.filter (\t -> t.id == trackId)
                 |> List.map .name
                 |> List.head
                 |> Maybe.withDefault ""
+
+        publishOrPreviewUi =
+            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -192,7 +195,7 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index colum
                 Just sessionStarting ->
                     td [ rowspan rowSpanVal, colspan colSpanVal ]
                         [ div []
-                            [ span []
+                            [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
@@ -207,8 +210,8 @@ appendFirstRowCell dateWithSessions timeDelimiters tracks numColumns index colum
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text ("Track: " ++ trackName) ]
                             ]
@@ -237,13 +240,13 @@ noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColu
             ]
 
 
-viewOtherRows : DateWithSessions -> List Column -> List Track -> List Float -> Int -> List (Html Msg)
-viewOtherRows dateWithSessions columns tracks timeDelimiters numColumns =
-    List.map (viewOtherRow dateWithSessions columns tracks timeDelimiters numColumns) timeDelimiters
+viewOtherRows : DateWithSessions -> Model -> List Float -> Int -> List (Html Msg)
+viewOtherRows dateWithSessions model timeDelimiters numColumns =
+    List.map (viewOtherRow dateWithSessions model timeDelimiters numColumns) timeDelimiters
 
 
-viewOtherRow : DateWithSessions -> List Column -> List Track -> List Float -> Int -> Float -> Html Msg
-viewOtherRow dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter =
+viewOtherRow : DateWithSessions -> Model -> List Float -> Int -> Float -> Html Msg
+viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
     let
         timeDisplay =
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
@@ -266,18 +269,18 @@ viewOtherRow dateWithSessions columns tracks timeDelimiters numColumns timeDelim
                 ([ td [ class timeClass ]
                     [ text (displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter) ]
                  ]
-                    ++ (viewCells dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter)
+                    ++ (viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter)
                 )
 
 
-viewCells : DateWithSessions -> List Column -> List Track -> List Float -> Int -> Float -> List (Html Msg)
-viewCells dateWithSessions columns tracks timeDelimiters numColumns timeDelimiter =
-    columns
-        |> List.indexedMap (viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter)
+viewCells : DateWithSessions -> Model -> List Float -> Int -> Float -> List (Html Msg)
+viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter =
+    model.columns
+        |> List.indexedMap (viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter)
 
 
-viewCell : DateWithSessions -> List Track -> List Float -> Int -> Float -> Int -> Column -> Html Msg
-viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index column =
+viewCell : DateWithSessions -> Model -> List Float -> Int -> Float -> Int -> Column -> Html Msg
+viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index column =
     let
         sessionsInColumn =
             dateWithSessions
@@ -317,11 +320,14 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                 |> Maybe.withDefault 0
 
         trackName =
-            tracks
+            model.tracks
                 |> List.filter (\t -> t.id == trackId)
                 |> List.head
                 |> Maybe.map .name
                 |> Maybe.withDefault ""
+
+        publishOrPreviewUi =
+            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -330,7 +336,7 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                 Just sessionStarting ->
                     td [ rowspan rowSpanVal, colspan colSpanVal ]
                         [ div []
-                            [ span []
+                            [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text
                                     (sessionStarting.name
                                         ++ "  "
@@ -345,8 +351,8 @@ viewCell dateWithSessions tracks timeDelimiters numColumns timeDelimiter index c
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text (" Track: " ++ trackName) ]
                             ]

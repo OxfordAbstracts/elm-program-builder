@@ -16,6 +16,7 @@ type Msg
     | GetDateAndThenAddDate String
     | NewColumn
     | NewTrack
+    | PublishProgrammeBuilder
     | UpdatePickedDates (List String)
     | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
@@ -24,6 +25,7 @@ type Msg
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
+    | TogglePreviewUi
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String

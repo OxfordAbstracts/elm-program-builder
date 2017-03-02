@@ -132,9 +132,37 @@ update msg model =
                         , showManageDatesUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
+                        , showPublishUi = False
+                        , showPreviewUi = False
                       }
                     , Cmd.none
                     )
+
+            PublishProgrammeBuilder ->
+                ( { model
+                    | showNewSessionUi = False
+                    , showNewColumnUi = False
+                    , showNewTrackUi = False
+                    , showManageDatesUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showPublishUi = True
+                    , showPreviewUi = False
+                  }
+                , Cmd.none
+                )
+
+            TogglePreviewUi ->
+                ( { model
+                    | showNewSessionUi = False
+                    , showNewColumnUi = False
+                    , showNewTrackUi = False
+                    , showManageDatesUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showPublishUi = False
+                    , showPreviewUi = True
+                  }
+                , Cmd.none
+                )
 
             ToggleNewTrackUi ->
                 ( { model
@@ -143,6 +171,8 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
+                    , showPublishUi = False
+                    , showPreviewUi = False
                   }
                 , Cmd.none
                 )
@@ -154,6 +184,8 @@ update msg model =
                     , showNewTrackUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
+                    , showPublishUi = False
+                    , showPreviewUi = False
                   }
                 , Cmd.none
                 )
@@ -174,6 +206,8 @@ update msg model =
                         , idOfSessionBeingEdited = Nothing
                         , datePickerClosed = False
                         , pickedDates = List.map .date model.datesWithSessions
+                        , showPublishUi = False
+                        , showPreviewUi = False
                       }
                     , command
                     )

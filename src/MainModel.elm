@@ -11,6 +11,8 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
+    , showPublishUi : Bool
+    , showPreviewUi : Bool
     , newSession : Session
     , newSessionDate : DateWithoutTime
     , editSession : Session
@@ -50,6 +52,8 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
+    , showPublishUi = False
+    , showPreviewUi = False
     , newSession = blankSession 1
     , newSessionDate = DateWithoutTime 2017 1 1
     , editSession = blankSession 1
