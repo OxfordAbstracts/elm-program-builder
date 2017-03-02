@@ -64,12 +64,6 @@ viewColumnHeader column =
 viewDate : Model -> Int -> DateWithSessions -> List (Html Msg)
 viewDate model numColumns dateWithSessions =
     let
-        columns =
-            model.columns
-
-        tracks =
-            model.tracks
-
         lengthOfDay =
             Time.hour * 24
 
@@ -91,7 +85,7 @@ viewDate model numColumns dateWithSessions =
     in
         [ tr []
             (viewDateCell dateWithSessions timeDelimiters firstTime
-                ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters model numColumns) columns)
+                ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters model numColumns) model.columns)
             )
         ]
             ++ (viewOtherRows dateWithSessions model (List.drop 1 timeDelimiters) numColumns)
@@ -254,12 +248,6 @@ viewOtherRows dateWithSessions model timeDelimiters numColumns =
 viewOtherRow : DateWithSessions -> Model -> List Float -> Int -> Float -> Html Msg
 viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
     let
-        columns =
-            model.columns
-
-        tracks =
-            model.tracks
-
         timeDisplay =
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
 
