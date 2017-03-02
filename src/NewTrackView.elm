@@ -10,10 +10,21 @@ import GetWarning exposing (..)
 
 
 newTrackWarning model =
-    if model.showNewTrackUi && model.newTrack.name == "" then
-        getWarning "Track name field is empty" model
-    else
-        ""
+    let
+        blankPickedTrackNameInput =
+            model.pickedTracks
+                |> List.map .name
+                |> List.any (\n -> n == "")
+
+        blankPickedTrackDescriptionInput =
+            model.pickedTracks
+                |> List.map .description
+                |> List.any (\n -> n == "")
+    in
+        if model.showNewTrackUi && (blankPickedTrackNameInput || blankPickedTrackDescriptionInput) then
+            getWarning "Track name and description fields cannot be empty" model
+        else
+            ""
 
 
 view : Model -> Html Msg
@@ -25,17 +36,34 @@ view model =
             else
                 toString int
 
-        disableInput t =
-            disabled True
+        disableInput trackId =
+            let
+                tracksWithSessions =
+                    model.datesWithSessions
+                        |> List.concatMap .sessions
+                        |> List.map .trackId
+            in
+                if List.member trackId tracksWithSessions then
+                    disabled True
+                else
+                    disabled False
 
         listTracks =
-            model.tracks
-                |> List.map
-                    (\t ->
+            model.pickedTracks
+                |> List.sortBy .id
+                |> List.indexedMap
+                    (\i t ->
                         div []
-                            [ p
+                            [ input
                                 [ class "form-control"
-                                , value (t.name)
+                                , value t.name
+                                , onInput (UpdatePickedTrack t.id "name")
+                                ]
+                                []
+                            , input
+                                [ class "form-control"
+                                , value t.description
+                                , onInput (UpdatePickedTrack t.id "description")
                                 ]
                                 []
                             , button
@@ -50,33 +78,20 @@ view model =
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
-                    [ label [ for "track-name-input" ]
-                        [ text "Track name" ]
-                    , input
-                        [ class "form-control"
-                        , id "track-name-input"
-                        , type_ "text"
-                        , value model.newTrack.name
-                        , onInput UpdateNewTrackName
+                    listTracks
+                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                    [ button
+                        [ class "btn btn-default"
+                        , id "add-new-date-btn"
+                        , type_ "button"
+                        , onClick AddNewTrack
                         ]
-                        []
-                    ]
-                , div [ class "input-group" ]
-                    [ label [ for "track-description-input" ]
-                        [ text "Track description" ]
-                    , input
-                        [ class "form-control"
-                        , id "track-description-input"
-                        , type_ "text"
-                        , value model.newTrack.description
-                        , onInput UpdateNewTrackDescription
-                        ]
-                        []
+                        [ text "Add New Track" ]
                     ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick CreateNewTrack ]
-                        [ text "Create Track" ]
+                    [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                        [ text "Save Tracks" ]
                     ]
                 ]
     in

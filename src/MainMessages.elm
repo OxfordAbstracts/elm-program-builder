@@ -7,9 +7,10 @@ import Date exposing (Date)
 
 type Msg
     = AddNewDate String Date
+    | AddNewTrack
     | CreateNewColumn
     | CreateNewSession
-    | CreateNewTrack
+    | UpdateTracks
     | DeleteDate MainModel.DateWithoutTime
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
@@ -43,6 +44,7 @@ type Msg
     | UpdateNewSessionTrack String
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
+    | UpdatePickedTrack Int String String
 
 
 
