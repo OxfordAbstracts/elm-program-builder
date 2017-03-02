@@ -265,7 +265,7 @@ update msg model =
             UpdateTracks ->
                 let
                     newTracks =
-                        model.pickedTracks
+                        List.sortBy .id model.pickedTracks
 
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions newTracks model.columns
@@ -512,19 +512,14 @@ update msg model =
             GetDateAndThenAddDate id ->
                 model ! [ Task.perform (AddNewDate id) Date.now ]
 
+            -- tracks not actually deleted from tracks list until user clicks save changes
             DeleteTrack trackId ->
                 let
-                    newTracks =
+                    newPickedTracks =
                         List.filter (\t -> t.id /= trackId) model.tracks
-
-                    apiUpdate =
-                        { datesWithSessions = model.datesWithSessions
-                        , tracks = newTracks
-                        , columns = model.columns
-                        }
                 in
-                    ( { model | tracks = newTracks }
-                    , Api.postModelToDb apiUpdate model.eventId
+                    ( { model | pickedTracks = newPickedTracks }
+                    , Cmd.none
                     )
 
             AddNewTrack ->
@@ -535,7 +530,7 @@ update msg model =
                 , Cmd.none
                 )
 
-            UpdatePickedTrack trackId trackInputType newPickedTrackInput ->
+            UpdatePickedTrack trackId trackField newPickedTrackInput ->
                 let
                     pickedTrack =
                         model.pickedTracks
@@ -544,11 +539,11 @@ update msg model =
                             |> Maybe.withDefault (Track 0 "" "")
 
                     newPickedTrack =
-                        if trackInputType == "name" then
+                        if trackField == Name then
                             { pickedTrack
                                 | name = newPickedTrackInput
                             }
-                        else if trackInputType == "description" then
+                        else if trackField == Description then
                             { pickedTrack
                                 | description = newPickedTrackInput
                             }
@@ -559,4 +554,4 @@ update msg model =
                         model.pickedTracks
                             |> List.filter (\s -> s.id /= trackId)
                 in
-                    ( { model | pickedTracks = List.append pickedTracksWithoutUpdatedTrack [ newPickedTrack ] }, Cmd.none )
+                    ( { model | pickedTracks = newPickedTrack :: pickedTracksWithoutUpdatedTrack }, Cmd.none )

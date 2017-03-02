@@ -57,13 +57,13 @@ view model =
                             [ input
                                 [ class "form-control"
                                 , value t.name
-                                , onInput (UpdatePickedTrack t.id "name")
+                                , onInput (UpdatePickedTrack t.id Name)
                                 ]
                                 []
                             , input
                                 [ class "form-control"
                                 , value t.description
-                                , onInput (UpdatePickedTrack t.id "description")
+                                , onInput (UpdatePickedTrack t.id Description)
                                 ]
                                 []
                             , button
@@ -91,7 +91,7 @@ view model =
                 , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
                     [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
-                        [ text "Save Tracks" ]
+                        [ text "Save Changes" ]
                     ]
                 ]
     in
