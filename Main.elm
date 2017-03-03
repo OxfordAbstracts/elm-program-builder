@@ -8,6 +8,7 @@ import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
+import PublishedUrlView exposing (view)
 import Api
 import Ports exposing (..)
 
@@ -18,7 +19,7 @@ import Ports exposing (..)
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { initialModel | eventId = flags.eventId }, Api.getModelFromDb flags.eventId )
+    ( { initialModel | eventId = flags.eventId, host = flags.host }, Api.getModelFromDb flags.eventId )
 
 
 
@@ -27,7 +28,8 @@ init flags =
 
 view : Model -> Html Msg
 view model =
-    if model.showPublishUi then
+    -- publishView
+    if model.showPreviewUi then
         div [ class "container" ]
             [ Html.h2 [] [ text "Programme builder" ]
             , Stylesheet.view
@@ -35,9 +37,10 @@ view model =
             ]
     else
         div [ class "container" ]
-            [ Html.h2 [] [ text "Programme builder" ]
+            [ Html.h2 [] [ text "Programme builder!" ]
             , Stylesheet.view
             , ControlsView.view model
+            , PublishedUrlView.view model
             , TableView.view model
             ]
 

@@ -184,9 +184,6 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> List.map .name
                 |> List.head
                 |> Maybe.withDefault ""
-
-        publishOrPreviewUi =
-            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -210,8 +207,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text ("Track: " ++ trackName) ]
                             ]
@@ -325,9 +322,6 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> List.head
                 |> Maybe.map .name
                 |> Maybe.withDefault ""
-
-        publishOrPreviewUi =
-            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -351,8 +345,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text (" Track: " ++ trackName) ]
                             ]

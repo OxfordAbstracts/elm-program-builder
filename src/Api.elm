@@ -15,6 +15,7 @@ apiUpdateGetDecoder =
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "submissions" (Json.Decode.list submissionDecoder)
+        |> required "published" (Json.Decode.bool)
 
 
 apiUpdatePostDecoder : Json.Decode.Decoder ApiUpdatePost
@@ -23,6 +24,7 @@ apiUpdatePostDecoder =
         |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
+        |> required "published" (Json.Decode.bool)
 
 
 encodeApiUpdatePost : ApiUpdatePost -> Json.Encode.Value
@@ -31,6 +33,7 @@ encodeApiUpdatePost record =
         [ ( "datesWithSessions", Json.Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
         , ( "tracks", Json.Encode.list <| List.map trackEncoder record.tracks )
         , ( "columns", Json.Encode.list <| List.map columnEncoder record.columns )
+        , ( "published", Json.Encode.bool record.published )
         ]
 
 

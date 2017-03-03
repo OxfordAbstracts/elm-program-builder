@@ -11,7 +11,7 @@ type alias Model =
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
-    , showPublishUi : Bool
+    , published : Bool
     , showPreviewUi : Bool
     , newSession : Session
     , newSessionDate : DateWithoutTime
@@ -28,11 +28,14 @@ type alias Model =
     , pickedTracks : List Track
     , pickedColumns : List Column
     , datesWithSessions : List DateWithSessions
+    , host : String
     }
 
 
 type alias Flags =
-    { eventId : String }
+    { eventId : String
+    , host : String
+    }
 
 
 type alias Submission =
@@ -54,7 +57,7 @@ initialModel =
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
-    , showPublishUi = False
+    , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
     , newSessionDate = DateWithoutTime 2017 1 1
@@ -71,6 +74,7 @@ initialModel =
     , pickedTracks = []
     , pickedColumns = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
+    , host = "localhost:8000"
     }
 
 
@@ -226,23 +230,19 @@ type alias TrackId =
 
 
 type alias ApiUpdatePost =
-    { datesWithSessions :
-        List DateWithSessions
-    , tracks :
-        List Track
-    , columns :
-        List Column
+    { datesWithSessions : List DateWithSessions
+    , tracks : List Track
+    , columns : List Column
+    , published : Bool
     }
 
 
 type alias ApiUpdateGet =
-    { datesWithSessions :
-        List DateWithSessions
-    , tracks :
-        List Track
-    , columns :
-        List Column
+    { datesWithSessions : List DateWithSessions
+    , tracks : List Track
+    , columns : List Column
     , submissions : List Submission
+    , published : Bool
     }
 
 
