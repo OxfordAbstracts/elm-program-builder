@@ -244,3 +244,8 @@ type alias ApiUpdateGet =
         List Column
     , submissions : List Submission
     }
+
+
+type TrackFields
+    = Name
+    | Description

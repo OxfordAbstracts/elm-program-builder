@@ -47,4 +47,4 @@ type Msg
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
     | UpdatePickedColumn Int String
-    | UpdatePickedTrack Int String String
+    | UpdatePickedTrack Int MainModel.TrackFields String
