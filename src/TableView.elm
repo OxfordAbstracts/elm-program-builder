@@ -207,8 +207,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden (model.showPreviewUi || model.showPublishPage), onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden (model.showPreviewUi || model.showPublishPage), onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text ("Track: " ++ trackName) ]
                             ]
@@ -345,8 +345,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                                         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
                                     )
                                 ]
-                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                            , button [ hidden (model.showPreviewUi || model.showPublishPage), onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                            , button [ hidden (model.showPreviewUi || model.showPublishPage), onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
                             , br [] []
                             , b [] [ text (" Track: " ++ trackName) ]
                             ]

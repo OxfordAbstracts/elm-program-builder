@@ -2,7 +2,9 @@
   var node = document.querySelector("div");
   var app = Elm.Main.embed(node, {
       eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : "",
-      host: window.location.origin
+      host: window.location.origin,
+      showPreviewUi: window.location.href.split('/programme-builder')[1] === '/preview',
+      showPublishPage: window.location.href.split('/programme-builder')[1] === '/view'
   });
 
   app.ports.openDatepicker.subscribe(function(id) {
