@@ -173,6 +173,7 @@ update msg model =
                     , idOfSessionBeingEdited = Nothing
                     , showPublishUi = False
                     , showPreviewUi = False
+                    , pickedTracks = model.tracks
                   }
                 , Cmd.none
                 )
@@ -261,16 +262,16 @@ update msg model =
                     , Api.postModelToDb newSessionToPost model.eventId
                     )
 
-            CreateNewTrack ->
+            UpdateTracks ->
                 let
-                    tracksWithNewId =
-                        appendNewElementToList model.tracks model.newTrack
+                    newTracks =
+                        List.sortBy .id model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions tracksWithNewId model.columns
+                        ApiUpdatePost model.datesWithSessions newTracks model.columns
                 in
                     ( { model
-                        | tracks = tracksWithNewId
+                        | tracks = newTracks
                         , newTrack = blankTrack 1
                       }
                     , Api.postModelToDb apiUpdatePost model.eventId
@@ -481,7 +482,7 @@ update msg model =
                 in
                     ( { model
                         | pickedDates =
-                            List.append [ dateRecord ] model.pickedDates
+                            List.append model.pickedDates [ dateRecord ]
                       }
                     , Cmd.batch [ Ports.openDatepicker id ]
                     )
@@ -510,3 +511,47 @@ update msg model =
 
             GetDateAndThenAddDate id ->
                 model ! [ Task.perform (AddNewDate id) Date.now ]
+
+            -- tracks not actually deleted from tracks list until user clicks save changes
+            DeleteTrack trackId ->
+                let
+                    newPickedTracks =
+                        List.filter (\t -> t.id /= trackId) model.tracks
+                in
+                    ( { model | pickedTracks = newPickedTracks }
+                    , Cmd.none
+                    )
+
+            AddNewTrack ->
+                ( { model
+                    | pickedTracks =
+                        appendNewElementToList model.pickedTracks (Track 0 "" "")
+                  }
+                , Cmd.none
+                )
+
+            UpdatePickedTrack trackId trackField newPickedTrackInput ->
+                let
+                    pickedTrack =
+                        model.pickedTracks
+                            |> List.filter (\t -> t.id == trackId)
+                            |> List.head
+                            |> Maybe.withDefault (Track 0 "" "")
+
+                    newPickedTrack =
+                        if trackField == Name then
+                            { pickedTrack
+                                | name = newPickedTrackInput
+                            }
+                        else if trackField == Description then
+                            { pickedTrack
+                                | description = newPickedTrackInput
+                            }
+                        else
+                            pickedTrack
+
+                    pickedTracksWithoutUpdatedTrack =
+                        model.pickedTracks
+                            |> List.filter (\s -> s.id /= trackId)
+                in
+                    ( { model | pickedTracks = newPickedTrack :: pickedTracksWithoutUpdatedTrack }, Cmd.none )

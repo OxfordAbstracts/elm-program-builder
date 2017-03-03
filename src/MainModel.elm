@@ -25,6 +25,7 @@ type alias Model =
     , submissions : List Submission
     , datePickerClosed : Bool
     , pickedDates : List DateWithoutTime
+    , pickedTracks : List Track
     , datesWithSessions : List DateWithSessions
     }
 
@@ -66,6 +67,7 @@ initialModel =
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
+    , pickedTracks = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
     }
 
@@ -240,3 +242,8 @@ type alias ApiUpdateGet =
         List Column
     , submissions : List Submission
     }
+
+
+type TrackFields
+    = Name
+    | Description
