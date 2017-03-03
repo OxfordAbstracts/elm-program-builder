@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,900');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,600');
+
+html {
+  font-size: 16px;
+}
+body {
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+
+/* Programme Builder CELLS */
+
+.prog-cell {}
+  .prog-cell__header { /* anchor tag */
+    display: block;
+    background-color: rgb(0, 48, 102);
+    padding: 0.25rem; /* 4px */
+    margin-bottom: 0.25rem; /* 4px */
+    text-decoration: none;
+  }
+  .prog-cell__name {
+    font-size: 0.8125rem; /* 13px */
+    color: #ffffff;
+    text-transform: capitalize;
+  }
+  .prog-cell__body {
+    padding: 0.25rem;
+  }
+  .prog-cell__data {
+    font-size: 0.6875rem; /* 11px */
+    font-family: 'Raleway', sans-serif;
+    display: block;
+    margin-bottom: 0.25rem; /* 4px */
+  }
+  .prog-cell__location {
+    text-transform: capitalize;
+  }
+  .prog-cell__chair {
+    color: #808080;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .prog-cell__track {
+    font-sie: 0.625rem;
+    background-color: #444444;
+    font-weight: 900;
+    color: #ffffff;
+    padding: 0.125rem;
+  }

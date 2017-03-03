@@ -335,27 +335,36 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
             case sessionStarting of
                 Just sessionStarting ->
                     td [ rowspan rowSpanVal, colspan colSpanVal ]
-                        [ div []
-                            [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
-                                [ text
-                                    (sessionStarting.name
-                                        ++ "  "
-                                        ++ "Chair:  "
-                                        ++ sessionStarting.chair
-                                        ++ "  "
-                                        ++ "Location:  "
-                                        ++ sessionStarting.location
-                                        ++ "  "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
-                                        ++ " - "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
-                                    )
+                        [ div [ class "prog-cell" ]
+                            [ a [ class "prog-cell__header", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
+                                [ span [ class "prog-cell__name" ]
+                                    [ text (sessionStarting.name) ]
                                 ]
-                            , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
-                            , br [] []
-                            , b [] [ text (" Track: " ++ trackName) ]
+                            , span [ class "prog-cell__data prog-cell__location" ]
+                                [ text (sessionStarting.location) ]
+                            , span [ class "prog-cell__data prog-cell__chair" ]
+                                [ text (sessionStarting.chair) ]
+                            , span [ class "prog-cell__data prog-cell__track" ]
+                                [ text (toString sessionStarting.trackId) ]
                             ]
+                          -- [ text
+                          --     (sessionStarting.name
+                          --         ++ "  "
+                          --         ++ "Chair:  "
+                          --         ++ sessionStarting.chair
+                          --         ++ "  "
+                          --         ++ "Location:  "
+                          --         ++ sessionStarting.location
+                          --         ++ "  "
+                          --         ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
+                          --         ++ " - "
+                          --         ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
+                          --     )
+                          -- ]
+                        , button [ hidden publishOrPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                        , button [ hidden publishOrPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                        , br [] []
+                        , b [] [ text (" Track: " ++ trackName) ]
                         ]
 
                 Nothing ->
