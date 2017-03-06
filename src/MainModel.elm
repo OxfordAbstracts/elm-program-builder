@@ -74,7 +74,7 @@ initialModel =
     , pickedTracks = []
     , pickedColumns = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
-    , host = "localhost:8000"
+    , host = ""
     }
 
 
