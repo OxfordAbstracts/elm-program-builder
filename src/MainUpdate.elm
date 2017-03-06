@@ -187,6 +187,7 @@ update msg model =
                     , idOfSessionBeingEdited = Nothing
                     , showPublishUi = False
                     , showPreviewUi = False
+                    , pickedColumns = model.columns
                   }
                 , Cmd.none
                 )
@@ -213,19 +214,19 @@ update msg model =
                     , command
                     )
 
-            CreateNewColumn ->
+            UpdateColumns ->
                 let
-                    listWithNewId =
-                        appendNewElementToList model.columns model.newColumn
+                    newColumns =
+                        List.sortBy .id model.pickedColumns
 
                     newColumnToPost =
                         { datesWithSessions = model.datesWithSessions
                         , tracks = model.tracks
-                        , columns = listWithNewId
+                        , columns = newColumns
                         }
                 in
                     ( { model
-                        | columns = listWithNewId
+                        | columns = newColumns
                         , newColumn = blankColumn 1
                       }
                     , Api.postModelToDb newColumnToPost model.eventId
@@ -555,3 +556,44 @@ update msg model =
                             |> List.filter (\s -> s.id /= trackId)
                 in
                     ( { model | pickedTracks = newPickedTrack :: pickedTracksWithoutUpdatedTrack }, Cmd.none )
+
+            -- this deletes columns from pickedcolumns list - deletion isn't saved the user clicks 'save changes'
+            DeleteColumn columnId ->
+                let
+                    newPickedColumns =
+                        List.filter (\c -> c.id /= columnId) model.pickedColumns
+                in
+                    ( { model | pickedColumns = newPickedColumns }
+                    , Cmd.none
+                    )
+
+            AddNewColumn ->
+                ( { model
+                    | pickedColumns =
+                        appendNewElementToList model.pickedColumns (Column 0 "")
+                  }
+                , Cmd.none
+                )
+
+            UpdatePickedColumn columnId newPickedColumnInput ->
+                let
+                    pickedColumn =
+                        model.pickedColumns
+                            |> List.filter (\c -> c.id == columnId)
+                            |> List.head
+                            |> Maybe.withDefault (Column 0 "")
+
+                    newPickedColumn =
+                        { pickedColumn
+                            | name = newPickedColumnInput
+                        }
+
+                    pickedColumnsWithoutUpdatedColumn =
+                        model.pickedColumns
+                            |> List.filter (\c -> c.id /= columnId)
+                in
+                    ( { model
+                        | pickedColumns = newPickedColumn :: pickedColumnsWithoutUpdatedColumn
+                      }
+                    , Cmd.none
+                    )
