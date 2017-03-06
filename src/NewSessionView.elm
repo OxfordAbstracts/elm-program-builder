@@ -37,6 +37,14 @@ newSessionViewWarning context model =
         ""
 
 
+invalidSubmissionsWarning : NewSessionContext -> Model -> String
+invalidSubmissionsWarning context model =
+    if not (String.isEmpty model.invalidSubmissionIdsInput) then
+        "The following submissions are invalid and will not be saved to this session: " ++ model.invalidSubmissionIdsInput
+    else
+        ""
+
+
 view : NewSessionContext -> Model -> Html Msg
 view context model =
     let
@@ -106,7 +114,8 @@ view context model =
                         [ text model.submissionIdsInput ]
                     ]
                 , span []
-                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned" ]
+                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
 
         column2 =
