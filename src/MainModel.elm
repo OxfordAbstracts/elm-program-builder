@@ -139,7 +139,7 @@ blankSession id =
         ""
         (TimeOfDay 9 0)
         (TimeOfDay 12 0)
-        (ColumnId 1)
+        AllColumns
         1
         ""
         []
