@@ -9,3 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.min.js"></script>
     <script src="main.js"></script>
 </body>
+
+<script defer>
+  var options = {
+    eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : "",
+    host: window.location.origin,
+    showPreviewUi: window.location.href.split('/programme-builder')[1] === '/preview',
+    showPublishPage: window.location.href.split('/programme-builder')[1] === '/view'
+  }
+  init(options);
+</script>
