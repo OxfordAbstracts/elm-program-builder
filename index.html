@@ -3,18 +3,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/css/pikaday.min.css" />
 
 <body>
-    <div></div>
+    <div id="programme-builder"></div>
     <script src="elm.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.min.js"></script>
     <script src="main.js"></script>
-    <script defer>
+    <script>
       var options = {
-        eventId: window.location.href.split('/events/')[1] ? window.location.href.split('/events/')[1].split('/')[0] : "",
+        eventId: "1",
         host: window.location.origin,
-        showPreviewUi: window.location.href.split('/programme-builder')[1] === '/preview',
-        showPublishPage: window.location.href.split('/programme-builder')[1] === '/view',
-        node: document.querySelector("div")
+        showPreviewUi: false,
+        showPublishPage: false,
+        node: document.querySelector("#programme-builder")
       }
       init(options, true);
     </script>
