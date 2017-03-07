@@ -108,3 +108,364 @@ body {
       font-size: 0.875rem; /* 14px */
       font-weight: 600;
     }
+
+    .form__wrapper { /* for use with multiple forms */
+    margin: auto;
+    max-width: 60rem;
+  }
+.form {
+display: block;
+max-width: 40rem;
+margin: auto;
+padding: 3rem 0;
+}
+.form--usertype {
+  padding: 1.5rem 0 0;
+  max-width: none;
+}
+.form--wider {
+  display: block;
+  max-width: 50rem;
+  margin: auto;
+  padding: 3rem 0;
+}
+  .form__copy {
+    display: block;
+    margin-bottom: 2rem;
+    max-width: 32rem;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+    color: rgb(128, 128, 128);
+    font-weight: bold;
+  }
+      .form__copy--link {
+        margin-left: 0;
+      }
+      .form__copy--thankyou {
+        margin: 2rem auto;
+      }
+      .form__copy--longform {
+        max-width: none;
+        font-weight: normal;
+        color: #333333;
+      }
+      .form__copy--listitem {
+        display: list-item;
+        list-style-position: inside;
+      }
+      .form__copy--listnumeric {
+        list-style-type: decimal;
+      }
+  .form__hint {
+    display: block;
+    text-align: left;
+    color: #000000;
+    font-size: 0.875rem;
+    letter-spacing: 0.75px;
+    font-weight: 300;
+    margin: 0.5rem 0;
+  }
+      .form__hint--large {
+        display: inline-block;
+        margin-bottom: 2rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #003066;
+      }
+  .form__subtitle {
+    display: block;
+    font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #808080;
+    font-weight: 700;
+    line-height: 1rem;
+    margin-bottom: 1rem;
+  }
+  .form__question {
+    margin-bottom: 4rem;
+  }
+    .form__question--admin {
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #bdbdbd;
+    }
+  .form__question-title {
+    display: block;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #003066;
+  }
+    .form__question-title--answered {
+      color: #808080;
+      letter-spacing: 0.5px;
+      font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  .form__question-section {
+    margin-bottom: 2rem;
+    position: relative;
+  }
+    .form__question-section--table {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+  .form__question-sub-section {
+    margin-bottom: 1.5rem;
+  }
+    .form__question-sub-section--table {
+      display: table-cell;
+    }
+
+    .form__question-sub-section--inline {
+      display:table;
+      table-layout:fixed;
+      width: 100%;
+    }
+
+    .form__question-sub-section--inline > .inline-element{
+      display: table-cell;
+      padding-right: 1em;
+    }
+
+    @media (max-width: 40rem) {
+      .form__question-sub-section--inline > .inline-element {
+        display: block;
+      }
+    }
+
+    .form__question-sub-section.author{
+      position: relative;
+      padding: 1em;
+      background: #e6e6e6;
+    }
+
+    .form__question-sub-section.affiliation {
+      position: relative;
+      padding-top: 1em;
+      padding-right: 1em;
+      padding-left: 1em;
+      background: #e6e6e6;
+      margin-bottom : 0em;
+    }
+
+
+
+    .form__input.city:invalid,
+    .form__input.institution:invalid,
+    .form__input.first-name:invalid,
+    .form__input.last-name:invalid {
+      outline: #9c2c00 solid 2px;
+    }
+    /* .form__question-section--read-only is a
+      Read-only variant which has effect child-elelms */
+    .form__question-section--read-only .form__input {
+      border: none;
+      background: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      height: initial; /* to un-do height declaration and support 1rem font-size */
+      padding: 0;
+      margin-bottom: 1.5rem;
+      color: #000000;
+    }
+    .form__question-section--read-only .form__label:first-child {
+      font-size: 1.125rem;
+      color: #000000;
+      font-weight: bold;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+    .form__question-section--read-only .form__label,
+    .form__label--read-only,
+    .form__question-section--read-only .form__checkbox-label {
+      display: block;
+      margin: 0 0 0.5rem;
+      letter-spacing: 0.5px;
+      line-height: 1.25;
+      font-size: 0.875rem;
+    }
+  .form__answer {
+    line-height: 1.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    display: inline-block;
+    font-weight: 500;
+  }
+      .form__answer--flag {
+        font-style: italic;
+      }
+      .form__answer-section {
+        text-indent: 0.25rem;
+      }
+  .form__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+  }
+    .form__label--warning {
+      color: #9c2c00;
+      text-transform: uppercase;
+      font-weight: bold;
+      display: none;
+    }
+    .form__label--subtitle {
+      display: inline-block;
+      font-size: 1.125rem;
+      color: #000000;
+      font-weight: bold;
+      margin-bottom: 1.125rem;
+    }
+    .form__label--file {
+      display: inline-block;
+      line-height: 2.4;
+      letter-spacing: 0.4px;
+      text-transform: initial;
+    }
+
+  .form__input {
+    display: block;
+    height: 2.625rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0.25rem 1rem;
+    margin: 0 0 1rem;
+    color: #00AA61;
+    font-size: 0.875rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  }
+      .form__input:active {
+        border-color: #333333;
+      }
+      .form__input:focus {
+        border-color: #333333;
+        outline: #B2E3CE solid 2px;
+        outline-offset: -3px;
+      }
+    .form__input--textarea {
+      resize: vertical;
+      min-height: 5rem;
+      padding-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .form__input--textarea-no-min-height {
+      resize: vertical;
+      height: inherit;
+      padding-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .form__input--dropdown {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 1rem; /* 16px */
+      /* Triangle pointing Downwards to indicate dropdown */
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
+      background-size: 0.625rem 0.5rem; /* 10px 8px */
+      background-repeat: no-repeat;
+      background-position: 95%;
+      -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
+      -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
+      box-shadow: 0px -1px 1px #bdbdbd inset;
+
+    }
+      .form__input--dropdown::-ms-expand { /* for IE 11 */
+        display: none;
+      }
+      .form__input--dropdown-manage-email {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* Triangle pointing Downwards to indicate dropdown */
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
+        background-size: 0.625rem 0.5rem; /* 10px 8px */
+        background-repeat: no-repeat;
+        background-position: 95%;
+        -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
+        -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
+        box-shadow: 0px -1px 1px #bdbdbd inset;
+        margin:0;
+        padding:0.2rem;
+        height:2rem;
+      }
+    .form__input--file {
+    /* Hiding element without removing it from payload sent to server */
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+      .form__input--file:focus + .form__label--file {
+        outline: 3px solid #b2e3ce;
+        outline-offset: 2px;
+        border-radius: 0px;
+      }
+    .form__input--with-icon {
+      display: inline-block;
+      width: 38rem;
+    }
+  .form__checkbox {
+  /* For compatibility across internet explorer checkboxes are an independent element of the input elements */
+  /* (Applying resets of inherited styles breaks the design on IE11) */
+    height: 0.875rem;
+    width: 0.875rem;
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    top: -2px;
+    *overflow: hidden;
+  }
+    .form__checkbox:focus {
+      outline-offset: 1px;
+    }
+  .form__checkbox-label {
+    display: block;
+    padding-left: 1rem;
+    text-indent: -1rem;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    margin-bottom: 0.625rem;
+  }
+      .form__checkbox-label--with-icon {
+        display: inline-block;
+      }
+  .form__button {
+    margin-bottom: 1.25rem;
+    margin-top: -0.5rem;
+  }
+      .button.remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+  .form__image {
+    display: block;
+    max-width: 100%;
+    margin: 1rem auto 1.5rem;
+  }
+@media (max-width: 48rem) {
+.form {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+}
+@media (min-width: 60rem) {
+.form--multi {
+  display: inline-block;
+  width: 30rem;
+  padding-left: 1rem;
+}
+}
