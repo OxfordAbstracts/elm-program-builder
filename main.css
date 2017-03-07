@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,900');
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,600');
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-size: 16px;
 }
@@ -9,7 +14,9 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-
+#programme-builder {
+  background-color: #f6f6f6;
+}
 
 /* Programme Builder CELLS */
 
@@ -22,11 +29,14 @@ body {
   border: 1px solid #979797;
   padding: 0;
   vertical-align: top;
+  background-color: #ffffff;
 }
+  .prog-session__divider {
+    text-align: right;
+  }
   .prog-session__action{
     font-family: Roboto;
     font-size: 0.6875rem; /* 11px */
-    float:right;
     background-color: #DBDBDB;
     box-shadow: inset 0 -1px 2px 0 rgba(0,0,0,0.5),inset 0 1px 2px 0 rgba(255,255,255,0.5);
     border-radius: 2px;
@@ -41,6 +51,7 @@ body {
     margin-bottom: 0.25rem; /* 4px */
   }
   .prog-session__name {
+    display: block;
     font-size: 0.8125rem; /* 13px */
     color: #ffffff;
     text-transform: capitalize;
@@ -75,13 +86,25 @@ body {
   .prog-table {
     border-collapse: collapse;
   }
-    .prog-table__row, .prog-table__header {
-      -webkit-box-shadow: 0px 1px 0px 0px #C0C0C2;
-      -moz-box-shadow: 0px 1px 0px 0px #C0C0C2;
-      box-shadow: 0px 1px 0px 0px #C0C0C2;
+    .prog-table__row {
+      -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+      -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+      box-shadow: inset 0px 1px 0px 0px #C0C0C2;
     }
-      .prog-table__time {
-        display: block;
-        font-size: 0.875rem; /* 14px */
-        margin-bottom: 0.5em; /* 7px */
-      }
+    .prog-table__header {
+      padding: 1rem 0.25rem;
+      text-align: left;
+      font-family: 'Raleway', sans-serif;
+    }
+        .prog-table__header--datetime {
+          padding: 1rem;
+        }
+    .prog-table__time {
+      display: block;
+      font-size: 0.875rem; /* 14px */
+      margin-bottom: 0.5em; /* 7px */
+    }
+    .prog-table__date {
+      font-size: 0.875rem; /* 14px */
+      font-weight: 600;
+    }
