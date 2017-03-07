@@ -1,6 +1,11 @@
-function init(options){
-  var node = document.querySelector("div");
-  var app = Elm.Main.embed(node, {
+function init(options, dev){
+  var elmProgrammeBuilder;
+  if (dev){
+    elmProgrammeBuilder = Elm;
+  } else {
+    elmProgrammeBuilder = require('elm-program-builder/elm');
+  }
+  var app = elmProgrammeBuilder.Main.embed(options.node, {
       eventId: options.eventId,
       host: options.host,
       showPreviewUi: options.showPreviewUi,
@@ -48,3 +53,4 @@ function init(options){
    }
   });
 }
+module.exports.init = init;
