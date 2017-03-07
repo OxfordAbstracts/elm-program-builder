@@ -18,17 +18,15 @@ view model =
             List.length model.columns
     in
         div [ class "agenda", style [ ( "margin", "3rem" ) ] ]
-            [ div [ class "table-responsive" ]
-                [ table [ class "table table-condensed table-bordered" ]
-                    [ thead []
-                        [ tr []
-                            (defaultHeaders
-                                ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
-                            )
-                        ]
-                    , tbody []
-                        (List.concatMap (viewDate model numColumns) model.datesWithSessions)
+            [ table [ class "prog-table" ]
+                [ thead []
+                    [ tr [ class "prog-table__row" ]
+                        (defaultHeaders
+                            ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
+                        )
                     ]
+                , tbody []
+                    (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                 ]
             ]
 
@@ -49,16 +47,16 @@ sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
 
 defaultHeaders : List (Html msg)
 defaultHeaders =
-    [ th []
+    [ th [ class "prog-table__header" ]
         [ text "Date" ]
-    , th []
+    , th [ class "prog-table__header" ]
         [ text "Time" ]
     ]
 
 
 viewColumnHeader : Column -> Html msg
 viewColumnHeader column =
-    th [] [ text column.name ]
+    th [ class "prog-table__header" ] [ text column.name ]
 
 
 viewDate : Model -> Int -> DateWithSessions -> List (Html Msg)
@@ -83,7 +81,7 @@ viewDate model numColumns dateWithSessions =
                 |> List.head
                 |> Maybe.withDefault 8
     in
-        [ tr []
+        [ tr [ class "prog-table__row" ]
             (viewDateCell dateWithSessions timeDelimiters firstTime
                 ++ (List.indexedMap (appendFirstRowCell dateWithSessions timeDelimiters model numColumns) model.columns)
             )
@@ -97,16 +95,10 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
         timeDisplay =
             displayTimeDelimiter dateWithSessions timeDelimiters firstTime
 
-        timeClass =
-            if timeDisplay == "" then
-                "active"
-            else
-                ""
-
         elmDate =
             DateUtils.dateWithoutTimeToDate dateWithSessions.date
     in
-        [ td [ class "active", attribute "rowspan" (toString ((List.length timeDelimiters) - 1)) ]
+        [ td [ attribute "rowspan" (toString ((List.length timeDelimiters) - 1)) ]
             [ div [ class "dayofmonth" ]
                 [ text (toString (Date.day elmDate)) ]
             , div [ class "dayofweek" ]
@@ -114,7 +106,7 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
             , div [ class "shortdate text-muted" ]
                 [ text ((toString (Date.month elmDate)) ++ ", " ++ (toString (Date.year elmDate))) ]
             ]
-        , td [ class timeClass ]
+        , td []
             [ text timeDisplay ]
         ]
 
@@ -190,28 +182,21 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ rowspan rowSpanVal, colspan colSpanVal ]
-                        [ div []
-                            [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
-                                [ text
-                                    (sessionStarting.name
-                                        ++ "  "
-                                        ++ "Chair:  "
-                                        ++ sessionStarting.chair
-                                        ++ "  "
-                                        ++ "Location:  "
-                                        ++ sessionStarting.location
-                                        ++ "  "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
-                                        ++ " - "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
-                                    )
+                    td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
+                        [ span [ class "prog-session__header" ]
+                            [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
+                                [ text (sessionStarting.name)
                                 ]
-                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
-                            , br [] []
-                            , b [] [ text ("Track: " ++ trackName) ]
+                            , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                            , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                             ]
+                        , span [ class "prog-session__data prog-session__location" ]
+                            [ text (sessionStarting.location)
+                            ]
+                        , span [ class "prog-session__data prog-session__chair" ]
+                            [ text (sessionStarting.chair) ]
+                        , span [ class "prog-session__data prog-session__track" ]
+                            [ text trackName ]
                         ]
 
                 Nothing ->
@@ -232,7 +217,7 @@ noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColu
     then
         text ""
     else
-        td [ class "agenda-date active", rowspan rowSpanVal ]
+        td [ rowspan rowSpanVal ]
             [ div [ class "agenda-event" ] []
             ]
 
@@ -248,12 +233,6 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
         timeDisplay =
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
 
-        timeClass =
-            if timeDisplay == "" then
-                "active"
-            else
-                ""
-
         lastTime =
             timeDelimiters
                 |> Utils.last
@@ -262,8 +241,8 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
         if timeDelimiter == lastTime then
             text ""
         else
-            tr []
-                ([ td [ class timeClass ]
+            tr [ class "prog-table__row" ]
+                ([ td []
                     [ text (displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter) ]
                  ]
                     ++ (viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter)
@@ -328,27 +307,22 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
         else
             case sessionStarting of
                 Just sessionStarting ->
-                    td [ rowspan rowSpanVal, colspan colSpanVal ]
+                    td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
                         [ div []
-                            [ a [ href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
-                                [ text
-                                    (sessionStarting.name
-                                        ++ "  "
-                                        ++ "Chair:  "
-                                        ++ sessionStarting.chair
-                                        ++ "  "
-                                        ++ "Location:  "
-                                        ++ sessionStarting.location
-                                        ++ "  "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.startTime)
-                                        ++ " - "
-                                        ++ (DateUtils.displayTimeOfDay sessionStarting.endTime)
-                                    )
+                            [ span [ class "prog-session__header" ]
+                                [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
+                                    [ text (sessionStarting.name)
+                                    , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
+                                    , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
+                                    ]
                                 ]
-                            , button [ hidden model.showPreviewUi, onClick (SelectSessionToEdit sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "edit" ]
-                            , button [ hidden model.showPreviewUi, onClick (DeleteSession sessionStarting.id), style [ ( "margin-left", "0.2rem" ) ] ] [ text "delete" ]
-                            , br [] []
-                            , b [] [ text (" Track: " ++ trackName) ]
+                            , span [ class "prog-session__data prog-session__location" ]
+                                [ text (sessionStarting.location)
+                                ]
+                            , span [ class "prog-session__data prog-session__chair" ]
+                                [ text (sessionStarting.chair) ]
+                            , span [ class "prog-session__data prog-session__track" ]
+                                [ text trackName ]
                             ]
                         ]
 
