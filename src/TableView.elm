@@ -25,7 +25,7 @@ view model =
                 [ col [ attribute "span" "2" ] []
                 , div [] columnElements
                 , thead []
-                    [ tr [ class "prog-table__row" ]
+                    [ tr []
                         (defaultHeaders
                             ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
                         )
