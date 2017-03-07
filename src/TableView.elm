@@ -92,8 +92,12 @@ viewDate model numColumns dateWithSessions =
 viewDateCell : DateWithSessions -> List Float -> Float -> List (Html msg)
 viewDateCell dateWithSessions timeDelimiters firstTime =
     let
-        timeDisplay =
+        timeElements =
             displayTimeDelimiter dateWithSessions timeDelimiters firstTime
+                |> List.map
+                    (\t ->
+                        span [ class "prog-table__time " ] [ text t ]
+                    )
 
         elmDate =
             DateUtils.dateWithoutTimeToDate dateWithSessions.date
@@ -106,8 +110,8 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
             , div [ class "shortdate text-muted" ]
                 [ text ((toString (Date.month elmDate)) ++ ", " ++ (toString (Date.year elmDate))) ]
             ]
-        , td []
-            [ text timeDisplay ]
+        , td [ class "prog-cell" ]
+            timeElements
         ]
 
 
@@ -233,8 +237,13 @@ viewOtherRows dateWithSessions model timeDelimiters numColumns =
 viewOtherRow : DateWithSessions -> Model -> List Float -> Int -> Float -> Html Msg
 viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
     let
-        timeDisplay =
+        timeElements =
+            -- list of start and end time
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
+                |> List.map
+                    (\t ->
+                        span [ class "prog-table__time" ] [ text t ]
+                    )
 
         lastTime =
             timeDelimiters
@@ -245,8 +254,8 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
             text ""
         else
             tr [ class "prog-table__row" ]
-                ([ td []
-                    [ text (displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter) ]
+                ([ td [ class "prog-cell" ]
+                    timeElements
                  ]
                     ++ (viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter)
                 )
@@ -340,7 +349,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 -- HELPERS
 
 
-displayTimeDelimiter : DateWithSessions -> List Float -> Float -> String
+displayTimeDelimiter : DateWithSessions -> List Float -> Float -> List String
 displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
     let
         nextDelimiter =
@@ -360,9 +369,10 @@ displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
                 dateWithSessions.sessions
     in
         if sessionExistsInTimeDelimiter then
-            DateUtils.displayTime timeDelimiter ++ " - " ++ DateUtils.displayTime nextDelimiter
+            -- list of start and end time
+            [ DateUtils.displayTime timeDelimiter, DateUtils.displayTime nextDelimiter ]
         else
-            ""
+            []
 
 
 

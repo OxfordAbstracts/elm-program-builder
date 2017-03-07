@@ -13,6 +13,11 @@ body {
 
 /* Programme Builder CELLS */
 
+.prog-cell {
+  vertical-align: top;
+  padding: 0.25rem 1rem;
+}
+
 .prog-session {
   border: 1px solid #979797;
   padding: 0;
@@ -70,9 +75,13 @@ body {
   .prog-table {
     border-collapse: collapse;
   }
-
-  .prog-table__row, .prog-table__header {
-    -webkit-box-shadow: 0px 1px 0px 0px #C0C0C2;
-    -moz-box-shadow: 0px 1px 0px 0px #C0C0C2;
-    box-shadow: 0px 1px 0px 0px #C0C0C2;
-  }
+    .prog-table__row, .prog-table__header {
+      -webkit-box-shadow: 0px 1px 0px 0px #C0C0C2;
+      -moz-box-shadow: 0px 1px 0px 0px #C0C0C2;
+      box-shadow: 0px 1px 0px 0px #C0C0C2;
+    }
+      .prog-table__time {
+        display: block;
+        font-size: 0.875rem; /* 14px */
+        margin-bottom: 0.5em; /* 7px */
+      }
