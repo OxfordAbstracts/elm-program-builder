@@ -14,4 +14,5 @@ test:
 
 # using sysconfcpus to speed up elm compiler # See: https://github.com/elm-lang/elm-compiler/issues/1473#issuecomment-245704142
   override:
+    - npm run publish
     - ~/dependencies/sysconfcpus/bin/sysconfcpus -n 2 npm test
