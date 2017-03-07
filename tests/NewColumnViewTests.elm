@@ -21,7 +21,11 @@ all =
             \() ->
                 let
                     newModel =
-                        { dummyModel | showNewTrackUi = False, showNewColumnUi = True }
+                        { dummyModel
+                            | showNewTrackUi = False
+                            , showNewColumnUi = True
+                            , pickedColumns = [ MainModel.Column 0 "" ]
+                        }
                 in
-                    Expect.equal (NewColumnView.newColumnWarning newModel) ("Cannot create: Column name field is empty")
+                    Expect.equal (NewColumnView.newColumnWarning newModel) ("Cannot create: Column name fields cannot be empty")
         ]

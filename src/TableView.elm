@@ -22,7 +22,7 @@ view model =
                 [ thead []
                     [ tr [ class "prog-table__row" ]
                         (defaultHeaders
-                            ++ (List.map viewColumnHeader model.columns)
+                            ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
                         )
                     ]
                 , tbody []
