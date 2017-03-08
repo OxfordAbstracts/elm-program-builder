@@ -19,6 +19,16 @@ body {
 }
 
 /* Programme Builder CELLS */
+.prog-form {
+  max-width: 50rem;
+  margin: auto;
+  padding: 3rem 0;
+}
+  .prog-form--warning {
+    color: #9c2c00;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
 
 .prog-cell {
   vertical-align: top;
@@ -1603,6 +1613,13 @@ body {
             margin:0;
             padding:0.2rem;
             height:2rem;
+          }
+          .form__input--time-hour-prog-builder{
+            float:left;
+            width:5rem;
+          }
+          .form__input--time-min-prog-builder{
+            width:5rem;
           }
         .form__input--file {
         /* Hiding element without removing it from payload sent to server */

@@ -34,43 +34,45 @@ view model =
                 |> List.indexedMap
                     (\i d ->
                         div []
-                            [ input
-                                [ class "form-control pikaday-input"
-                                , id ("pikaday-instance-" ++ (toString i))
-                                , value (displayDateWithoutTime d)
-                                , disableInput d
+                            [ div [ class "inline-element" ]
+                                [ input
+                                    [ class "form__input form__input--dropdown pikaday-input"
+                                    , id ("pikaday-instance-" ++ (toString i))
+                                    , value (displayDateWithoutTime d)
+                                    , disableInput d
+                                    ]
+                                    []
                                 ]
-                                []
-                            , button
-                                [ onClick (DeleteDate d)
-                                , style [ ( "margin-left", "0.2rem" ) ]
-                                , disableInput d
+                            , div [ class "inline-element" ]
+                                [ button
+                                    [ onClick (DeleteDate d)
+                                    , disableInput d
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
                                 ]
-                                [ text "Delete" ]
                             ]
                     )
 
         column1 =
-            div [ class "form-group" ]
+            div [ class "form__question-sub-section--inline" ]
                 [ div [ class "input-group" ]
                     datesInputs
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                , div []
                     [ button
-                        [ class "btn btn-default"
+                        [ class "button button--tertiary"
                         , id "add-new-date-btn"
                         , type_ "button"
                         , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
                         ]
                         [ text "Add New Date" ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", id "save-dates-btn", type_ "button" ]
+                , div []
+                    [ button [ class "button button--primary", id "save-dates-btn", type_ "button" ]
                         [ text "Save Dates" ]
                     ]
                 , span []
                     [ text "You will be unable to change any dates that have sessions" ]
                 ]
     in
-        div [ hidden (not model.showManageDatesUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
-            ]
+        div [ class "prog-form", hidden (not model.showManageDatesUi) ] [ column1 ]

@@ -53,32 +53,41 @@ view model =
                 |> List.sortBy .id
                 |> List.indexedMap
                     (\i t ->
-                        div []
-                            [ input
-                                [ class "form__input"
-                                , value t.name
-                                , onInput (UpdatePickedTrack t.id Name)
+                        div [ class "form__question-sub-section--inline" ]
+                            [ div [ class "inline-element" ]
+                                [ label []
+                                    [ text "Track name" ]
+                                , input
+                                    [ class "form__input"
+                                    , value t.name
+                                    , onInput (UpdatePickedTrack t.id Name)
+                                    ]
+                                    []
                                 ]
-                                []
-                            , input
-                                [ class "form__input"
-                                , value t.description
-                                , onInput (UpdatePickedTrack t.id Description)
+                            , div [ class "inline-element" ]
+                                [ label []
+                                    [ text "Track description" ]
+                                , input
+                                    [ class "form__input"
+                                    , value t.description
+                                    , onInput (UpdatePickedTrack t.id Description)
+                                    ]
+                                    []
                                 ]
-                                []
-                            , button
-                                [ onClick (DeleteTrack t.id)
-                                , style [ ( "margin-left", "0.2rem" ) ]
-                                , disableInput t.id
-                                , class "button button--secondary icon icon--bin"
+                            , div [ class "inline-element" ]
+                                [ button
+                                    [ onClick (DeleteTrack t.id)
+                                    , disableInput t.id
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
                                 ]
-                                []
                             ]
                     )
 
         column1 =
-            div [ class "form" ]
-                [ div [ class "form__question-sub-section--inline" ]
+            div []
+                [ div []
                     listTracks
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
                     [ button
@@ -89,13 +98,11 @@ view model =
                         ]
                         [ text "Add New Track" ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "button button--primary button--cta", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                , div [] [ text (newTrackWarning model) ]
+                , div []
+                    [ button [ class "button button--primary", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
                         [ text "Save Changes" ]
                     ]
                 ]
     in
-        div [ hidden (not model.showNewTrackUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
-            ]
+        div [ hidden (not model.showNewTrackUi) ] [ column1 ]

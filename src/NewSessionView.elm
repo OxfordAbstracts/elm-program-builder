@@ -68,7 +68,7 @@ view context model =
         column1 =
             div []
                 [ div []
-                    [ label [ for "sesssion-name-input", class "form__label" ]
+                    [ label [ for "sesssion-name-input" ]
                         [ text "Session name" ]
                     , input
                         [ class "form__input"
@@ -80,7 +80,7 @@ view context model =
                         [ text context.session.name ]
                     ]
                 , div []
-                    [ label [ for "description-input", class "form__label" ]
+                    [ label [ for "description-input" ]
                         [ text "Description" ]
                     , textarea
                         [ class "form__input"
@@ -93,7 +93,7 @@ view context model =
                         [ text context.session.description ]
                     ]
                 , div []
-                    [ label [ for "submissions-input", class "form__label" ]
+                    [ label [ for "submissions-input" ]
                         [ text "Submissions" ]
                     , textarea
                         [ class "form__input"
@@ -112,19 +112,19 @@ view context model =
         column2 =
             div []
                 [ div []
-                    [ label [ for "column-input", class "form__label" ] [ text "Column" ]
+                    [ label [ for "column-input" ] [ text "Column" ]
                     , br [] []
                     , select [ id "column-input", onInput UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
                         (allColumnsDropdownOption :: columnOptions)
                     ]
                 , div []
-                    [ label [ for "track-input", class "form__label" ] [ text "Track " ]
+                    [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []
                     , select [ id "track-input", onInput UpdateNewSessionTrack, class "form__input form__input--dropdown" ]
                         (List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div []
-                    [ label [ for "chair-input", class "form__label" ]
+                    [ label [ for "chair-input" ]
                         [ text "Chair" ]
                     , input
                         [ class "form__input"
@@ -165,7 +165,7 @@ view context model =
             in
                 div []
                     [ div [ onInput UpdateNewSessionDate ]
-                        [ label [ for "day-input", class "form__label" ] [ text "Date " ]
+                        [ label [ for "day-input" ] [ text "Date " ]
                         , br [] []
                         , select [ id "day-input", class "form__input" ]
                             dayOptions
@@ -176,7 +176,7 @@ view context model =
                             [ text "Start time" ]
                         , div []
                             [ input
-                                [ class "form__input"
+                                [ class "form__input form__input--time-hour-prog-builder"
                                 , type_ "number"
                                 , value (toStringIgnore0 context.session.startTime.hour)
                                 , onInput UpdateNewSessionStartHour
@@ -184,7 +184,7 @@ view context model =
                                 ]
                                 []
                             , input
-                                [ class "form__input"
+                                [ class "form__input form__input--time-min-prog-builder"
                                 , type_ "number"
                                 , value (toStringIgnore0 context.session.startTime.minute)
                                 , onInput UpdateNewSessionStartMinute
@@ -198,7 +198,7 @@ view context model =
                             [ text "End time" ]
                         , div []
                             [ input
-                                [ class "form__input"
+                                [ class "form__input form__input--time-hour-prog-builder"
                                 , type_ "number"
                                 , value (toStringIgnore0 context.session.endTime.hour)
                                 , onInput UpdateNewSessionEndHour
@@ -206,7 +206,7 @@ view context model =
                                 ]
                                 []
                             , input
-                                [ class "form__input"
+                                [ class "form__input form__input--time-min-prog-builder"
                                 , type_ "number"
                                 , value (toStringIgnore0 context.session.endTime.minute)
                                 , onInput UpdateNewSessionEndMinute
@@ -214,8 +214,8 @@ view context model =
                                 ]
                                 []
                             ]
-                        , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
-                        , div [ style [ ( "margin-top", "1rem" ) ] ]
+                        , div [ class "prog-form--warning" ] [ text (newSessionViewWarning context model) ]
+                        , div []
                             [ button
                                 [ class "button button--primary"
                                 , type_ "button"
@@ -227,7 +227,7 @@ view context model =
                         ]
                     ]
     in
-        div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "form" ]
+        div [ class "prog-form", hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)) ]
             [ div [ class "form__question-sub-section--inline" ]
                 [ div [ class "inline-element" ] [ column1 ]
                 , div [ class "inline-element" ] [ column2 ]
