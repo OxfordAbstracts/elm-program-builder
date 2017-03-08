@@ -186,9 +186,6 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> List.map .name
                 |> List.head
                 |> Maybe.withDefault ""
-
-        publishOrPreviewUi =
-            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -201,8 +198,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                 [ text (sessionStarting.name)
                                 ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden publishOrPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden publishOrPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
@@ -327,9 +324,6 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> List.head
                 |> Maybe.map .name
                 |> Maybe.withDefault ""
-
-        publishOrPreviewUi =
-            model.showPublishUi || model.showPreviewUi
     in
         if timeDelimiter == lastTime then
             text ""
@@ -341,8 +335,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text (sessionStarting.name) ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden publishOrPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden publishOrPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]

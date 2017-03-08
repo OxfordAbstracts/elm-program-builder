@@ -132,24 +132,25 @@ update msg model =
                         , showManageDatesUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
-                        , showPublishUi = False
                         , showPreviewUi = False
                       }
                     , Cmd.none
                     )
 
             PublishProgrammeBuilder ->
-                ( { model
-                    | showNewSessionUi = False
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
-                    , showManageDatesUi = False
-                    , idOfSessionBeingEdited = Nothing
-                    , showPublishUi = True
-                    , showPreviewUi = False
-                  }
-                , Cmd.none
-                )
+                let
+                    newApiPostModel =
+                        { datesWithSessions = model.datesWithSessions
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , published = not model.published
+                        }
+                in
+                    ( { model
+                        | published = not model.published
+                      }
+                    , Api.postModelToDb newApiPostModel model.eventId
+                    )
 
             TogglePreviewUi ->
                 ( { model
@@ -158,7 +159,6 @@ update msg model =
                     , showNewTrackUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
-                    , showPublishUi = False
                     , showPreviewUi = True
                   }
                 , Cmd.none
@@ -171,7 +171,6 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
-                    , showPublishUi = False
                     , showPreviewUi = False
                     , pickedTracks = model.tracks
                   }
@@ -185,7 +184,6 @@ update msg model =
                     , showNewTrackUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
-                    , showPublishUi = False
                     , showPreviewUi = False
                     , pickedColumns = model.columns
                   }
@@ -208,7 +206,6 @@ update msg model =
                         , idOfSessionBeingEdited = Nothing
                         , datePickerClosed = False
                         , pickedDates = List.map .date model.datesWithSessions
-                        , showPublishUi = False
                         , showPreviewUi = False
                       }
                     , command
@@ -219,17 +216,18 @@ update msg model =
                     newColumns =
                         List.sortBy .id model.pickedColumns
 
-                    newColumnToPost =
+                    apiPostModel =
                         { datesWithSessions = model.datesWithSessions
                         , tracks = model.tracks
                         , columns = newColumns
+                        , published = model.published
                         }
                 in
                     ( { model
                         | columns = newColumns
                         , newColumn = blankColumn 1
                       }
-                    , Api.postModelToDb newColumnToPost model.eventId
+                    , Api.postModelToDb apiPostModel model.eventId
                     )
 
             CreateNewSession ->
@@ -249,10 +247,11 @@ update msg model =
                                     dateWithSessions.sessions
                         }
 
-                    newSessionToPost =
+                    apiModelPost =
                         { datesWithSessions = updateDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
+                        , published = model.published
                         }
                 in
                     ( { model
@@ -260,7 +259,7 @@ update msg model =
                         , newSession = blankSession 1
                         , submissionIdsInput = ""
                       }
-                    , Api.postModelToDb newSessionToPost model.eventId
+                    , Api.postModelToDb apiModelPost model.eventId
                     )
 
             UpdateTracks ->
@@ -269,7 +268,7 @@ update msg model =
                         List.sortBy .id model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.columns
+                        ApiUpdatePost model.datesWithSessions newTracks model.columns model.published
                 in
                     ( { model
                         | tracks = newTracks
@@ -364,6 +363,7 @@ update msg model =
                         { datesWithSessions = newDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
+                        , published = model.published
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -445,6 +445,7 @@ update msg model =
                                 { datesWithSessions = updateDatesWithSessions
                                 , tracks = model.tracks
                                 , columns = model.columns
+                                , published = model.published
                                 }
                         in
                             ( { model
