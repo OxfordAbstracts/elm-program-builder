@@ -43,7 +43,7 @@ type Msg
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
     | UpdateNewSessionSubmissionIds String
-    | UpdateNewSessionTrack String
+    | UpdateNewSessionTrack (Maybe MainModel.TrackId)
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
     | UpdatePickedColumn Int String

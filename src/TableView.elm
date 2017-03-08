@@ -50,6 +50,24 @@ sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
             False
 
 
+getTrackId sessionStarting =
+    case (Maybe.map .trackId sessionStarting) of
+        Just trackId ->
+            trackId
+                |> Maybe.withDefault 0
+
+        Nothing ->
+            0
+
+
+getTrackName tracks trackId =
+    tracks
+        |> List.filter (\t -> t.id == trackId)
+        |> List.map .name
+        |> List.head
+        |> Maybe.withDefault ""
+
+
 defaultHeaders : List (Html msg)
 defaultHeaders =
     [ th [ class "prog-table__header prog-table__header--datetime" ]
@@ -176,20 +194,10 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> Maybe.withDefault 0
 
         trackId =
-            case (Maybe.map .trackId sessionStarting) of
-                Just trackId ->
-                    trackId
-                        |> Maybe.withDefault 0
-
-                Nothing ->
-                    0
+            getTrackId sessionStarting
 
         trackName =
-            model.tracks
-                |> List.filter (\t -> t.id == trackId)
-                |> List.map .name
-                |> List.head
-                |> Maybe.withDefault ""
+            getTrackName model.tracks trackId
     in
         if timeDelimiter == lastTime then
             text ""
@@ -318,20 +326,10 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> Maybe.withDefault -1
 
         trackId =
-            case (Maybe.map .trackId sessionStarting) of
-                Just trackId ->
-                    trackId
-                        |> Maybe.withDefault 0
-
-                Nothing ->
-                    0
+            getTrackId sessionStarting
 
         trackName =
-            model.tracks
-                |> List.filter (\t -> t.id == trackId)
-                |> List.head
-                |> Maybe.map .name
-                |> Maybe.withDefault ""
+            getTrackName model.tracks trackId
     in
         if timeDelimiter == lastTime then
             text ""
