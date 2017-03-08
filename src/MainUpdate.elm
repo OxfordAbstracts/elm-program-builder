@@ -87,6 +87,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
         , tracks = apiUpdateGet.tracks
         , columns = apiUpdateGet.columns
         , submissions = apiUpdateGet.submissions
+        , published = apiUpdateGet.published
      }
     )
 
@@ -151,18 +152,6 @@ update msg model =
                       }
                     , Api.postModelToDb newApiPostModel model.eventId
                     )
-
-            TogglePreviewUi ->
-                ( { model
-                    | showNewSessionUi = False
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
-                    , showManageDatesUi = False
-                    , idOfSessionBeingEdited = Nothing
-                    , showPreviewUi = True
-                  }
-                , Cmd.none
-                )
 
             ToggleNewTrackUi ->
                 ( { model
