@@ -14,7 +14,7 @@ newColumnWarning model =
         blankPickedColumn =
             model.pickedColumns
                 |> List.map .name
-                |> List.any (\n -> n == "")
+                |> List.any (\n -> String.isEmpty n)
     in
         if model.showNewColumnUi && blankPickedColumn then
             getWarning "Column name fields cannot be empty" model
