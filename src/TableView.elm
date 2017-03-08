@@ -176,9 +176,13 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> Maybe.withDefault 0
 
         trackId =
-            sessionStarting
-                |> Maybe.map .trackId
-                |> Maybe.withDefault 0
+            case (Maybe.map .trackId sessionStarting) of
+                Just trackId ->
+                    trackId
+                        |> Maybe.withDefault 0
+
+                Nothing ->
+                    0
 
         trackName =
             model.tracks
@@ -314,9 +318,13 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> Maybe.withDefault -1
 
         trackId =
-            sessionStarting
-                |> Maybe.map .trackId
-                |> Maybe.withDefault 0
+            case (Maybe.map .trackId sessionStarting) of
+                Just trackId ->
+                    trackId
+                        |> Maybe.withDefault 0
+
+                Nothing ->
+                    0
 
         trackName =
             model.tracks

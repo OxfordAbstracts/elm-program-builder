@@ -45,7 +45,7 @@ all =
                                 , sessionColumn = MainModel.ColumnId 1
                                 , chair = "test chair"
                                 , location = "test location"
-                                , trackId = 1
+                                , trackId = (Just 1)
                                 , submissionIds = []
                                 }
                             , editSessionDate = { year = 2017, month = 1, day = 1 }
@@ -71,7 +71,7 @@ all =
                                 , sessionColumn = MainModel.ColumnId 1
                                 , chair = "test chair"
                                 , location = "test location"
-                                , trackId = 1
+                                , trackId = (Just 1)
                                 , submissionIds = []
                                 }
                             , newSessionDate = { year = 2017, month = 1, day = 1 }

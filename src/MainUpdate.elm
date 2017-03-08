@@ -331,7 +331,10 @@ update msg model =
                 ( (updateNewSession model (\ns -> { ns | location = newLocation })), Cmd.none )
 
             UpdateNewSessionTrack newTrackId ->
-                ( (updateNewSession model (\ns -> { ns | trackId = (toInt model newTrackId) })), Cmd.none )
+                if newTrackId == "" then
+                    ( (updateNewSession model (\ns -> { ns | trackId = Nothing })), Cmd.none )
+                else
+                    ( (updateNewSession model (\ns -> { ns | trackId = Just (toInt model newTrackId) })), Cmd.none )
 
             UpdateNewSessionDate newDate ->
                 ( { model | newSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )

@@ -90,7 +90,7 @@ type alias Session =
     , startTime : TimeOfDay
     , endTime : TimeOfDay
     , sessionColumn : SessionColumn
-    , trackId : TrackId
+    , trackId : Maybe TrackId
     , location : String
     , submissionIds : List Int
     , chair : String
@@ -133,8 +133,8 @@ blankSession id =
         ""
         (TimeOfDay 9 0)
         (TimeOfDay 12 0)
-        (ColumnId 1)
-        1
+        AllColumns
+        Nothing
         ""
         []
         ""
@@ -167,7 +167,7 @@ initialSessions =
         (TimeOfDay 9 0)
         (TimeOfDay 9 1)
         (ColumnId 1)
-        1
+        (Just 1)
         "The aquariam"
         []
         "Chairman Dave"
@@ -178,7 +178,7 @@ initialSessions =
         (TimeOfDay 10 30)
         (TimeOfDay 11 0)
         (ColumnId 1)
-        1
+        (Just 1)
         "The observatory"
         []
         "Chairwoman Sue"
@@ -189,7 +189,7 @@ initialSessions =
         (TimeOfDay 13 30)
         (TimeOfDay 15 0)
         (ColumnId 1)
-        1
+        (Just 1)
         "The games room"
         []
         ""
@@ -200,7 +200,7 @@ initialSessions =
         (TimeOfDay 13 0)
         (TimeOfDay 13 30)
         (ColumnId 1)
-        1
+        (Just 1)
         "The mystery room"
         []
         ""
@@ -211,7 +211,7 @@ initialSessions =
         (TimeOfDay 11 0)
         (TimeOfDay 11 30)
         AllColumns
-        1
+        (Just 1)
         "The mystery room 4"
         []
         ""
