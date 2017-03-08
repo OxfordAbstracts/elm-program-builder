@@ -37,7 +37,7 @@ view model =
             ]
     else
         div [ class "container" ]
-            [ Html.h2 [] [ text "Programme builder!" ]
+            [ Html.h2 [] [ text "Programme builder" ]
             , Stylesheet.view
             , ControlsView.view model
             , PublishedUrlView.view model

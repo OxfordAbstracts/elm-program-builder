@@ -66,12 +66,12 @@ view context model =
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
-                    [ label [ for "sesssion-name-input" ]
+            div []
+                [ div []
+                    [ label [ for "sesssion-name-input", class "form__label" ]
                         [ text "Session name" ]
                     , input
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "sesssion-name-input"
                         , type_ "text"
                         , value context.session.name
@@ -79,11 +79,11 @@ view context model =
                         ]
                         [ text context.session.name ]
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "description-input" ]
+                , div []
+                    [ label [ for "description-input", class "form__label" ]
                         [ text "Description" ]
                     , textarea
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "description-input"
                         , rows 5
                         , cols 32
@@ -92,11 +92,11 @@ view context model =
                         ]
                         [ text context.session.description ]
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "submissions-input" ]
+                , div []
+                    [ label [ for "submissions-input", class "form__label" ]
                         [ text "Submissions" ]
                     , textarea
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "submissions-input"
                         , rows 2
                         , cols 32
@@ -105,29 +105,29 @@ view context model =
                         ]
                         [ text model.submissionIdsInput ]
                     ]
-                , span []
+                , span [ class "form__hint" ]
                     [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned" ]
                 ]
 
         column2 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
-                    [ label [ for "column-input" ] [ text "Column" ]
+            div []
+                [ div []
+                    [ label [ for "column-input", class "form__label" ] [ text "Column" ]
                     , br [] []
-                    , select [ id "column-input", onInput UpdateNewSessionColumn ]
+                    , select [ id "column-input", onInput UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
                         (allColumnsDropdownOption :: columnOptions)
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "track-input" ] [ text "Track " ]
+                , div []
+                    [ label [ for "track-input", class "form__label" ] [ text "Track " ]
                     , br [] []
-                    , select [ id "track-input", onInput UpdateNewSessionTrack ]
+                    , select [ id "track-input", onInput UpdateNewSessionTrack, class "form__input form__input--dropdown" ]
                         (List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == t.id) ] [ text t.name ]) model.tracks)
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "chair-input" ]
+                , div []
+                    [ label [ for "chair-input", class "form__label" ]
                         [ text "Chair" ]
                     , input
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "chair-input"
                         , type_ "text"
                         , value context.session.chair
@@ -135,11 +135,11 @@ view context model =
                         ]
                         [ text model.newSession.chair ]
                     ]
-                , div [ class "input-group" ]
+                , div []
                     [ label [ for "location-input" ]
                         [ text "Location" ]
                     , input
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "location-input"
                         , type_ "text"
                         , value context.session.location
@@ -163,31 +163,29 @@ view context model =
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )
             in
-                div [ class "form-group" ]
-                    [ div [ class "input-group", onInput UpdateNewSessionDate ]
-                        [ label [ for "day-input" ] [ text "Date " ]
+                div []
+                    [ div [ onInput UpdateNewSessionDate ]
+                        [ label [ for "day-input", class "form__label" ] [ text "Date " ]
                         , br [] []
-                        , select [ id "day-input" ]
+                        , select [ id "day-input", class "form__input" ]
                             dayOptions
                         ]
                     , div
-                        [ class "input-group" ]
+                        []
                         [ label []
                             [ text "Start time" ]
                         , div []
                             [ input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
                                 , value (toStringIgnore0 context.session.startTime.hour)
                                 , onInput UpdateNewSessionStartHour
                                 , placeholder "00"
                                 ]
                                 []
                             , input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
                                 , value (toStringIgnore0 context.session.startTime.minute)
                                 , onInput UpdateNewSessionStartMinute
                                 , placeholder "00"
@@ -195,23 +193,21 @@ view context model =
                                 []
                             ]
                         ]
-                    , div [ class "input-group" ]
+                    , div []
                         [ label []
                             [ text "End time" ]
                         , div []
                             [ input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
                                 , value (toStringIgnore0 context.session.endTime.hour)
                                 , onInput UpdateNewSessionEndHour
                                 , placeholder "00"
                                 ]
                                 []
                             , input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
                                 , value (toStringIgnore0 context.session.endTime.minute)
                                 , onInput UpdateNewSessionEndMinute
                                 , placeholder "00"
@@ -221,7 +217,7 @@ view context model =
                         , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
                         , div [ style [ ( "margin-top", "1rem" ) ] ]
                             [ button
-                                [ class "btn btn-default"
+                                [ class "button button--primary"
                                 , type_ "button"
                                 , disabled (newSessionViewWarning context model /= "")
                                 , onClick context.onClickAction
@@ -231,8 +227,10 @@ view context model =
                         ]
                     ]
     in
-        div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
-            , div [ class "col-md-4" ] [ column2 ]
-            , div [ class "col-md-4" ] [ column3 ]
+        div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "form" ]
+            [ div [ class "form__question-sub-section--inline" ]
+                [ div [ class "inline-element" ] [ column1 ]
+                , div [ class "inline-element" ] [ column2 ]
+                , div [ class "inline-element" ] [ column3 ]
+                ]
             ]

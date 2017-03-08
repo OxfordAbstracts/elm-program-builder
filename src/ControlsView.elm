@@ -18,14 +18,14 @@ view model =
             case model.idOfSessionBeingEdited of
                 Just id ->
                     NewSessionContext
-                        "Edit session"
+                        "Save"
                         EditSession
                         model.editSession
                         model.editSessionDate
 
                 Nothing ->
                     NewSessionContext
-                        "New session"
+                        "Save"
                         CreateNewSession
                         model.newSession
                         model.newSessionDate

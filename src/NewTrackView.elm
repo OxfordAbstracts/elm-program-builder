@@ -55,13 +55,13 @@ view model =
                     (\i t ->
                         div []
                             [ input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , value t.name
                                 , onInput (UpdatePickedTrack t.id Name)
                                 ]
                                 []
                             , input
-                                [ class "form-control"
+                                [ class "form__input"
                                 , value t.description
                                 , onInput (UpdatePickedTrack t.id Description)
                                 ]
@@ -70,18 +70,19 @@ view model =
                                 [ onClick (DeleteTrack t.id)
                                 , style [ ( "margin-left", "0.2rem" ) ]
                                 , disableInput t.id
+                                , class "button button--secondary icon icon--bin"
                                 ]
-                                [ text "Delete" ]
+                                []
                             ]
                     )
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
+            div [ class "form" ]
+                [ div [ class "form__question-sub-section--inline" ]
                     listTracks
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
                     [ button
-                        [ class "btn btn-default"
+                        [ class "button button--tertiary"
                         , id "add-new-date-btn"
                         , type_ "button"
                         , onClick AddNewTrack
@@ -90,7 +91,7 @@ view model =
                     ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
                 , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                    [ button [ class "button button--primary button--cta", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
                         [ text "Save Changes" ]
                     ]
                 ]
