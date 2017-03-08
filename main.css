@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,900');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,600');
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+body {
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+#programme-builder {
+  background-color: #f6f6f6;
+}
+
+/* Programme Builder CELLS */
+
+.prog-cell {
+  vertical-align: top;
+  padding: 0.25rem 1rem;
+}
+
+.prog-session {
+  border: 1px solid #979797;
+  padding: 0;
+  vertical-align: top;
+  background-color: #ffffff;
+}
+  .prog-session__divider {
+    text-align: right;
+  }
+  .prog-session__action{
+    font-family: Roboto;
+    font-size: 0.6875rem; /* 11px */
+    background-color: #DBDBDB;
+    box-shadow: inset 0 -1px 2px 0 rgba(0,0,0,0.5),inset 0 1px 2px 0 rgba(255,255,255,0.5);
+    border-radius: 2px;
+    border: 1px solid #808080;
+    margin-left: 0.2rem;
+    cursor: pointer;
+  }
+  .prog-session__header { /* anchor tag */
+    display: block;
+    background-color: rgb(0, 48, 102);
+    padding: 0.25rem; /* 4px */
+    margin-bottom: 0.25rem; /* 4px */
+  }
+  .prog-session__name {
+    display: block;
+    font-size: 0.8125rem; /* 13px */
+    color: #ffffff;
+    text-transform: capitalize;
+    text-decoration: none;
+  }
+  .prog-session__body {
+    padding: 0.25rem;
+  }
+  .prog-session__data {
+    font-size: 0.6875rem; /* 11px */
+    font-family: 'Raleway', sans-serif;
+    display: block;
+    margin: 0.25rem; /* 4px */
+  }
+  .prog-session__location {
+    text-transform: capitalize;
+  }
+  .prog-session__chair {
+    color: #808080;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .prog-session__track {
+    font-size: 0.625rem;
+    background-color: #444444;
+    font-weight: 900;
+    color: #ffffff;
+    padding: 0.125rem;
+    display: inline-block;
+  }
+
+  .prog-table {
+    border-collapse: collapse;
+  }
+    .prog-table__row {
+      -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+      -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+      box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+    }
+    .prog-table__header {
+      padding: 1rem 0.25rem;
+      text-align: left;
+      font-family: 'Raleway', sans-serif;
+    }
+        .prog-table__header--datetime {
+          padding: 1rem;
+        }
+    .prog-table__time {
+      display: block;
+      font-size: 0.875rem; /* 14px */
+      margin-bottom: 0.5em; /* 7px */
+    }
+    .prog-table__date {
+      font-size: 0.875rem; /* 14px */
+      font-weight: 600;
+    }
