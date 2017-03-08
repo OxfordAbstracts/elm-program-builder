@@ -15,6 +15,7 @@ dummyApiUpdateGet =
     , tracks = dummyTracks
     , columns = dummyColumn
     , submissions = []
+    , published = False
     }
 
 

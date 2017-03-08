@@ -71,6 +71,12 @@ viewUiButtons model =
                 "btn btn-default active"
             else
                 "btn btn-default"
+
+        publishButtonText =
+            if model.published then
+                "Unpublish"
+            else
+                "Publish"
     in
         div [ class "btn-toolbar", attribute "role" "toolbar", style [ ( "margin", "3rem" ) ] ]
             [ div [ class "btn-group btn-group-lg", attribute "role" "group" ]
@@ -85,6 +91,6 @@ viewUiButtons model =
                 , button [ class togglePreviewUiClass, type_ "button", onClick TogglePreviewUi ]
                     [ text "Preview" ]
                 , button [ class "btn btn-default", type_ "button", onClick PublishProgrammeBuilder ]
-                    [ text "Publish" ]
+                    [ text publishButtonText ]
                 ]
             ]

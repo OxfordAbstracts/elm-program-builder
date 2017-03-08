@@ -39,7 +39,7 @@ view model =
                         |> List.map .sessionColumn
                         |> List.filter (\c -> c /= AllColumns)
             in
-                if List.member (columnId) columnsWithSessions then
+                if List.member columnId columnsWithSessions then
                     disabled True
                 else
                     disabled False

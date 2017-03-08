@@ -79,7 +79,8 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
   ],
 "submissions": [
   {"id": 1}
-]
+],
+"published": false
 }"""
 
 
@@ -93,6 +94,7 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         [ Track 1 "track 1" "track 1 description" ]
         [ Column 1 "column 1" ]
         [ Submission 1 ]
+        False
 
 
 createSession : String -> String -> Int -> Int -> Session
