@@ -110,7 +110,7 @@ createSession sessionName sessionDescription sessionYear sessionMonth =
         , minute = 30
         }
         (MainModel.ColumnId 1)
-        1
+        (Just 1)
         "This is the location"
         []
         "This is the chair"
