@@ -1,8 +1,15 @@
-(function(){
-  var node = document.querySelector("#programme-builder");
-  var app = Elm.Main.embed(node, {
-      eventId: "1",
-      host: window.location.origin
+function init(options, dev){
+  var elmProgrammeBuilder;
+  if (dev){
+    elmProgrammeBuilder = Elm;
+  } else {
+    elmProgrammeBuilder = require('elm-program-builder/elm');
+  }
+  var app = elmProgrammeBuilder.Main.embed(options.node, {
+      eventId: options.eventId,
+      host: options.host,
+      showPreviewUi: options.showPreviewUi,
+      showPublishPage: options.showPublishPage
   });
 
   app.ports.openDatepicker.subscribe(function(id) {
@@ -45,4 +52,5 @@
      app.ports[port].send(pikadayDateArray)
    }
   });
-})()
+}
+module.exports.init = init;
