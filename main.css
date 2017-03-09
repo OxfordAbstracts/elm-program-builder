@@ -840,6 +840,17 @@ body {
           }
       /* a datum is usually paired with a label */
   /*```````````````*/
+    .card__sub-datum{
+      border-radius: 2px;
+      float:left;
+      padding:0.125rem;
+      margin-left:3rem;
+      background-color: #444444;
+      font-weight: 900;
+      color: #ffffff;
+      text-align:center;
+      display: inline-block;
+    }
     .card__copy {
       margin-bottom: 1rem;
       line-height: 1.25;
@@ -870,6 +881,9 @@ body {
     }
       .card__sub-section ~ .card__sub-section {
         border-left: solid 1px #bdbdbd;
+      }
+      .card__sub-section--divided{
+        border-bottom: solid 1px #bdbdbd;
       }
         .card__sub-section--small {
           padding: 2px 2rem;
