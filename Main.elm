@@ -19,7 +19,14 @@ import Ports exposing (..)
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { initialModel | eventId = flags.eventId, host = flags.host }, Api.getModelFromDb flags.eventId )
+    ( { initialModel
+        | eventId = flags.eventId
+        , host = flags.host
+        , showPreviewUi = flags.showPreviewUi
+        , showPublishPage = flags.showPublishPage
+      }
+    , Api.getModelFromDb flags.eventId
+    )
 
 
 
@@ -29,7 +36,7 @@ init flags =
 view : Model -> Html Msg
 view model =
     -- publishView
-    if model.showPreviewUi then
+    if model.showPreviewUi || model.showPublishPage then
         div [ class "container" ]
             [ Html.h2 [] [ text "Programme builder" ]
             , Stylesheet.view

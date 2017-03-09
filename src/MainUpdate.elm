@@ -7,6 +7,7 @@ import MainModel exposing (..)
 import String exposing (trim, join, split)
 import Ports exposing (..)
 import Task
+import Set
 import Date exposing (Date)
 
 
@@ -16,11 +17,14 @@ addSubmissionIdsInputToSession submissionIdsInput session submissions =
         validSubmissionIds =
             List.map .id submissions
 
+        -- set.fromlist and tolist remove duplicates from list
         submissionIds =
             submissionIdsInput
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
+                |> Set.fromList
+                |> Set.toList
     in
         { session
             | submissionIds = submissionIds
@@ -87,6 +91,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
         , tracks = apiUpdateGet.tracks
         , columns = apiUpdateGet.columns
         , submissions = apiUpdateGet.submissions
+        , published = apiUpdateGet.published
      }
     )
 
@@ -151,18 +156,6 @@ update msg model =
                       }
                     , Api.postModelToDb newApiPostModel model.eventId
                     )
-
-            TogglePreviewUi ->
-                ( { model
-                    | showNewSessionUi = False
-                    , showNewColumnUi = False
-                    , showNewTrackUi = False
-                    , showManageDatesUi = False
-                    , idOfSessionBeingEdited = Nothing
-                    , showPreviewUi = True
-                  }
-                , Cmd.none
-                )
 
             ToggleNewTrackUi ->
                 ( { model
@@ -309,7 +302,24 @@ update msg model =
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
 
             UpdateNewSessionSubmissionIds newSubmissionIdsString ->
-                ( { model | submissionIdsInput = newSubmissionIdsString }, Cmd.none )
+                let
+                    validSubmissionIds =
+                        model.submissions
+                            |> List.map .id
+                            |> List.map toString
+
+                    invalidSubmissionIds =
+                        newSubmissionIdsString
+                            |> split ","
+                            |> List.filter (\sub -> not (List.member sub validSubmissionIds))
+                            |> join ", "
+                in
+                    ( { model
+                        | submissionIdsInput = newSubmissionIdsString
+                        , invalidSubmissionIdsInput = invalidSubmissionIds
+                      }
+                    , Cmd.none
+                    )
 
             UpdateNewSessionColumn newColumn ->
                 if newColumn == "ALL COLUMNS" then
@@ -331,7 +341,12 @@ update msg model =
                 ( (updateNewSession model (\ns -> { ns | location = newLocation })), Cmd.none )
 
             UpdateNewSessionTrack newTrackId ->
-                ( (updateNewSession model (\ns -> { ns | trackId = (toInt model newTrackId) })), Cmd.none )
+                case newTrackId of
+                    Just trackId ->
+                        ( updateNewSession model (\ns -> { ns | trackId = Just trackId }), Cmd.none )
+
+                    Nothing ->
+                        ( updateNewSession model (\ns -> { ns | trackId = Nothing }), Cmd.none )
 
             UpdateNewSessionDate newDate ->
                 ( { model | newSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )

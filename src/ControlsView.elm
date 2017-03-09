@@ -66,12 +66,6 @@ viewUiButtons model =
             else
                 "btn btn-default"
 
-        togglePreviewUiClass =
-            if model.showPreviewUi then
-                "btn btn-default active"
-            else
-                "btn btn-default"
-
         publishButtonText =
             if model.published then
                 "Unpublish"
@@ -88,7 +82,7 @@ viewUiButtons model =
                     [ text "New Column" ]
                 , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
                     [ text "Manage Dates" ]
-                , button [ class togglePreviewUiClass, type_ "button", onClick TogglePreviewUi ]
+                , a [ href ("/events/" ++ model.eventId ++ "/programme-builder/preview"), target "_blank", type_ "button" ]
                     [ text "Preview" ]
                 , button [ class "btn btn-default", type_ "button", onClick PublishProgrammeBuilder ]
                     [ text publishButtonText ]

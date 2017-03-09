@@ -29,7 +29,6 @@ type Msg
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
-    | TogglePreviewUi
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String
@@ -43,7 +42,7 @@ type Msg
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
     | UpdateNewSessionSubmissionIds String
-    | UpdateNewSessionTrack String
+    | UpdateNewSessionTrack (Maybe MainModel.TrackId)
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
     | UpdatePickedColumn Int String

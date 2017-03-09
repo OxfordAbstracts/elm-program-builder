@@ -43,7 +43,7 @@ view model =
                         |> List.concatMap .sessions
                         |> List.map .trackId
             in
-                if List.member trackId tracksWithSessions then
+                if List.member (Just trackId) tracksWithSessions then
                     disabled True
                 else
                     disabled False

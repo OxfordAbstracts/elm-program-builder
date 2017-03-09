@@ -86,7 +86,7 @@ all =
                         , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
                         , location = "test location"
-                        , trackId = 1
+                        , trackId = (Just 1)
                         , submissionIds = [ 1 ]
                         }
 
@@ -130,7 +130,7 @@ all =
                         , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
                         , location = "test location"
-                        , trackId = 1
+                        , trackId = (Just 1)
                         , submissionIds = [ 1 ]
                         }
 

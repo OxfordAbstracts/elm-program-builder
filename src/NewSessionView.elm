@@ -37,6 +37,14 @@ newSessionViewWarning context model =
         ""
 
 
+invalidSubmissionsWarning : NewSessionContext -> Model -> String
+invalidSubmissionsWarning context model =
+    if not (String.isEmpty model.invalidSubmissionIdsInput) then
+        "The following submissions are invalid and will not be saved to this session: " ++ model.invalidSubmissionIdsInput
+    else
+        ""
+
+
 view : NewSessionContext -> Model -> Html Msg
 view context model =
     let
@@ -64,6 +72,9 @@ view context model =
 
                 _ ->
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
+
+        noTracksDropdownOption =
+            option [ value "", selected (context.session.trackId == Nothing) ] [ text "No track" ]
 
         column1 =
             div []
@@ -106,8 +117,19 @@ view context model =
                         [ text model.submissionIdsInput ]
                     ]
                 , span [ class "form__hint" ]
-                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned" ]
+                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
+
+        toTrackId trackIdString =
+            if trackIdString == "" then
+                Nothing
+            else
+                Just
+                    (trackIdString
+                        |> String.toInt
+                        |> Result.withDefault 0
+                    )
 
         column2 =
             div []
@@ -120,8 +142,8 @@ view context model =
                 , div []
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []
-                    , select [ id "track-input", onInput UpdateNewSessionTrack, class "form__input form__input--dropdown" ]
-                        (List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == t.id) ] [ text t.name ]) model.tracks)
+                    , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId), class "form__input form__input--dropdown" ]
+                        (noTracksDropdownOption :: List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == Just t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div []
                     [ label [ for "chair-input" ]

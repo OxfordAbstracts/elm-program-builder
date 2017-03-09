@@ -50,6 +50,25 @@ sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
             False
 
 
+getTrackId : Maybe Session -> TrackId
+getTrackId sessionStarting =
+    case (Maybe.map .trackId sessionStarting) of
+        Just trackId ->
+            trackId
+                |> Maybe.withDefault 0
+
+        Nothing ->
+            0
+
+
+getTrackName tracks trackId =
+    tracks
+        |> List.filter (\t -> t.id == trackId)
+        |> List.map .name
+        |> List.head
+        |> Maybe.withDefault ""
+
+
 defaultHeaders : List (Html msg)
 defaultHeaders =
     [ th [ class "prog-table__header prog-table__header--datetime" ]
@@ -176,16 +195,10 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 |> Maybe.withDefault 0
 
         trackId =
-            sessionStarting
-                |> Maybe.map .trackId
-                |> Maybe.withDefault 0
+            getTrackId sessionStarting
 
         trackName =
-            model.tracks
-                |> List.filter (\t -> t.id == trackId)
-                |> List.map .name
-                |> List.head
-                |> Maybe.withDefault ""
+            getTrackName model.tracks trackId
     in
         if timeDelimiter == lastTime then
             text ""
@@ -198,8 +211,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                 [ text (sessionStarting.name)
                                 ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
@@ -314,16 +327,10 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> Maybe.withDefault -1
 
         trackId =
-            sessionStarting
-                |> Maybe.map .trackId
-                |> Maybe.withDefault 0
+            getTrackId sessionStarting
 
         trackName =
-            model.tracks
-                |> List.filter (\t -> t.id == trackId)
-                |> List.head
-                |> Maybe.map .name
-                |> Maybe.withDefault ""
+            getTrackName model.tracks trackId
     in
         if timeDelimiter == lastTime then
             text ""
@@ -335,8 +342,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
                                 [ text (sessionStarting.name) ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden model.showPreviewUi, class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden model.showPreviewUi, class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
