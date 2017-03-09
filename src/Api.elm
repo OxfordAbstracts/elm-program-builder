@@ -46,11 +46,21 @@ sessionEncoder session =
         , ( "startTime", timeEncoder session.startTime )
         , ( "endTime", timeEncoder session.endTime )
         , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
-        , ( "trackId", Json.Encode.int session.trackId )
+        , ( "trackId", sessionTrackIdEncoder session.trackId )
         , ( "location", Json.Encode.string session.location )
         , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int session.submissionIds )
         , ( "chair", Json.Encode.string session.chair )
         ]
+
+
+sessionTrackIdEncoder : Maybe TrackId -> Json.Encode.Value
+sessionTrackIdEncoder record =
+    case record of
+        Just int ->
+            Json.Encode.int int
+
+        Nothing ->
+            Json.Encode.null
 
 
 sessionColumnEncoder : SessionColumn -> Json.Encode.Value
@@ -90,10 +100,18 @@ sessionDecoder =
         |> required "startTime" timeDecoder
         |> required "endTime" timeDecoder
         |> required "sessionColumn" sessionColumnDecoder
-        |> required "trackId" Json.Decode.int
+        |> required "trackId" sessionTrackIdDecoder
         |> required "location" Json.Decode.string
         |> required "submissionIds" (Json.Decode.list Json.Decode.int)
         |> required "chair" Json.Decode.string
+
+
+sessionTrackIdDecoder : Json.Decode.Decoder (Maybe TrackId)
+sessionTrackIdDecoder =
+    Json.Decode.oneOf
+        [ Json.Decode.map Just Json.Decode.int
+        , Json.Decode.null Nothing
+        ]
 
 
 sessionColumnDecoder : Json.Decode.Decoder SessionColumn

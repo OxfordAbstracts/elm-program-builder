@@ -73,6 +73,9 @@ view context model =
                 _ ->
                     (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
 
+        noTracksDropdownOption =
+            option [ value "", selected (context.session.trackId == Nothing) ] [ text "No track" ]
+
         column1 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
@@ -118,6 +121,16 @@ view context model =
                 , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
 
+        toTrackId trackIdString =
+            if trackIdString == "" then
+                Nothing
+            else
+                Just
+                    (trackIdString
+                        |> String.toInt
+                        |> Result.withDefault 0
+                    )
+
         column2 =
             div [ class "form-group" ]
                 [ div [ class "input-group" ]
@@ -129,8 +142,8 @@ view context model =
                 , div [ class "input-group" ]
                     [ label [ for "track-input" ] [ text "Track " ]
                     , br [] []
-                    , select [ id "track-input", onInput UpdateNewSessionTrack ]
-                        (List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == t.id) ] [ text t.name ]) model.tracks)
+                    , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId) ]
+                        (noTracksDropdownOption :: List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == Just t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div [ class "input-group" ]
                     [ label [ for "chair-input" ]

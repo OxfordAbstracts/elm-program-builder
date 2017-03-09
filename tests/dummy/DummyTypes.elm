@@ -64,7 +64,7 @@ dummySessions =
         (MainModel.TimeOfDay 9 0)
         (MainModel.TimeOfDay 9 1)
         (MainModel.ColumnId 1)
-        1
+        (Just 1)
         "The aquariam"
         []
         "Chairman Dave"
@@ -75,7 +75,7 @@ dummySessions =
         (MainModel.TimeOfDay 10 30)
         (MainModel.TimeOfDay 11 0)
         (MainModel.ColumnId 1)
-        1
+        (Just 1)
         "The observatory"
         []
         "Chairwoman Sue"
