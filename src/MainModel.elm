@@ -30,6 +30,7 @@ type alias Model =
     , datesWithSessions : List DateWithSessions
     , host : String
     , showPublishPage : Bool
+    , invalidSubmissionIdsInput : String
     }
 
 
@@ -79,6 +80,7 @@ initialModel =
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = initialSessions } ]
     , host = ""
     , showPublishPage = False
+    , invalidSubmissionIdsInput = ""
     }
 
 
