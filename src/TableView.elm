@@ -50,6 +50,7 @@ sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
             False
 
 
+getTrackId : Maybe Session -> TrackId
 getTrackId sessionStarting =
     case (Maybe.map .trackId sessionStarting) of
         Just trackId ->
