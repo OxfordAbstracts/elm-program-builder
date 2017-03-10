@@ -144,9 +144,10 @@ view context model =
                     ]
                 , div []
                     [ label [ class "form__label", for "chair-input" ]
-                        [ text "Chair" ]
-                    , span [ class "form__hint" ]
-                        [ text "This will be the person in charge of this session" ]
+                        [ text "Chair"
+                        , span [ class "form__label form__label--sub" ]
+                            [ text "This will be the person in charge of this session" ]
+                        ]
                     , input
                         [ class "form__input"
                         , id "chair-input"

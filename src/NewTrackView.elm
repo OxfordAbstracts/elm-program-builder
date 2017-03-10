@@ -74,7 +74,7 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section__button" ]
                                 [ button
                                     [ onClick (DeleteTrack t.id)
                                     , disableInput t.id

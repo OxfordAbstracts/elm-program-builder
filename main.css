@@ -1456,6 +1456,7 @@ body {
     .form__question-sub-section {
       margin-bottom: 1.5rem;
     }
+
         .form__question-sub-section--table { /* to be used with form__question-section--table */
           display: table-cell;
           padding-right: 1rem;
@@ -1469,7 +1470,9 @@ body {
           table-layout:fixed;
           width: 100%;
         }
-
+      .form__question-sub-section__button {
+          vertical-align: middle;
+        }
 /* Please refactor to BEM methodology - AVOID descendant selectors */
 /*=================================================================*/
 /*=================================================================*/
