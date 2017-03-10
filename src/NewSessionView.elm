@@ -24,6 +24,8 @@ newSessionViewWarning context model =
         getWarning "Session name field is empty" model
     else if model.showNewSessionUi && endNotMoreThanStart context.session then
         getWarning "Session end time must be greater than start time" model
+    else if List.length model.columns == 0 then
+        getWarning "You will need to create a column before you can save this session" model
     else if
         model.showNewSessionUi
             && sessionsAreOverLapping

@@ -17,7 +17,7 @@ endNotMoreThanStart newSession =
 
 timeIsGreaterThan time1 time2 =
     (time2.hour < time1.hour)
-        || (time2.hour == time1.hour && (time2.minute < time1.minute || time2.minute == time1.minute))
+        || (time2.hour == time1.hour && time2.minute < time1.minute)
 
 
 sessionsAreOverLapping : Session -> DateWithoutTime -> List DateWithSessions -> Maybe Int -> Bool
@@ -44,4 +44,4 @@ sessionsAreOverLapping newSession newDate datesWithSessions idOfSessionBeingEdit
 
 overLappingTime newSession session =
     (timeIsGreaterThan session.endTime newSession.startTime)
-        && (timeIsGreaterThan newSession.endTime session.endTime)
+        && (timeIsGreaterThan newSession.endTime session.startTime)
