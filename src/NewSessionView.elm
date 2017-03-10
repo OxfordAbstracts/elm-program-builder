@@ -133,20 +133,20 @@ view context model =
         column2 =
             div []
                 [ div []
-                    [ label [ for "column-input" ] [ text "Column" ]
-                    , br [] []
+                    [ label [ class "form__label", for "column-input" ] [ text "Column *" ]
                     , select [ id "column-input", onInput UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
                         (allColumnsDropdownOption :: columnOptions)
                     ]
                 , div []
-                    [ label [ for "track-input" ] [ text "Track " ]
-                    , br [] []
+                    [ label [ class "form__label", for "track-input" ] [ text "Track *" ]
                     , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId), class "form__input form__input--dropdown" ]
                         (noTracksDropdownOption :: List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == Just t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div []
-                    [ label [ for "chair-input" ]
+                    [ label [ class "form__label", for "chair-input" ]
                         [ text "Chair" ]
+                    , span [ class "form__hint" ]
+                        [ text "This will be the person in charge of this session" ]
                     , input
                         [ class "form__input"
                         , id "chair-input"
@@ -157,7 +157,7 @@ view context model =
                         [ text model.newSession.chair ]
                     ]
                 , div []
-                    [ label [ for "location-input" ]
+                    [ label [ class "form__label", for "location-input" ]
                         [ text "Location" ]
                     , input
                         [ class "form__input"
@@ -186,15 +186,14 @@ view context model =
             in
                 div []
                     [ div [ onInput UpdateNewSessionDate ]
-                        [ label [ for "day-input" ] [ text "Date " ]
-                        , br [] []
+                        [ label [ class "form__label", for "day-input" ] [ text "Date *" ]
                         , select [ id "day-input", class "form__input" ]
                             dayOptions
                         ]
                     , div
                         []
-                        [ label []
-                            [ text "Start time" ]
+                        [ label [ class "form__label" ]
+                            [ text "Start time *" ]
                         , div []
                             [ input
                                 [ class "form__input form__input--time-hour-prog-builder"
@@ -215,8 +214,8 @@ view context model =
                             ]
                         ]
                     , div []
-                        [ label []
-                            [ text "End time" ]
+                        [ label [ class "form__label" ]
+                            [ text "End time *" ]
                         , div []
                             [ input
                                 [ class "form__input form__input--time-hour-prog-builder"
@@ -247,8 +246,14 @@ view context model =
                             ]
                         ]
                     ]
+
+        displayDiv =
+            if (not model.showNewSessionUi && not sessionBeingEditted) then
+                "none"
+            else
+                "block"
     in
-        div [ class "form form--add-to-view", hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)) ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
             [ span [ class "form__hint" ]
                 [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
             , div [ class "form__question-section form__question-section--table" ]
