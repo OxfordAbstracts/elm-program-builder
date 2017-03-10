@@ -53,9 +53,9 @@ view model =
                 |> List.sortBy .id
                 |> List.indexedMap
                     (\i t ->
-                        div [ class "form__question-sub-section--inline" ]
-                            [ div [ class "inline-element" ]
-                                [ label []
+                        div [ class "form__question-section form__question-section--table" ]
+                            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
                                     [ text "Track name" ]
                                 , input
                                     [ class "form__input"
@@ -64,17 +64,17 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div [ class "inline-element" ]
-                                [ label []
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
                                     [ text "Track description" ]
                                 , input
-                                    [ class "form__input"
+                                    [ class "form__input form__input--textarea"
                                     , value t.description
                                     , onInput (UpdatePickedTrack t.id Description)
                                     ]
                                     []
                                 ]
-                            , div [ class "inline-element" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ button
                                     [ onClick (DeleteTrack t.id)
                                     , disableInput t.id
@@ -89,20 +89,27 @@ view model =
             div []
                 [ div []
                     listTracks
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button
-                        [ class "button button--tertiary"
-                        , id "add-new-date-btn"
-                        , type_ "button"
-                        , onClick AddNewTrack
-                        ]
-                        [ text "Add New Track" ]
+                , button
+                    [ class "button button--tertiary"
+                    , id "add-new-date-btn"
+                    , type_ "button"
+                    , onClick AddNewTrack
                     ]
-                , div [] [ text (newTrackWarning model) ]
+                    [ text "Add New Track" ]
+                , span [ class "prog-form--warning" ] [ text (newTrackWarning model) ]
                 , div []
                     [ button [ class "button button--primary", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
                         [ text "Save Changes" ]
                     ]
                 ]
+
+        displayDiv =
+            if (not model.showNewTrackUi) then
+                "none"
+            else
+                "block"
     in
-        div [ hidden (not model.showNewTrackUi) ] [ column1 ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
+            [ div []
+                [ column1 ]
+            ]

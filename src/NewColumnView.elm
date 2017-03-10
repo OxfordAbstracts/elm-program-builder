@@ -51,14 +51,12 @@ view model =
                     (\c ->
                         div []
                             [ input
-                                [ class "form-control"
-                                , value c.name
+                                [ value c.name
                                 , onInput (UpdatePickedColumn c.id)
                                 ]
                                 []
                             , button
                                 [ onClick (DeleteColumn c.id)
-                                , style [ ( "margin-left", "0.2rem" ) ]
                                 , disableInput (ColumnId c.id)
                                 ]
                                 [ text "Delete" ]
@@ -66,10 +64,10 @@ view model =
                     )
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
+            div []
+                [ div []
                     listColumns
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                , div []
                     [ button
                         [ class "btn btn-default"
                         , id "add-new-date-btn"
@@ -78,13 +76,13 @@ view model =
                         ]
                         [ text "Add New Column" ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newColumnWarning model) ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                , div [] [ text (newColumnWarning model) ]
+                , div []
                     [ button [ class "btn btn-default", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
                         [ text "Save Changes" ]
                     ]
                 ]
     in
-        div [ hidden (not model.showNewColumnUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
+        div [ hidden (not model.showNewColumnUi) ]
+            [ div [] [ column1 ]
             ]

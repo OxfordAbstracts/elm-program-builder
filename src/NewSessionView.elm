@@ -80,11 +80,11 @@ view context model =
 
         column1 =
             div []
-                [ label [ class "form__label", for "sesssion-name-input" ]
+                [ label [ class "form__label", for "session-name-input" ]
                     [ text "Session name *" ]
                 , input
                     [ class "form__input"
-                    , id "sesssion-name-input"
+                    , id "session-name-input"
                     , type_ "text"
                     , value context.session.name
                     , onInput UpdateNewSessionName
