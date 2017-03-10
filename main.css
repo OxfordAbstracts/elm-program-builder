@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,900');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,900');
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,600');
 
 html, body {
@@ -95,6 +95,7 @@ body {
 
   .prog-table {
     border-collapse: collapse;
+    margin: 1rem;
   }
     .prog-table__row {
       -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
@@ -1359,6 +1360,15 @@ body {
       margin: auto;
       padding: 3rem 0;
     }
+    .form--add-to-view { /* for use when:
+                          .form is initially hidden and then
+                          added to view / brought in to view */
+      margin: 0;
+      padding: 1rem 2rem;
+      max-width: 66rem; /* suitable for 3 columns as question-sections */
+      background-color: #f0f0f0;
+    }
+
   .form__copy {
     display: block;
     margin-bottom: 2rem;
@@ -1386,33 +1396,37 @@ body {
       .form__copy--listnumeric {
         list-style-type: decimal;
       }
-      .form__hint {
-        display: block;
-        text-align: left;
-        color: #000000;
-        font-size: 0.875rem;
-        letter-spacing: 0.75px;
-        font-weight: 300;
-        margin: 0.5rem 0;
+  .form__hint {
+    display: block;
+    text-align: left;
+    color: #000000;
+    font-size: 0.875rem;
+    letter-spacing: 0.4px;
+    font-weight: 500;
+    margin: 1rem 0;
+  }
+      .form__hint--large { /* should be nested within form__hint parent */
+        display: inline-block;
+        margin: 0 0.25rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #003066;
       }
-          .form__hint--large {
-            display: inline-block;
-            margin-bottom: 2rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #003066;
-          }
-    .form__subtitle {
-      display: block;
-      font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #808080;
-      font-weight: 700;
-      line-height: 1rem;
-      margin-bottom: 1rem;
-    }
-    .form__question {
-      margin-bottom: 4rem;
-    }
+      .form__hint--warning {
+        color: #9c2c00;
+        text-transform: uppercase;
+      }
+  .form__subtitle {
+    display: block;
+    font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #808080;
+    font-weight: 700;
+    line-height: 1rem;
+    margin-bottom: 1rem;
+  }
+  .form__question {
+    margin-bottom: 4rem;
+  }
         .form__question--admin {
           padding-bottom: 1rem;
           border-bottom: 1px solid #bdbdbd;
@@ -1434,7 +1448,7 @@ body {
       margin-bottom: 2rem;
       position: relative;
     }
-        .form__question-section--table {
+        .form__question-section--table { /* to be used with form__question-sub-section--table */
           display: table;
           table-layout: fixed;
           width: 100%;
@@ -1442,8 +1456,12 @@ body {
     .form__question-sub-section {
       margin-bottom: 1.5rem;
     }
-        .form__question-sub-section--table {
+        .form__question-sub-section--table { /* to be used with form__question-section--table */
           display: table-cell;
+          padding-right: 1rem;
+        }
+        .form__question-sub-section--table:last-child {
+          padding-right: 0;
         }
 
         .form__question-sub-section--inline {
@@ -1536,131 +1554,136 @@ body {
           .form__answer-section {
             text-indent: 0.25rem;
           }
-      .form__label {
-        display: block;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.5px;
-        line-height: 1.25;
+  .form__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+  }
+      .form__label--sub { /* for additional input description */
+        font-size: 0.875rem; /* 14px */
+        font-weight: 500;
+        line-height: 1; /* 14px */
+        margin-top: 0.25rem;
       }
-        .form__label--warning {
-          color: #9c2c00;
-          text-transform: uppercase;
-          font-weight: bold;
-          display: none;
-        }
-        .form__label--subtitle {
-          display: inline-block;
-          font-size: 1.125rem;
-          color: #000000;
-          font-weight: bold;
-          margin-bottom: 1.125rem;
-        }
-        .form__label--file {
-          display: inline-block;
-          line-height: 2.4;
-          letter-spacing: 0.4px;
-          text-transform: initial;
-        }
-
-      .form__input {
-        display: block;
-        height: 2.625rem;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        padding: 0.25rem 1rem;
-        margin: 0 0 1rem;
-        color: #00AA61;
-        font-size: 0.875rem;
-        border: 1px solid #bdbdbd;
-        border-radius: 3px;
-        -webkit-transition: all 0.2s linear;
-        -moz-transition: all 0.2s linear;
-        -o-transition: all 0.2s linear;
-        transition: all 0.2s linear;
+      .form__label--warning {
+        color: #9c2c00;
+        text-transform: uppercase;
+        font-weight: bold;
+        display: none;
       }
-          .form__input:active {
-            border-color: #333333;
-          }
-          .form__input:focus {
-            border-color: #333333;
-            outline: #B2E3CE solid 2px;
-            outline-offset: -3px;
-          }
-        .form__input--textarea {
-          resize: vertical;
-          min-height: 5rem;
-          padding-top: 0.5rem;
-          line-height: 1.5;
-        }
+      .form__label--subtitle { /* larger than normal label */
+        display: inline-block;
+        font-size: 1.125rem;
+        color: #000000;
+        font-weight: bold;
+        margin-bottom: 1.125rem;
+      }
+      .form__label--file {
+        display: inline-block;
+        line-height: 2.4;
+        letter-spacing: 0.4px;
+        text-transform: initial;
+      }
 
-        .form__input--textarea-no-min-height {
-          resize: vertical;
-          height: inherit;
-          padding-top: 0.5rem;
-          line-height: 1.5;
-        }
 
-        .form__input--dropdown {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-          padding-right: 1rem; /* 16px */
-          /* Triangle pointing Downwards to indicate dropdown */
-          background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
-          background-size: 0.625rem 0.5rem; /* 10px 8px */
-          background-repeat: no-repeat;
-          background-position: 95%;
-          -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
-          -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
-          box-shadow: 0px -1px 1px #bdbdbd inset;
+  .form__input { /* default style for simple TEXT input */
+    display: block;
+    height: 2.625rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0.25rem 1rem;
+    margin: 0 0 1rem;
+    color: #00AA61;
+    font-size: 0.875rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 3px;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  }
+      .form__input:active {
+        border-color: #333333;
+      }
+      .form__input:focus {
+        border-color: #333333;
+        outline: #B2E3CE solid 2px;
+        outline-offset: 1px;
+      }
+      .form__input--textarea {
+        resize: vertical;
+        min-height: 5rem;
+        padding-top: 0.5rem;
+        line-height: 1.5;
+      }
+      .form__input--textarea-no-min-height {
+        resize: vertical;
+        height: inherit;
+        padding-top: 0.5rem;
+        line-height: 1.5;
+      }
+      .form__input--dropdown {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 1rem; /* 16px */
+        /* Triangle pointing Downwards to indicate dropdown */
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
+        background-size: 0.625rem 0.5rem; /* 10px 8px */
+        background-repeat: no-repeat;
+        background-position: 95%;
+        -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
+        -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
+        box-shadow: 0px -1px 1px #bdbdbd inset;
 
-        }
-          .form__input--dropdown::-ms-expand { /* for IE 11 */
-            display: none;
-          }
-          .form__input--dropdown-manage-email {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            /* Triangle pointing Downwards to indicate dropdown */
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
-            background-size: 0.625rem 0.5rem; /* 10px 8px */
-            background-repeat: no-repeat;
-            background-position: 95%;
-            -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
-            -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
-            box-shadow: 0px -1px 1px #bdbdbd inset;
-            margin:0;
-            padding:0.2rem;
-            height:2rem;
-          }
-          .form__input--time-hour-prog-builder{
-            float:left;
-            width:5rem;
-          }
-          .form__input--time-min-prog-builder{
-            width:5rem;
-          }
-        .form__input--file {
-        /* Hiding element without removing it from payload sent to server */
-          width: 0.1px;
-          height: 0.1px;
-          opacity: 0;
-          overflow: hidden;
-          position: absolute;
-          z-index: -1;
-        }
-          .form__input--file:focus + .form__label--file {
-            outline: 3px solid #b2e3ce;
-            outline-offset: 2px;
-            border-radius: 0px;
-          }
-        .form__input--with-icon {
-          display: inline-block;
-          width: 38rem;
-        }
+      }
+      .form__input--dropdown::-ms-expand { /* for IE 11 */
+        display: none;
+      }
+      .form__input--dropdown-manage-email {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* Triangle pointing Downwards to indicate dropdown */
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
+        background-size: 0.625rem 0.5rem; /* 10px 8px */
+        background-repeat: no-repeat;
+        background-position: 95%;
+        -webkit-box-shadow: 0px -1px 1px #bdbdbd inset;
+        -moz-box-shadow: 0px -1px 1px #bdbdbd inset;
+        box-shadow: 0px -1px 1px #bdbdbd inset;
+        margin:0;
+        padding:0.2rem;
+        height:2rem;
+      }
+      .form__input--time-hour-prog-builder{
+        float:left;
+        width:5rem;
+      }
+      .form__input--time-min-prog-builder{
+        width:5rem;
+      }
+      .form__input--file {
+      /* Hiding element without removing it from payload sent to server */
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+      }
+      .form__input--file:focus + .form__label--file {
+        outline: 3px solid #b2e3ce;
+        outline-offset: 2px;
+        border-radius: 0px;
+      }
+      .form__input--with-icon {
+        display: inline-block;
+        width: 38rem;
+      }
       .form__checkbox {
       /* For compatibility across internet explorer checkboxes are an independent element of the input elements */
       /* (Applying resets of inherited styles breaks the design on IE11) */

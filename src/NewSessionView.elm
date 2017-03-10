@@ -80,46 +80,43 @@ view context model =
 
         column1 =
             div []
-                [ div []
-                    [ label [ for "sesssion-name-input" ]
-                        [ text "Session name" ]
-                    , input
-                        [ class "form__input"
-                        , id "sesssion-name-input"
-                        , type_ "text"
-                        , value context.session.name
-                        , onInput UpdateNewSessionName
-                        ]
-                        [ text context.session.name ]
+                [ label [ class "form__label", for "sesssion-name-input" ]
+                    [ text "Session name *" ]
+                , input
+                    [ class "form__input"
+                    , id "sesssion-name-input"
+                    , type_ "text"
+                    , value context.session.name
+                    , onInput UpdateNewSessionName
                     ]
-                , div []
-                    [ label [ for "description-input" ]
-                        [ text "Description" ]
-                    , textarea
-                        [ class "form__input"
-                        , id "description-input"
-                        , rows 5
-                        , cols 32
-                        , value context.session.description
-                        , onInput UpdateNewSessionDescription
-                        ]
-                        [ text context.session.description ]
+                    [ text context.session.name ]
+                , label [ class "form__label", for "description-input" ]
+                    [ text "Description *" ]
+                , textarea
+                    [ class "form__input form__input--textarea"
+                    , id "description-input"
+                    , rows 5
+                    , cols 32
+                    , value context.session.description
+                    , onInput UpdateNewSessionDescription
                     ]
-                , div []
-                    [ label [ for "submissions-input" ]
-                        [ text "Submissions" ]
-                    , textarea
-                        [ class "form__input"
-                        , id "submissions-input"
-                        , rows 2
-                        , cols 32
-                        , value model.submissionIdsInput
-                        , onInput UpdateNewSessionSubmissionIds
-                        ]
-                        [ text model.submissionIdsInput ]
+                    [ text context.session.description ]
+                , label [ for "submissions-input" ]
+                    [ text "Submissions"
+                    , span [ class "form__label form__label--sub" ]
+                        [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
                     ]
+                , textarea
+                    [ class "form__input form__input--textarea"
+                    , id "submissions-input"
+                    , rows 2
+                    , cols 32
+                    , value model.submissionIdsInput
+                    , onInput UpdateNewSessionSubmissionIds
+                    ]
+                    [ text model.submissionIdsInput ]
                 , span [ class "form__hint" ]
-                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                    [ text "" ]
                 , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
 
@@ -251,10 +248,12 @@ view context model =
                         ]
                     ]
     in
-        div [ class "prog-form", hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)) ]
-            [ div [ class "form__question-sub-section--inline" ]
-                [ div [ class "inline-element" ] [ column1 ]
-                , div [ class "inline-element" ] [ column2 ]
-                , div [ class "inline-element" ] [ column3 ]
+        div [ class "form form--add-to-view", hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)) ]
+            [ span [ class "form__hint" ]
+                [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
+            , div [ class "form__question-section form__question-section--table" ]
+                [ div [ class "form__question-sub-section form__question-sub-section--table" ] [ column1 ]
+                , div [ class "form__question-sub-section form__question-sub-section--table" ] [ column2 ]
+                , div [ class "form__question-sub-section form__question-sub-section--table" ] [ column3 ]
                 ]
             ]
