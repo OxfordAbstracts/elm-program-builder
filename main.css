@@ -1336,19 +1336,19 @@ body {
 
   /*[][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 
-      Form
-    [][][][][][][][][][][][][][][][][][][][][][][][][][][][][]*/
+    Form
+  [][][][][][][][][][][][][][][][][][][][][][][][][][][][][]*/
 
-      .form__wrapper { /* for use with multiple forms */
-        margin: auto;
-        max-width: 60rem;
-      }
-  .form {
-    display: block;
-    max-width: 40rem;
+  .form__wrapper { /* for use with multiple forms */
     margin: auto;
-    padding: 3rem 0;
+    max-width: 60rem;
   }
+.form {
+  display: block;
+  max-width: 40rem;
+  margin: auto;
+  padding: 3rem 0;
+}
     .form--usertype {
       padding: 1.5rem 0 0;
       max-width: none;
@@ -1359,33 +1359,33 @@ body {
       margin: auto;
       padding: 3rem 0;
     }
-      .form__copy {
-        display: block;
-        margin-bottom: 2rem;
-        max-width: 32rem;
-        margin: 0 auto 2rem;
-        line-height: 1.5;
-        color: rgb(128, 128, 128);
-        font-weight: bold;
+  .form__copy {
+    display: block;
+    margin-bottom: 2rem;
+    max-width: 32rem;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+    color: rgb(128, 128, 128);
+    font-weight: bold;
+  }
+      .form__copy--link {
+        margin-left: 0;
       }
-          .form__copy--link {
-            margin-left: 0;
-          }
-          .form__copy--thankyou {
-            margin: 2rem auto;
-          }
-          .form__copy--longform {
-            max-width: none;
-            font-weight: normal;
-            color: #333333;
-          }
-          .form__copy--listitem {
-            display: list-item;
-            list-style-position: inside;
-          }
-          .form__copy--listnumeric {
-            list-style-type: decimal;
-          }
+      .form__copy--thankyou {
+        margin: 2rem auto;
+      }
+      .form__copy--longform {
+        max-width: none;
+        font-weight: normal;
+        color: #333333;
+      }
+      .form__copy--listitem {
+        display: list-item;
+        list-style-position: inside;
+      }
+      .form__copy--listnumeric {
+        list-style-type: decimal;
+      }
       .form__hint {
         display: block;
         text-align: left;
@@ -1402,46 +1402,46 @@ body {
             font-weight: bold;
             color: #003066;
           }
-      .form__subtitle {
-        display: block;
-        font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
-        color: #808080;
-        font-weight: 700;
-        line-height: 1rem;
-        margin-bottom: 1rem;
-      }
-      .form__question {
-        margin-bottom: 4rem;
-      }
+    .form__subtitle {
+      display: block;
+      font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #808080;
+      font-weight: 700;
+      line-height: 1rem;
+      margin-bottom: 1rem;
+    }
+    .form__question {
+      margin-bottom: 4rem;
+    }
         .form__question--admin {
           padding-bottom: 1rem;
           border-bottom: 1px solid #bdbdbd;
         }
-      .form__question-title {
-        display: block;
-        margin-bottom: 1.5rem;
-        font-size: 1.25rem;
-        font-weight: 500;
-        line-height: 1.2;
-        color: #003066;
-      }
+    .form__question-title {
+      display: block;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: #003066;
+    }
         .form__question-title--answered {
           color: #808080;
           letter-spacing: 0.5px;
           font-family: 'Raleway', "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-      .form__question-section {
-        margin-bottom: 2rem;
-        position: relative;
-      }
+    .form__question-section {
+      margin-bottom: 2rem;
+      position: relative;
+    }
         .form__question-section--table {
           display: table;
           table-layout: fixed;
           width: 100%;
         }
-      .form__question-sub-section {
-        margin-bottom: 1.5rem;
-      }
+    .form__question-sub-section {
+      margin-bottom: 1.5rem;
+    }
         .form__question-sub-section--table {
           display: table-cell;
         }
@@ -1452,42 +1452,50 @@ body {
           width: 100%;
         }
 
-        .form__question-sub-section--inline > .inline-element{
-          display: table-cell;
-          padding-right: 1em;
-        }
+/* Please refactor to BEM methodology - AVOID descendant selectors */
+/*=================================================================*/
+/*=================================================================*/
 
-        @media (max-width: 40rem) {
-          .form__question-sub-section--inline > .inline-element {
-            display: block;
-          }
-        }
+.form__question-sub-section--inline > .inline-element{
+  display: table-cell;
+  padding-right: 1em;
+}
 
-        .form__question-sub-section.author{
-          position: relative;
-          padding: 1em;
-          background: #e6e6e6;
-        }
+@media (max-width: 40rem) {
+  .form__question-sub-section--inline > .inline-element {
+    display: block;
+  }
+}
 
-        .form__question-sub-section.affiliation {
-          position: relative;
-          padding-top: 1em;
-          padding-right: 1em;
-          padding-left: 1em;
-          background: #e6e6e6;
-          margin-bottom : 0em;
-        }
+.form__question-sub-section.author{
+  position: relative;
+  padding: 1em;
+  background: #e6e6e6;
+}
+
+.form__question-sub-section.affiliation {
+  position: relative;
+  padding-top: 1em;
+  padding-right: 1em;
+  padding-left: 1em;
+  background: #e6e6e6;
+  margin-bottom : 0em;
+}
+
+.form__input.city:invalid,
+.form__input.institution:invalid,
+.form__input.first-name:invalid,
+.form__input.last-name:invalid {
+  outline: #9c2c00 solid 2px;
+}
+/*=================================================================*/
+/*=================================================================*/
 
 
-
-        .form__input.city:invalid,
-        .form__input.institution:invalid,
-        .form__input.first-name:invalid,
-        .form__input.last-name:invalid {
-          outline: #9c2c00 solid 2px;
-        }
         /* .form__question-section--read-only is a
-          Read-only variant which has effect child-elelms */
+          Read-only variant which has effect child-elelms to be refactored
+          WITH the removal of data tables. (child selector used to overcome
+          limitations of datatables) */
         .form__question-section--read-only .form__input {
           border: none;
           background: none;
