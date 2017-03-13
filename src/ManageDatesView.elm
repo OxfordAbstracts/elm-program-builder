@@ -33,44 +33,52 @@ view model =
             model.pickedDates
                 |> List.indexedMap
                     (\i d ->
-                        div []
-                            [ input
-                                [ class "form-control pikaday-input"
-                                , id ("pikaday-instance-" ++ (toString i))
-                                , value (displayDateWithoutTime d)
-                                , disableInput d
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
+                            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
+                                    [ text "Date" ]
+                                , input
+                                    [ class "form__input  pikaday-input"
+                                    , id ("pikaday-instance-" ++ (toString i))
+                                    , value (displayDateWithoutTime d)
+                                    , disableInput d
+                                    ]
+                                    []
                                 ]
-                                []
-                            , button
-                                [ onClick (DeleteDate d)
-                                , style [ ( "margin-left", "0.2rem" ) ]
-                                , disableInput d
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
+                                [ button
+                                    [ onClick (DeleteDate d)
+                                    , disableInput d
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
                                 ]
-                                [ text "Delete" ]
                             ]
                     )
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
+            div []
+                [ span [ class "form__hint" ]
+                    [ i [ class "icon icon--warning icon--margin-right" ] [], text "You will be unable to change any dates that have sessions" ]
+                , div []
                     datesInputs
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button
-                        [ class "btn btn-default"
-                        , id "add-new-date-btn"
-                        , type_ "button"
-                        , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
-                        ]
-                        [ text "Add New Date" ]
+                , button
+                    [ class "button button--tertiary"
+                    , id "add-new-date-btn"
+                    , type_ "button"
+                    , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", id "save-dates-btn", type_ "button" ]
-                        [ text "Save Dates" ]
+                    [ text "Add New Date" ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", id "save-dates-btn", type_ "button" ]
+                        [ text "Save" ]
                     ]
-                , span []
-                    [ text "You will be unable to change any dates that have sessions" ]
                 ]
+
+        displayDiv =
+            if (not model.showManageDatesUi) then
+                "none"
+            else
+                "block"
     in
-        div [ hidden (not model.showManageDatesUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
-            ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ] [ column1 ]

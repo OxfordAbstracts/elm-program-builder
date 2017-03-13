@@ -49,42 +49,56 @@ view model =
                 |> List.sortBy .id
                 |> List.map
                     (\c ->
-                        div []
-                            [ input
-                                [ class "form-control"
-                                , value c.name
-                                , onInput (UpdatePickedColumn c.id)
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
+                            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
+                                    [ text "Column name *" ]
+                                , input
+                                    [ class "form__input"
+                                    , value c.name
+                                    , onInput (UpdatePickedColumn c.id)
+                                    ]
+                                    []
                                 ]
-                                []
-                            , button
-                                [ onClick (DeleteColumn c.id)
-                                , style [ ( "margin-left", "0.2rem" ) ]
-                                , disableInput (ColumnId c.id)
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
+                                [ button
+                                    [ onClick (DeleteColumn c.id)
+                                    , disableInput (ColumnId c.id)
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
                                 ]
-                                [ text "Delete" ]
                             ]
                     )
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
+            div []
+                [ div []
                     listColumns
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
+                , div []
                     [ button
-                        [ class "btn btn-default"
+                        [ class "button button--tertiary"
                         , id "add-new-date-btn"
                         , type_ "button"
                         , onClick AddNewColumn
                         ]
                         [ text "Add New Column" ]
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newColumnWarning model) ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
-                        [ text "Save Changes" ]
+                , div [ class "prog-form--warning" ] [ text (newColumnWarning model) ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
+                        [ text "Save" ]
                     ]
                 ]
+
+        displayDiv =
+            if (not model.showNewColumnUi) then
+                "none"
+            else
+                "block"
     in
-        div [ hidden (not model.showNewColumnUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
+            [ span [ class "form__hint" ]
+                [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
+            , div [] [ column1 ]
             ]

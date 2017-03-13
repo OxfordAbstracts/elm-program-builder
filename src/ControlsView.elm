@@ -18,14 +18,14 @@ view model =
             case model.idOfSessionBeingEdited of
                 Just id ->
                     NewSessionContext
-                        "Edit session"
+                        "Save"
                         EditSession
                         model.editSession
                         model.editSessionDate
 
                 Nothing ->
                     NewSessionContext
-                        "New session"
+                        "Save"
                         CreateNewSession
                         model.newSession
                         model.newSessionDate
@@ -74,17 +74,17 @@ viewUiButtons model =
     in
         div [ class "btn-toolbar", attribute "role" "toolbar", style [ ( "margin", "3rem" ) ] ]
             [ div [ class "btn-group btn-group-lg", attribute "role" "group" ]
-                [ button [ class toggleNewSessionClass, type_ "button", onClick ToggleNewSessionUi ]
-                    [ text "New Session" ]
-                , button [ class toggleNewTrackClass, type_ "button", onClick ToggleNewTrackUi ]
-                    [ text "New Track" ]
-                , button [ class toggleNewColumnClass, type_ "button", onClick ToggleNewColumnUi ]
-                    [ text "New Column" ]
-                , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
+                [ button [ class "button button--new", type_ "button", onClick ToggleNewSessionUi ]
+                    [ text "+ New Session" ]
+                , button [ class "button button--secondary", type_ "button", onClick ToggleNewTrackUi ]
+                    [ text "Manage Tracks" ]
+                , button [ class "button button--secondary", type_ "button", onClick ToggleNewColumnUi ]
+                    [ text "Manage Columns" ]
+                , button [ class "button button--secondary", type_ "button", onClick ToggleManageDatesUi ]
                     [ text "Manage Dates" ]
-                , a [ href ("/events/" ++ model.eventId ++ "/programme-builder/preview"), target "_blank", type_ "button" ]
+                , a [ class "button button--secondary", href ("/events/" ++ model.eventId ++ "/programme-builder/preview"), target "_blank", type_ "button" ]
                     [ text "Preview" ]
-                , button [ class "btn btn-default", type_ "button", onClick PublishProgrammeBuilder ]
+                , button [ class "button button--primary", type_ "button", onClick PublishProgrammeBuilder ]
                     [ text publishButtonText ]
                 ]
             ]
