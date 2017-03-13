@@ -56,7 +56,7 @@ view model =
                         div [ class "form__question-section form__question-section--table" ]
                             [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
-                                    [ text "Track name" ]
+                                    [ text "Track name *" ]
                                 , input
                                     [ class "form__input"
                                     , value t.name
@@ -66,7 +66,7 @@ view model =
                                 ]
                             , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
-                                    [ text "Track description" ]
+                                    [ text "Track description *" ]
                                 , input
                                     [ class "form__input form__input--textarea"
                                     , value t.description
@@ -99,7 +99,7 @@ view model =
                 , span [ class "prog-form--warning" ] [ text (newTrackWarning model) ]
                 , div []
                     [ button [ class "button button--primary", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
-                        [ text "Save Changes" ]
+                        [ text "Save" ]
                     ]
                 ]
 
@@ -110,6 +110,8 @@ view model =
                 "block"
     in
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
-            [ div []
+            [ span [ class "form__hint" ]
+                [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
+            , div []
                 [ column1 ]
             ]

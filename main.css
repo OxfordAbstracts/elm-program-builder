@@ -25,6 +25,8 @@ body {
   padding: 3rem 0;
 }
   .prog-form--warning {
+    padding: 0.5rem;
+    display:block;
     color: #9c2c00;
     text-transform: uppercase;
     font-weight: bold;

@@ -33,17 +33,19 @@ view model =
             model.pickedDates
                 |> List.indexedMap
                     (\i d ->
-                        div []
-                            [ div [ class "inline-element" ]
-                                [ input
-                                    [ class "form__input form__input--dropdown pikaday-input"
+                        div [ class "form__question-section form__question-section--table" ]
+                            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
+                                    [ text "Date" ]
+                                , input
+                                    [ class "form__input  pikaday-input"
                                     , id ("pikaday-instance-" ++ (toString i))
                                     , value (displayDateWithoutTime d)
                                     , disableInput d
                                     ]
                                     []
                                 ]
-                            , div [ class "inline-element" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section__button" ]
                                 [ button
                                     [ onClick (DeleteDate d)
                                     , disableInput d
@@ -55,8 +57,10 @@ view model =
                     )
 
         column1 =
-            div [ class "form__question-sub-section--inline" ]
-                [ div [ class "input-group" ]
+            div []
+                [ span [ class "form__hint" ]
+                    [ text "You will be unable to change any dates that have sessions" ]
+                , div []
                     datesInputs
                 , div []
                     [ button
@@ -69,10 +73,14 @@ view model =
                     ]
                 , div []
                     [ button [ class "button button--primary", id "save-dates-btn", type_ "button" ]
-                        [ text "Save Dates" ]
+                        [ text "Save" ]
                     ]
-                , span []
-                    [ text "You will be unable to change any dates that have sessions" ]
                 ]
+
+        displayDiv =
+            if (not model.showManageDatesUi) then
+                "none"
+            else
+                "block"
     in
-        div [ class "prog-form", hidden (not model.showManageDatesUi) ] [ column1 ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ] [ column1 ]
