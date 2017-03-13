@@ -130,7 +130,7 @@ body {
   .prog-controls__dividing-section{
     display:inline-block;
     padding: 0.625rem 1rem;
-    border-left: solid 1px rgb(192,192,194)
+    border-left: solid 1px #c0c0c2
   }
   .programme-controls__button-dropdown{
     -webkit-appearance: none;
