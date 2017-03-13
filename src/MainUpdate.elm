@@ -497,9 +497,22 @@ update msg model =
                             |> List.map (\d -> { date = d, sessions = [] })
                             |> List.append model.datesWithSessions
                             |> List.filter (\d -> not (List.member d.date deletedDates))
+
+                    orderedDatesWithSessions =
+                        List.sortWith
+                            (\a b ->
+                                if
+                                    (a.date.year >= b.date.year && a.date.month > b.date.month)
+                                        || (a.date.month == b.date.month && a.date.day > b.date.day)
+                                then
+                                    GT
+                                else
+                                    LT
+                            )
+                            datesWithSessionsWithUpdatedDates
                 in
                     ( { model
-                        | datesWithSessions = datesWithSessionsWithUpdatedDates
+                        | datesWithSessions = orderedDatesWithSessions
                         , pickedDates = datesListToDateWithoutTime
                       }
                     , Cmd.none
