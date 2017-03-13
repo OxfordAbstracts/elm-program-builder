@@ -45,7 +45,7 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section__button" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                                 [ button
                                     [ onClick (DeleteDate d)
                                     , disableInput d
@@ -59,25 +59,23 @@ view model =
         column1 =
             div []
                 [ span [ class "form__hint" ]
-                    [ text "You will be unable to change any dates that have sessions" ]
+                    [ i [ class "icon icon--warning" ] [], text "You will be unable to change any dates that have sessions" ]
                 , div []
                     datesInputs
-                , div []
-                    [ button
-                        [ class "button button--tertiary"
-                        , id "add-new-date-btn"
-                        , type_ "button"
-                        , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
-                        ]
-                        [ text "Add New Date" ]
+                , button
+                    [ class "button button--tertiary"
+                    , id "add-new-date-btn"
+                    , type_ "button"
+                    , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
                     ]
-                , div []
-                    [ button
-                        [ class "button button--secondary"
-                        , onClick CancelAction
-                        ]
-                        [ text "Cancel" ]
-                    , button [ class "button button--primary", id "save-dates-btn", type_ "button" ]
+                    [ text "Add New Date" ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", id "save-dates-btn", type_ "button" ]
                         [ text "Save" ]
                     ]
                 ]

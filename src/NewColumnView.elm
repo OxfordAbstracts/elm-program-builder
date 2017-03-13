@@ -49,7 +49,7 @@ view model =
                 |> List.sortBy .id
                 |> List.map
                     (\c ->
-                        div [ class "form__question-section form__question-section--table" ]
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
                             [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
                                     [ text "Column name *" ]
@@ -60,7 +60,7 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section__button" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                                 [ button
                                     [ onClick (DeleteColumn c.id)
                                     , disableInput (ColumnId c.id)
@@ -85,13 +85,13 @@ view model =
                         [ text "Add New Column" ]
                     ]
                 , div [ class "prog-form--warning" ] [ text (newColumnWarning model) ]
-                , div []
-                    [ button
-                        [ class "button button--secondary"
-                        , onClick CancelAction
-                        ]
-                        [ text "Cancel" ]
-                    , button [ class "button button--primary", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
                         [ text "Save" ]
                     ]
                 ]

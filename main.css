@@ -24,13 +24,13 @@ body {
   margin: auto;
   padding: 3rem 0;
 }
-  .prog-form--warning {
-    padding: 0.5rem;
-    display:block;
-    color: #9c2c00;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
+    .prog-form--warning {
+      padding: 0.5rem;
+      display:block;
+      color: #9c2c00;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
 
 .prog-cell {
   vertical-align: top;
@@ -95,42 +95,48 @@ body {
     display: inline-block;
   }
 
-  .prog-table {
-    border-collapse: collapse;
-    margin: 1rem;
+.prog-table {
+  border-collapse: collapse;
+  margin: 1rem;
+}
+  .prog-table__row {
+    -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+    -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+    box-shadow: inset 0px 1px 0px 0px #C0C0C2;
   }
-    .prog-table__row {
-      -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-      -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-      box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-    }
-    .prog-table__header {
-      padding: 1rem 0.25rem;
-      text-align: left;
-      font-family: 'Raleway', sans-serif;
-    }
-        .prog-table__header--datetime {
-          padding: 1rem;
-        }
-    .prog-table__time {
-      display: block;
-      font-size: 0.875rem; /* 14px */
-      margin-bottom: 0.5em; /* 7px */
-    }
-    .prog-table__date {
-      font-size: 0.875rem; /* 14px */
-      font-weight: 600;
-    }
+  .prog-table__header {
+    padding: 1rem 0.25rem;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+  }
+      .prog-table__header--datetime {
+        padding: 1rem;
+      }
+  .prog-table__time {
+    display: block;
+    font-size: 0.875rem; /* 14px */
+    margin-bottom: 0.5em; /* 7px */
+  }
+  .prog-table__date {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 600;
+  }
 
-.prog-bar{}
-  .prog-bar__button{
-    margin: 0.75rem 1.5rem;
+.programme-controls{
+  border-top: solid 1px rgb(192, 192, 194);
+  border-bottom: solid 1px rgb(192, 192, 194);
+  padding: 0 2rem;
+}
+  .prog-controls__dividing-section{
+    display:inline-block;
+    padding: 0.625rem 1rem;
+    border-left: solid 1px rgb(192,192,194)
   }
-  .prog-bar__button-dropdown{
+  .programme-controls__button-dropdown{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    padding: 0.5rem 2.5rem;
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
     margin: 0.75rem 1.5rem;
     font-size: 0.8125rem;
     background: none;
@@ -141,11 +147,13 @@ body {
     background-position: 95%;
     cursor: pointer;
   }
-      .prog-bar__button-dropdown--active{
-        border-bottom: solid 2px #003066;
+      .programme-controls__button-dropdown--active{
+        -webkit-box-shadow: 0px 2px 0px 0px #003066;
+        -moz-box-shadow: 0px 2px 0px 0px #003066;
+        box-shadow: 0px 2px 0px 0px #003066;
       }
-  .prog-bar__button-dropdown:active,
-  .prog-bar__button-dropdown:focus{
+  .programme-controls__button-dropdown:active,
+  .programme-controls__button-dropdown:focus{
     outline:none;
   }
 
@@ -1476,6 +1484,9 @@ body {
           table-layout: fixed;
           width: 100%;
         }
+        .form__question-section--table-auto {
+          table-layout: auto;
+        }
     .form__question-sub-section {
       margin-bottom: 1.5rem;
     }
@@ -1493,7 +1504,7 @@ body {
           table-layout:fixed;
           width: 100%;
         }
-      .form__question-sub-section__button {
+      .form__question-sub-section--button {
           vertical-align: middle;
         }
 /* Please refactor to BEM methodology - AVOID descendant selectors */
@@ -2673,3 +2684,4 @@ body {
   .icon--book:before { content: '\e806'; } /* '' */
   .icon--cog:before { content: '\e807'; } /* '' */
   .icon--pencil:before { content: '\e808'; } /* '' */
+  .icon--warning:before { content: '\e809'; } /* '' */

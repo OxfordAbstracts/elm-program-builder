@@ -53,7 +53,7 @@ view model =
                 |> List.sortBy .id
                 |> List.indexedMap
                     (\i t ->
-                        div [ class "form__question-section form__question-section--table" ]
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
                             [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
                                     [ text "Track name *" ]
@@ -74,7 +74,7 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section__button" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                                 [ button
                                     [ onClick (DeleteTrack t.id)
                                     , disableInput t.id
@@ -97,16 +97,22 @@ view model =
                     ]
                     [ text "Add New Track" ]
                 , span [ class "prog-form--warning" ] [ text (newTrackWarning model) ]
-                , div []
-                    [ button
-                        [ class "button button--secondary"
-                        , onClick CancelAction
-                        ]
-                        [ text "Cancel" ]
-                    , button [ class "button button--primary", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
                         [ text "Save" ]
                     ]
                 ]
+
+        displayWarning =
+            if not (String.isEmpty (newTrackWarning model)) then
+                "block"
+            else
+                "none"
 
         displayDiv =
             if (not model.showNewTrackUi) then
@@ -117,6 +123,5 @@ view model =
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
             [ span [ class "form__hint" ]
                 [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
-            , div []
-                [ column1 ]
+            , column1
             ]

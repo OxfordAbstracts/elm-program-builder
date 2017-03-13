@@ -45,21 +45,21 @@ viewUiButtons model =
     let
         toggleNewColumnClass =
             if model.showNewColumnUi then
-                "prog-bar__button-dropdown prog-bar__button-dropdown--active"
+                "programme-controls__button-dropdown programme-controls__button-dropdown--active"
             else
-                "prog-bar__button-dropdown"
+                "programme-controls__button-dropdown"
 
         toggleNewTrackClass =
             if model.showNewTrackUi then
-                "prog-bar__button-dropdown prog-bar__button-dropdown--active"
+                "programme-controls__button-dropdown programme-controls__button-dropdown--active"
             else
-                "prog-bar__button-dropdown"
+                "programme-controls__button-dropdown"
 
         toggleManageDatesClass =
             if model.showManageDatesUi then
-                "prog-bar__button-dropdown prog-bar__button-dropdown--active"
+                "programme-controls__button-dropdown programme-controls__button-dropdown--active"
             else
-                "prog-bar__button-dropdown"
+                "programme-controls__button-dropdown"
 
         publishButtonText =
             if model.published then
@@ -67,20 +67,20 @@ viewUiButtons model =
             else
                 "Publish"
     in
-        div [ class "prog-bar" ]
-            [ div []
-                [ button [ class "button button--new prog-bar__button", type_ "button", onClick ToggleNewSessionUi ]
-                    [ text "+ New Session" ]
-                , button [ class toggleNewTrackClass, type_ "button", onClick ToggleNewTrackUi ]
-                    [ text "Manage Tracks" ]
-                , button [ class toggleNewColumnClass, type_ "button", onClick ToggleNewColumnUi ]
-                    [ text "Manage Columns" ]
-                , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
-                    [ text "Manage Dates" ]
-                , a [ class "button button--secondary prog-bar__button", href ("/events/" ++ model.eventId ++ "/programme-builder/preview"), target "_blank", type_ "button" ]
+        div [ class "programme-controls" ]
+            [ button [ class "button button--new", type_ "button", onClick ToggleNewSessionUi ]
+                [ text "+ New Session" ]
+            , button [ class toggleNewTrackClass, type_ "button", onClick ToggleNewTrackUi ]
+                [ text "Manage Tracks" ]
+            , button [ class toggleNewColumnClass, type_ "button", onClick ToggleNewColumnUi ]
+                [ text "Manage Columns" ]
+            , button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
+                [ text "Manage Dates" ]
+            , div [ class "prog-controls__dividing-section" ]
+                [ a [ class "button button--secondary button--wider", href ("/events/" ++ model.eventId ++ "/programme-builder/preview"), target "_blank", type_ "button" ]
                     [ text "Preview" ]
-                , button [ class "button button--primary prog-bar__button", type_ "button", onClick PublishProgrammeBuilder ]
-                    [ text publishButtonText ]
-                , PublishedUrlView.view model
                 ]
+            , button [ class "button button--primary button--wider", type_ "button", onClick PublishProgrammeBuilder ]
+                [ text publishButtonText ]
+            , PublishedUrlView.view model
             ]
