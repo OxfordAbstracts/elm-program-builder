@@ -13,7 +13,7 @@ type Msg
     | CreateNewSession
     | UpdateTracks
     | DeleteColumn Int
-    | DeleteDate MainModel.DateWithoutTime
+    | DeleteDate Int
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
     | EditSession

@@ -42,7 +42,7 @@ view model =
                                 ]
                                 []
                             , button
-                                [ onClick (DeleteDate d)
+                                [ onClick (DeleteDate i)
                                 , style [ ( "margin-left", "0.2rem" ) ]
                                 , disableInput d
                                 ]
