@@ -1455,6 +1455,9 @@ body {
           table-layout: fixed;
           width: 100%;
         }
+        .form__question-section--table-auto {
+          table-layout: auto;
+        }
     .form__question-sub-section {
       margin-bottom: 1.5rem;
     }
@@ -1472,7 +1475,7 @@ body {
           table-layout:fixed;
           width: 100%;
         }
-      .form__question-sub-section__button {
+      .form__question-sub-section--button {
           vertical-align: middle;
         }
 /* Please refactor to BEM methodology - AVOID descendant selectors */
@@ -2652,3 +2655,4 @@ body {
   .icon--book:before { content: '\e806'; } /* '' */
   .icon--cog:before { content: '\e807'; } /* '' */
   .icon--pencil:before { content: '\e808'; } /* '' */
+  .icon--warning:before { content: '\e809'; } /* '' */

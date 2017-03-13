@@ -191,61 +191,50 @@ view context model =
                         , select [ id "day-input", class "form__input" ]
                             dayOptions
                         ]
-                    , div
+                    , label [ class "form__label" ]
+                        [ text "Start time *" ]
+                    , input
+                        [ class "form__input form__input--time-hour-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.startTime.hour)
+                        , onInput UpdateNewSessionStartHour
+                        , placeholder "00"
+                        ]
                         []
-                        [ label [ class "form__label" ]
-                            [ text "Start time *" ]
-                        , div []
-                            [ input
-                                [ class "form__input form__input--time-hour-prog-builder"
-                                , type_ "number"
-                                , value (toStringIgnore0 context.session.startTime.hour)
-                                , onInput UpdateNewSessionStartHour
-                                , placeholder "00"
-                                ]
-                                []
-                            , input
-                                [ class "form__input form__input--time-min-prog-builder"
-                                , type_ "number"
-                                , value (toStringIgnore0 context.session.startTime.minute)
-                                , onInput UpdateNewSessionStartMinute
-                                , placeholder "00"
-                                ]
-                                []
-                            ]
+                    , input
+                        [ class "form__input form__input--time-min-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.startTime.minute)
+                        , onInput UpdateNewSessionStartMinute
+                        , placeholder "00"
                         ]
-                    , div []
-                        [ label [ class "form__label" ]
-                            [ text "End time *" ]
-                        , div []
-                            [ input
-                                [ class "form__input form__input--time-hour-prog-builder"
-                                , type_ "number"
-                                , value (toStringIgnore0 context.session.endTime.hour)
-                                , onInput UpdateNewSessionEndHour
-                                , placeholder "00"
-                                ]
-                                []
-                            , input
-                                [ class "form__input form__input--time-min-prog-builder"
-                                , type_ "number"
-                                , value (toStringIgnore0 context.session.endTime.minute)
-                                , onInput UpdateNewSessionEndMinute
-                                , placeholder "00"
-                                ]
-                                []
-                            ]
-                        , div [ class "prog-form--warning" ] [ text (newSessionViewWarning context model) ]
-                        , div []
-                            [ button
-                                [ class "button button--primary"
-                                , type_ "button"
-                                , disabled (newSessionViewWarning context model /= "")
-                                , onClick context.onClickAction
-                                ]
-                                [ text context.buttonText ]
-                            ]
+                        []
+                    , label [ class "form__label" ]
+                        [ text "End time *" ]
+                    , input
+                        [ class "form__input form__input--time-hour-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.endTime.hour)
+                        , onInput UpdateNewSessionEndHour
+                        , placeholder "00"
                         ]
+                        []
+                    , input
+                        [ class "form__input form__input--time-min-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.endTime.minute)
+                        , onInput UpdateNewSessionEndMinute
+                        , placeholder "00"
+                        ]
+                        []
+                    , div [ class "form__hint form__hint--warning" ] [ text (newSessionViewWarning context model) ]
+                    , button
+                        [ class "button button--primary button--wider"
+                        , type_ "button"
+                        , disabled (newSessionViewWarning context model /= "")
+                        , onClick context.onClickAction
+                        ]
+                        [ text context.buttonText ]
                     ]
 
         displayDiv =
