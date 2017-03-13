@@ -72,7 +72,12 @@ view model =
                         [ text "Add New Date" ]
                     ]
                 , div []
-                    [ button [ class "button button--primary", id "save-dates-btn", type_ "button" ]
+                    [ button
+                        [ class "button button--secondary"
+                        , onClick CancelAction
+                        ]
+                        [ text "Cancel" ]
+                    , button [ class "button button--primary", id "save-dates-btn", type_ "button" ]
                         [ text "Save" ]
                     ]
                 ]

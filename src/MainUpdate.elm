@@ -170,6 +170,18 @@ update msg model =
                 , Cmd.none
                 )
 
+            CancelAction ->
+                ( { model
+                    | showNewTrackUi = False
+                    , showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , showManageDatesUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showPreviewUi = False
+                  }
+                , Cmd.none
+                )
+
             ToggleNewColumnUi ->
                 ( { model
                     | showNewColumnUi = not model.showNewColumnUi

@@ -238,6 +238,11 @@ view context model =
                         , div [ class "prog-form--warning" ] [ text (newSessionViewWarning context model) ]
                         , div []
                             [ button
+                                [ class "button button--secondary"
+                                , onClick CancelAction
+                                ]
+                                [ text "Cancel" ]
+                            , button
                                 [ class "button button--primary"
                                 , type_ "button"
                                 , disabled (newSessionViewWarning context model /= "")

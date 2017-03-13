@@ -8,7 +8,6 @@ import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
-import PublishedUrlView exposing (view)
 import Api
 import Ports exposing (..)
 
@@ -47,7 +46,6 @@ view model =
             [ Html.h2 [] [ text "Programme builder" ]
             , Stylesheet.view
             , ControlsView.view model
-            , PublishedUrlView.view model
             , TableView.view model
             ]
 

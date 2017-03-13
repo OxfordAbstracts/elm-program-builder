@@ -9,6 +9,7 @@ type Msg
     = AddNewColumn
     | AddNewDate String Date
     | AddNewTrack
+    | CancelAction
     | UpdateColumns
     | CreateNewSession
     | UpdateTracks

@@ -86,7 +86,12 @@ view model =
                     ]
                 , div [ class "prog-form--warning" ] [ text (newColumnWarning model) ]
                 , div []
-                    [ button [ class "button button--primary", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
+                    [ button
+                        [ class "button button--secondary"
+                        , onClick CancelAction
+                        ]
+                        [ text "Cancel" ]
+                    , button [ class "button button--primary", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
                         [ text "Save" ]
                     ]
                 ]
