@@ -67,7 +67,7 @@ view model =
                             , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
                                     [ text "Track description *" ]
-                                , input
+                                , textarea
                                     [ class "form__input form__input--textarea"
                                     , value t.description
                                     , onInput (UpdatePickedTrack t.id Description)
