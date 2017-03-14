@@ -37,14 +37,12 @@ view model =
     -- publishView
     if model.showPreviewUi || model.showPublishPage then
         div [ class "container" ]
-            [ Html.h2 [] [ text "Programme builder" ]
-            , Stylesheet.view
+            [ Stylesheet.view
             , TableView.view model
             ]
     else
         div [ class "container" ]
-            [ Html.h2 [] [ text "Programme builder" ]
-            , Stylesheet.view
+            [ Stylesheet.view
             , ControlsView.view model
             , TableView.view model
             ]
