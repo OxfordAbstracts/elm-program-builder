@@ -24,13 +24,13 @@ body {
   margin: auto;
   padding: 3rem 0;
 }
-  .prog-form--warning {
-    padding: 0.5rem;
-    display:block;
-    color: #9c2c00;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
+    .prog-form--warning {
+      padding: 0.5rem;
+      display:block;
+      color: #9c2c00;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
 
 .prog-cell {
   vertical-align: top;
@@ -95,32 +95,67 @@ body {
     display: inline-block;
   }
 
-  .prog-table {
-    border-collapse: collapse;
-    margin: 1rem;
+.prog-table {
+  border-collapse: collapse;
+  margin: 1rem;
+}
+  .prog-table__row {
+    -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+    -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
+    box-shadow: inset 0px 1px 0px 0px #C0C0C2;
   }
-    .prog-table__row {
-      -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-      -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-      box-shadow: inset 0px 1px 0px 0px #C0C0C2;
-    }
-    .prog-table__header {
-      padding: 1rem 0.25rem;
-      text-align: left;
-      font-family: 'Raleway', sans-serif;
-    }
-        .prog-table__header--datetime {
-          padding: 1rem;
-        }
-    .prog-table__time {
-      display: block;
-      font-size: 0.875rem; /* 14px */
-      margin-bottom: 0.5em; /* 7px */
-    }
-    .prog-table__date {
-      font-size: 0.875rem; /* 14px */
-      font-weight: 600;
-    }
+  .prog-table__header {
+    padding: 1rem 0.25rem;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+  }
+      .prog-table__header--datetime {
+        padding: 1rem;
+      }
+  .prog-table__time {
+    display: block;
+    font-size: 0.875rem; /* 14px */
+    margin-bottom: 0.5em; /* 7px */
+  }
+  .prog-table__date {
+    font-size: 0.875rem; /* 14px */
+    font-weight: 600;
+  }
+
+.programme-controls{
+  border-top: solid 1px rgb(192, 192, 194);
+  border-bottom: solid 1px rgb(192, 192, 194);
+  padding: 0 2rem;
+}
+  .prog-controls__dividing-section{
+    display:inline-block;
+    padding: 0.6875rem 1rem 0.625rem; /* 11px 16px 10px */
+    border-left: solid 1px #c0c0c2
+  }
+  .programme-controls__button-dropdown{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+    margin: 0.75rem 1.5rem;
+    font-size: 0.8125rem;
+    background: none;
+    border: none;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
+    background-size: 0.625rem 0.5rem; /* 10px 8px */
+    background-repeat: no-repeat;
+    background-position: 95%;
+    cursor: pointer;
+  }
+      .programme-controls__button-dropdown--active{
+        -webkit-box-shadow: 0px 2px 0px 0px #003066;
+        -moz-box-shadow: 0px 2px 0px 0px #003066;
+        box-shadow: 0px 2px 0px 0px #003066;
+      }
+  .programme-controls__button-dropdown:active,
+  .programme-controls__button-dropdown:focus{
+    outline:none;
+  }
 
     /*[][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 
@@ -218,12 +253,6 @@ body {
   @import 'https://fonts.googleapis.com/css?family=Raleway|Roboto:300,500,400,700';
 
 
-  /*
-
-  font-family: 'Raleway', Helvetica, Ariel, sans-serif;
-  font-family: 'Roboto', Helvetica, Ariel, sans-serif;
-
-  */
 
   /*[][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
 

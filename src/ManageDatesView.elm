@@ -69,6 +69,11 @@ view model =
                     , onClick (GetDateAndThenAddDate <| toString <| List.length model.pickedDates)
                     ]
                     [ text "Add New Date" ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
                 , div [ class "bar bar--button" ]
                     [ button [ class "button button--primary button--wider", id "save-dates-btn", type_ "button" ]
                         [ text "Save" ]

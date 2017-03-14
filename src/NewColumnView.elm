@@ -85,6 +85,11 @@ view model =
                         [ text "Add New Column" ]
                     ]
                 , div [ class "prog-form--warning" ] [ text (newColumnWarning model) ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
                 , div [ class "bar bar--button" ]
                     [ button [ class "button button--primary button--wider", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
                         [ text "Save" ]

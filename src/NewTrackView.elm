@@ -96,7 +96,12 @@ view model =
                     , onClick AddNewTrack
                     ]
                     [ text "Add New Track" ]
-                , span [ class "prog-form--warning", style [ ( "display", displayWarning ) ] ] [ text (newTrackWarning model) ]
+                , span [ class "prog-form--warning" ] [ text (newTrackWarning model) ]
+                , button
+                    [ class "button button--secondary"
+                    , onClick CancelAction
+                    ]
+                    [ text "Cancel" ]
                 , div [ class "bar bar--button" ]
                     [ button [ class "button button--primary button--wider", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
                         [ text "Save" ]

@@ -229,6 +229,11 @@ view context model =
                         []
                     , div [ class "form__hint form__hint--warning" ] [ text (newSessionViewWarning context model) ]
                     , button
+                        [ class "button button--secondary"
+                        , onClick CancelAction
+                        ]
+                        [ text "Cancel" ]
+                    , button
                         [ class "button button--primary button--wider"
                         , type_ "button"
                         , disabled (newSessionViewWarning context model /= "")
