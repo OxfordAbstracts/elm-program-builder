@@ -549,10 +549,11 @@ update msg model =
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
 
-            DeleteDate date ->
+            DeleteDate pickedDateIndex ->
                 let
+                    -- http://stackoverflow.com/questions/33099945/how-to-remove-an-item-at-a-given-index-from-array-list-in-elm/35871747
                     updatedPickedDates =
-                        List.filter (\d -> d /= date) model.pickedDates
+                        (List.take pickedDateIndex model.pickedDates) ++ (List.drop (pickedDateIndex + 1) model.pickedDates)
                 in
                     ( { model
                         | pickedDates = updatedPickedDates
