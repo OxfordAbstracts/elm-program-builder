@@ -53,48 +53,70 @@ view model =
                 |> List.sortBy .id
                 |> List.indexedMap
                     (\i t ->
-                        div []
-                            [ input
-                                [ class "form-control"
-                                , value t.name
-                                , onInput (UpdatePickedTrack t.id Name)
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
+                            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
+                                    [ text "Track name *" ]
+                                , input
+                                    [ class "form__input"
+                                    , value t.name
+                                    , onInput (UpdatePickedTrack t.id Name)
+                                    ]
+                                    []
                                 ]
-                                []
-                            , input
-                                [ class "form-control"
-                                , value t.description
-                                , onInput (UpdatePickedTrack t.id Description)
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ label [ class "form__label" ]
+                                    [ text "Track description *" ]
+                                , textarea
+                                    [ class "form__input form__input--textarea"
+                                    , value t.description
+                                    , onInput (UpdatePickedTrack t.id Description)
+                                    ]
+                                    []
                                 ]
-                                []
-                            , button
-                                [ onClick (DeleteTrack t.id)
-                                , style [ ( "margin-left", "0.2rem" ) ]
-                                , disableInput t.id
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
+                                [ button
+                                    [ onClick (DeleteTrack t.id)
+                                    , disableInput t.id
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
                                 ]
-                                [ text "Delete" ]
                             ]
                     )
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
+            div []
+                [ div []
                     listTracks
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button
-                        [ class "btn btn-default"
-                        , id "add-new-date-btn"
-                        , type_ "button"
-                        , onClick AddNewTrack
-                        ]
-                        [ text "Add New Track" ]
+                , button
+                    [ class "button button--tertiary"
+                    , id "add-new-date-btn"
+                    , type_ "button"
+                    , onClick AddNewTrack
                     ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newTrackWarning model) ]
-                , div [ style [ ( "margin-top", "1rem" ) ] ]
-                    [ button [ class "btn btn-default", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
-                        [ text "Save Changes" ]
+                    [ text "Add New Track" ]
+                , span [ class "prog-form--warning", style [ ( "display", displayWarning ) ] ] [ text (newTrackWarning model) ]
+                , div [ class "bar bar--button" ]
+                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                        [ text "Save" ]
                     ]
                 ]
+
+        displayWarning =
+            if not (String.isEmpty (newTrackWarning model)) then
+                "block"
+            else
+                "none"
+
+        displayDiv =
+            if (not model.showNewTrackUi) then
+                "none"
+            else
+                "block"
     in
-        div [ hidden (not model.showNewTrackUi), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
+            [ span [ class "form__hint" ]
+                [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
+            , column1
             ]

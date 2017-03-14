@@ -79,47 +79,44 @@ view context model =
             option [ value "", selected (context.session.trackId == Nothing) ] [ text "No track" ]
 
         column1 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
-                    [ label [ for "sesssion-name-input" ]
-                        [ text "Session name" ]
-                    , input
-                        [ class "form-control"
-                        , id "sesssion-name-input"
-                        , type_ "text"
-                        , value context.session.name
-                        , onInput UpdateNewSessionName
-                        ]
-                        [ text context.session.name ]
+            div []
+                [ label [ class "form__label", for "session-name-input" ]
+                    [ text "Session name *" ]
+                , input
+                    [ class "form__input"
+                    , id "session-name-input"
+                    , type_ "text"
+                    , value context.session.name
+                    , onInput UpdateNewSessionName
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "description-input" ]
-                        [ text "Description" ]
-                    , textarea
-                        [ class "form-control"
-                        , id "description-input"
-                        , rows 5
-                        , cols 32
-                        , value context.session.description
-                        , onInput UpdateNewSessionDescription
-                        ]
-                        [ text context.session.description ]
+                    [ text context.session.name ]
+                , label [ class "form__label", for "description-input" ]
+                    [ text "Description *" ]
+                , textarea
+                    [ class "form__input form__input--textarea"
+                    , id "description-input"
+                    , rows 5
+                    , cols 32
+                    , value context.session.description
+                    , onInput UpdateNewSessionDescription
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "submissions-input" ]
-                        [ text "Submissions" ]
-                    , textarea
-                        [ class "form-control"
-                        , id "submissions-input"
-                        , rows 2
-                        , cols 32
-                        , value model.submissionIdsInput
-                        , onInput UpdateNewSessionSubmissionIds
-                        ]
-                        [ text model.submissionIdsInput ]
+                    [ text context.session.description ]
+                , label [ for "submissions-input" ]
+                    [ text "Submissions"
+                    , span [ class "form__label form__label--sub" ]
+                        [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
                     ]
-                , span []
-                    [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                , textarea
+                    [ class "form__input form__input--textarea"
+                    , id "submissions-input"
+                    , rows 2
+                    , cols 32
+                    , value model.submissionIdsInput
+                    , onInput UpdateNewSessionSubmissionIds
+                    ]
+                    [ text model.submissionIdsInput ]
+                , span [ class "form__hint" ]
+                    [ text "" ]
                 , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
 
@@ -134,24 +131,25 @@ view context model =
                     )
 
         column2 =
-            div [ class "form-group" ]
-                [ div [ class "input-group" ]
-                    [ label [ for "column-input" ] [ text "Column" ]
-                    , br [] []
-                    , select [ id "column-input", onInput UpdateNewSessionColumn ]
+            div []
+                [ div []
+                    [ label [ class "form__label", for "column-input" ] [ text "Column *" ]
+                    , select [ id "column-input", onInput UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
                         (allColumnsDropdownOption :: columnOptions)
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "track-input" ] [ text "Track " ]
-                    , br [] []
-                    , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId) ]
+                , div []
+                    [ label [ class "form__label", for "track-input" ] [ text "Track *" ]
+                    , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId), class "form__input form__input--dropdown" ]
                         (noTracksDropdownOption :: List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == Just t.id) ] [ text t.name ]) model.tracks)
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "chair-input" ]
-                        [ text "Chair" ]
+                , div []
+                    [ label [ class "form__label", for "chair-input" ]
+                        [ text "Chair"
+                        , span [ class "form__label form__label--sub" ]
+                            [ text "This will be the person in charge of this session" ]
+                        ]
                     , input
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "chair-input"
                         , type_ "text"
                         , value context.session.chair
@@ -159,11 +157,11 @@ view context model =
                         ]
                         [ text model.newSession.chair ]
                     ]
-                , div [ class "input-group" ]
-                    [ label [ for "location-input" ]
+                , div []
+                    [ label [ class "form__label", for "location-input" ]
                         [ text "Location" ]
                     , input
-                        [ class "form-control"
+                        [ class "form__input"
                         , id "location-input"
                         , type_ "text"
                         , value context.session.location
@@ -187,76 +185,70 @@ view context model =
                                     [ text (DateUtils.displayDateWithoutTime d) ]
                             )
             in
-                div [ class "form-group" ]
-                    [ div [ class "input-group", onInput UpdateNewSessionDate ]
-                        [ label [ for "day-input" ] [ text "Date " ]
-                        , br [] []
-                        , select [ id "day-input" ]
+                div []
+                    [ div [ onInput UpdateNewSessionDate ]
+                        [ label [ class "form__label", for "day-input" ] [ text "Date *" ]
+                        , select [ id "day-input", class "form__input" ]
                             dayOptions
                         ]
-                    , div
-                        [ class "input-group" ]
-                        [ label []
-                            [ text "Start time" ]
-                        , div []
-                            [ input
-                                [ class "form-control"
-                                , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 context.session.startTime.hour)
-                                , onInput UpdateNewSessionStartHour
-                                , placeholder "00"
-                                ]
-                                []
-                            , input
-                                [ class "form-control"
-                                , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 context.session.startTime.minute)
-                                , onInput UpdateNewSessionStartMinute
-                                , placeholder "00"
-                                ]
-                                []
-                            ]
+                    , label [ class "form__label" ]
+                        [ text "Start time *" ]
+                    , input
+                        [ class "form__input form__input--time-hour-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.startTime.hour)
+                        , onInput UpdateNewSessionStartHour
+                        , placeholder "00"
                         ]
-                    , div [ class "input-group" ]
-                        [ label []
-                            [ text "End time" ]
-                        , div []
-                            [ input
-                                [ class "form-control"
-                                , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 context.session.endTime.hour)
-                                , onInput UpdateNewSessionEndHour
-                                , placeholder "00"
-                                ]
-                                []
-                            , input
-                                [ class "form-control"
-                                , type_ "number"
-                                , style [ ( "width", "6rem" ) ]
-                                , value (toStringIgnore0 context.session.endTime.minute)
-                                , onInput UpdateNewSessionEndMinute
-                                , placeholder "00"
-                                ]
-                                []
-                            ]
-                        , div [ style [ ( "margin-top", "1rem" ) ] ] [ text (newSessionViewWarning context model) ]
-                        , div [ style [ ( "margin-top", "1rem" ) ] ]
-                            [ button
-                                [ class "btn btn-default"
-                                , type_ "button"
-                                , disabled (newSessionViewWarning context model /= "")
-                                , onClick context.onClickAction
-                                ]
-                                [ text context.buttonText ]
-                            ]
+                        []
+                    , input
+                        [ class "form__input form__input--time-min-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.startTime.minute)
+                        , onInput UpdateNewSessionStartMinute
+                        , placeholder "00"
                         ]
+                        []
+                    , label [ class "form__label" ]
+                        [ text "End time *" ]
+                    , input
+                        [ class "form__input form__input--time-hour-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.endTime.hour)
+                        , onInput UpdateNewSessionEndHour
+                        , placeholder "00"
+                        ]
+                        []
+                    , input
+                        [ class "form__input form__input--time-min-prog-builder"
+                        , type_ "number"
+                        , value (toStringIgnore0 context.session.endTime.minute)
+                        , onInput UpdateNewSessionEndMinute
+                        , placeholder "00"
+                        ]
+                        []
+                    , div [ class "form__hint form__hint--warning" ] [ text (newSessionViewWarning context model) ]
+                    , button
+                        [ class "button button--primary button--wider"
+                        , type_ "button"
+                        , disabled (newSessionViewWarning context model /= "")
+                        , onClick context.onClickAction
+                        ]
+                        [ text context.buttonText ]
                     ]
+
+        displayDiv =
+            if (not model.showNewSessionUi && not sessionBeingEditted) then
+                "none"
+            else
+                "block"
     in
-        div [ hidden ((not model.showNewSessionUi) && (not sessionBeingEditted)), class "row" ]
-            [ div [ class "col-md-4" ] [ column1 ]
-            , div [ class "col-md-4" ] [ column2 ]
-            , div [ class "col-md-4" ] [ column3 ]
+        div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
+            [ span [ class "form__hint" ]
+                [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
+            , div [ class "form__question-section form__question-section--table" ]
+                [ div [ class "form__question-sub-section form__question-sub-section--table" ] [ column1 ]
+                , div [ class "form__question-sub-section form__question-sub-section--table" ] [ column2 ]
+                , div [ class "form__question-sub-section form__question-sub-section--table" ] [ column3 ]
+                ]
             ]
