@@ -129,7 +129,7 @@ body {
 }
   .prog-controls__dividing-section{
     display:inline-block;
-    padding: 0.625rem 1rem;
+    padding: 0.6875rem 1rem 0.625rem; /* 11px 16px 10px */
     border-left: solid 1px #c0c0c2
   }
   .programme-controls__button-dropdown{
