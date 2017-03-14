@@ -237,8 +237,18 @@ update msg model =
 
             CreateNewSession ->
                 let
+                    highestSessionId =
+                        model.datesWithSessions
+                            |> List.concatMap .sessions
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 0
+
                     newSessionWithSubmissionIds =
                         addSubmissionIdsInputToSession model.submissionIdsInput model.newSession model.submissions
+
+                    newSession =
+                        { newSessionWithSubmissionIds | id = highestSessionId + 1 }
 
                     updateDatesWithSessions =
                         List.map updateDateWithSessions model.datesWithSessions
@@ -247,7 +257,7 @@ update msg model =
                         { dateWithSessions
                             | sessions =
                                 if dateWithSessions.date == model.newSessionDate then
-                                    newSessionWithSubmissionIds :: dateWithSessions.sessions
+                                    newSession :: dateWithSessions.sessions
                                 else
                                     dateWithSessions.sessions
                         }
