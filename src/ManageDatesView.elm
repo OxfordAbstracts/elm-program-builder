@@ -33,7 +33,7 @@ view model =
             model.pickedDates
                 |> List.indexedMap
                     (\i d ->
-                        div [ class "form__question-section form__question-section--table" ]
+                        div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
                             [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
                                     [ text "Date" ]
@@ -59,7 +59,7 @@ view model =
         column1 =
             div []
                 [ span [ class "form__hint" ]
-                    [ i [ class "icon icon--warning" ] [], text "You will be unable to change any dates that have sessions" ]
+                    [ i [ class "icon icon--warning icon--margin-right" ] [], text "You will be unable to change any dates that have sessions" ]
                 , div []
                     datesInputs
                 , button
