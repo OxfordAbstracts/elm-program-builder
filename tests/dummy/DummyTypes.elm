@@ -1,12 +1,38 @@
 module DummyTypes exposing (..)
 
-import MainModel
+import MainModel exposing (..)
 import MainUpdate
 
 
 dummyModel : MainModel.Model
 dummyModel =
-    MainModel.initialModel
+    { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
+    , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+    , showNewSessionUi = False
+    , showNewTrackUi = False
+    , showNewColumnUi = False
+    , showManageDatesUi = False
+    , published = False
+    , showPreviewUi = False
+    , newSession = blankSession 1
+    , newSessionDate = DateWithoutTime 2017 1 1
+    , editSession = blankSession 1
+    , editSessionDate = DateWithoutTime 2017 1 1
+    , newColumn = blankColumn 1
+    , newTrack = blankTrack 1
+    , idOfSessionBeingEdited = Nothing
+    , eventId = ""
+    , submissionIdsInput = ""
+    , submissions = [ Submission 1 ]
+    , datePickerClosed = True
+    , pickedDates = initialDates
+    , pickedTracks = []
+    , pickedColumns = []
+    , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = [] } ]
+    , host = ""
+    , showPublishPage = False
+    , invalidSubmissionIdsInput = ""
+    }
 
 
 dummyApiUpdateGet : MainModel.ApiUpdateGet
