@@ -22,7 +22,10 @@ function init(options, dev){
           field: pickNew,
           format: 'D MMM YYYY',
           defaultDate: new Date(Date.now()),
-          minDate: new Date()
+          minDate: new Date(),
+          onSelect: function(){
+            sendDates('changePickedDates');
+          }
         });
       }, 100)
     }

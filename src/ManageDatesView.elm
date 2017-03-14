@@ -47,7 +47,7 @@ view model =
                                 ]
                             , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                                 [ button
-                                    [ onClick (DeleteDate d)
+                                    [ onClick (DeleteDate i)
                                     , disableInput d
                                     , class "button button--secondary icon icon--bin"
                                     ]
