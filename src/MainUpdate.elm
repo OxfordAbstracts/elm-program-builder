@@ -503,7 +503,7 @@ update msg model =
                             (\a b ->
                                 if
                                     (a.date.year >= b.date.year && a.date.month > b.date.month)
-                                        || (a.date.month == b.date.month && a.date.day > b.date.day)
+                                        || (a.date.year >= b.date.year && a.date.month == b.date.month && a.date.day > b.date.day)
                                 then
                                     GT
                                 else
