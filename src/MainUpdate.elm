@@ -444,6 +444,7 @@ update msg model =
                                 True
                         , showNewTrackUi = False
                         , showNewColumnUi = False
+                        , showManageDatesUi = False
                         , editSession = session
                         , submissionIdsInput = submissionIdsInput
                         , editSessionDate = sessionDate
