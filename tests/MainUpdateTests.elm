@@ -122,7 +122,7 @@ all =
             \() ->
                 let
                     newSession =
-                        { id = 6
+                        { id = 1
                         , name = "new test name"
                         , description = "new test description"
                         , startTime = { hour = 12, minute = 0 }
@@ -149,7 +149,7 @@ all =
                         modelAfterUpdate
                             |> .datesWithSessions
                             |> List.concatMap .sessions
-                            |> List.filter (\s -> s.id == 6)
+                            |> List.filter (\s -> s.id == 1)
                             |> List.head
                             |> Maybe.withDefault (MainModel.blankSession -1)
                 in
