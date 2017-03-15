@@ -32,6 +32,7 @@ dummyModel =
     , host = ""
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
+    , showValidation = True
     }
 
 
