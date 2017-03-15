@@ -48,6 +48,19 @@ view model =
                 else
                     disabled False
 
+        onClickUpdate =
+            if String.isEmpty (newTrackWarning model) then
+                UpdateTracks
+            else
+                ShowValidationMessage
+
+        validationWarningDiv =
+            if model.showValidation then
+                div [ class "form__hint form__hint--warning" ]
+                    [ text (newTrackWarning model) ]
+            else
+                Html.text ""
+
         listTracks =
             model.pickedTracks
                 |> List.sortBy .id
@@ -96,14 +109,14 @@ view model =
                     , onClick AddNewTrack
                     ]
                     [ text "Add New Track" ]
-                , span [ class "prog-form--warning" ] [ text (newTrackWarning model) ]
+                , validationWarningDiv
                 , button
                     [ class "button button--secondary"
                     , onClick CancelAction
                     ]
                     [ text "Cancel" ]
                 , div [ class "bar bar--button" ]
-                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newTrackWarning model /= ""), onClick UpdateTracks ]
+                    [ button [ class "button button--primary button--wider", type_ "button", onClick onClickUpdate ]
                         [ text "Save" ]
                     ]
                 ]

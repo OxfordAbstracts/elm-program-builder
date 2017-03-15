@@ -44,6 +44,19 @@ view model =
                 else
                     disabled False
 
+        onClickUpdate =
+            if String.isEmpty (newColumnWarning model) then
+                UpdateColumns
+            else
+                ShowValidationMessage
+
+        validationWarningDiv =
+            if model.showValidation then
+                div [ class "form__hint form__hint--warning" ]
+                    [ text (newColumnWarning model) ]
+            else
+                Html.text ""
+
         listColumns =
             model.pickedColumns
                 |> List.sortBy .id
@@ -84,14 +97,14 @@ view model =
                         ]
                         [ text "Add New Column" ]
                     ]
-                , div [ class "prog-form--warning" ] [ text (newColumnWarning model) ]
+                , validationWarningDiv
                 , button
                     [ class "button button--secondary"
                     , onClick CancelAction
                     ]
                     [ text "Cancel" ]
                 , div [ class "bar bar--button" ]
-                    [ button [ class "button button--primary button--wider", type_ "button", disabled (newColumnWarning model /= ""), onClick UpdateColumns ]
+                    [ button [ class "button button--primary button--wider", type_ "button", onClick onClickUpdate ]
                         [ text "Save" ]
                     ]
                 ]

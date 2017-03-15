@@ -20,12 +20,14 @@ type alias NewSessionContext =
 
 newSessionViewWarning : NewSessionContext -> Model -> String
 newSessionViewWarning context model =
-    if model.showNewSessionUi && context.session.name == "" then
-        getWarning "Session name field is empty" model
+    if List.length model.columns == 0 then
+        getWarning "You will need to create a column before you can save this session" model
+    else if List.length model.datesWithSessions == 0 then
+        getWarning "You will need to create a date before you can save this session" model
     else if model.showNewSessionUi && endNotMoreThanStart context.session then
         getWarning "Session end time must be greater than start time" model
-    else if List.length model.columns == 0 then
-        getWarning "You will need to create a column before you can save this session" model
+    else if model.showNewSessionUi && context.session.name == "" then
+        getWarning "Session name field is empty" model
     else if
         model.showNewSessionUi
             && sessionsAreOverLapping
@@ -91,7 +93,7 @@ view context model =
                     ]
                     [ text context.session.name ]
                 , label [ class "form__label", for "description-input" ]
-                    [ text "Description *" ]
+                    [ text "Description" ]
                 , textarea
                     [ class "form__input form__input--textarea"
                     , id "description-input"
@@ -172,14 +174,12 @@ view context model =
             else
                 ShowValidationMessage
 
-        t =
-            newSessionViewWarning context model
-
-        z =
-            Debug.log "warning" t
-
-        y =
-            Debug.log "onClickUpdate" onClickUpdate
+        validationWarningDiv =
+            if model.showValidation then
+                div [ class "form__hint form__hint--warning" ]
+                    [ text (newSessionViewWarning context model) ]
+            else
+                Html.text ""
 
         column3 =
             div []
@@ -219,12 +219,7 @@ view context model =
                     , placeholder "00"
                     ]
                     []
-                , div [ class "form__hint form__hint--warning" ]
-                    [ if model.showValidation then
-                        text (newSessionViewWarning context model)
-                      else
-                        text ("")
-                    ]
+                , validationWarningDiv
                 , button
                     [ class "button button--secondary"
                     , onClick CancelAction

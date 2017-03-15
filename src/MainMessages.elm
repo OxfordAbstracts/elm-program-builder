@@ -26,6 +26,7 @@ type Msg
     | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
+    | ShowValidationMessage
     | ToggleManageDatesUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
