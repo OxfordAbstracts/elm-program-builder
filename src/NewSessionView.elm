@@ -221,7 +221,7 @@ view context model =
                     []
                 , validationWarningDiv
                 , button
-                    [ class "button button--secondary"
+                    [ class "button button--secondary button--wider"
                     , onClick CancelAction
                     ]
                     [ text "Cancel" ]

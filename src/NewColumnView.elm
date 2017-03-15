@@ -90,7 +90,7 @@ view model =
                     listColumns
                 , div []
                     [ button
-                        [ class "button button--tertiary"
+                        [ class "button button--tertiary button--wider"
                         , id "add-new-date-btn"
                         , type_ "button"
                         , onClick AddNewColumn
@@ -99,7 +99,7 @@ view model =
                     ]
                 , validationWarningDiv
                 , button
-                    [ class "button button--secondary"
+                    [ class "button button--secondary button--wider"
                     , onClick CancelAction
                     ]
                     [ text "Cancel" ]
