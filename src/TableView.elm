@@ -197,6 +197,12 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
 
         trackName =
             getTrackName model.tracks trackId
+
+        hideTrackName =
+            if String.isEmpty trackName then
+                "none"
+            else
+                "block"
     in
         if timeDelimiter == lastTime then
             text ""
@@ -218,7 +224,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                             ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
-                        , span [ class "prog-session__data prog-session__track" ]
+                        , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
                             [ text trackName ]
                         ]
 

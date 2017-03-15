@@ -231,6 +231,7 @@ update msg model =
                     ( { model
                         | columns = newColumns
                         , newColumn = blankColumn 1
+                        , showValidation = False
                       }
                     , Api.postModelToDb apiPostModel model.eventId
                     )
@@ -273,6 +274,7 @@ update msg model =
                         | datesWithSessions = updateDatesWithSessions
                         , newSession = blankSession 1
                         , submissionIdsInput = ""
+                        , showValidation = False
                       }
                     , Api.postModelToDb apiModelPost model.eventId
                     )
@@ -288,6 +290,7 @@ update msg model =
                     ( { model
                         | tracks = newTracks
                         , newTrack = blankTrack 1
+                        , showValidation = False
                       }
                     , Api.postModelToDb apiUpdatePost model.eventId
                     )
@@ -659,3 +662,6 @@ update msg model =
                       }
                     , Cmd.none
                     )
+
+            ShowValidationMessage ->
+                ( { model | showValidation = True }, Cmd.none )

@@ -22,7 +22,12 @@ all =
             \() ->
                 let
                     newModel =
-                        { model | showNewTrackUi = False, showNewSessionUi = True }
+                        { model
+                            | showNewTrackUi = False
+                            , showNewSessionUi = True
+                            , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+                            , datesWithSessions = [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = initialSessions } ]
+                        }
 
                     context =
                         NewSessionContext "Edit session" EditSession model.editSession model.editSessionDate
@@ -49,6 +54,8 @@ all =
                                 , submissionIds = []
                                 }
                             , editSessionDate = { year = 2017, month = 1, day = 1 }
+                            , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+                            , datesWithSessions = [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = initialSessions } ]
                         }
 
                     context =

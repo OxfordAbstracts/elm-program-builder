@@ -31,6 +31,7 @@ type alias Model =
     , host : String
     , showPublishPage : Bool
     , invalidSubmissionIdsInput : String
+    , showValidation : Bool
     }
 
 
@@ -81,6 +82,7 @@ initialModel =
     , host = ""
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
+    , showValidation = False
     }
 
 

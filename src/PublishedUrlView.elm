@@ -12,13 +12,15 @@ import GetWarning exposing (..)
 view : Model -> Html Msg
 view model =
     let
-        showPublishUrl =
+        displayPublishUrl =
             if model.published then
-                False
+                "block"
             else
-                True
+                "none"
     in
-        div [ hidden showPublishUrl ]
-            [ span [] [ text ("Your programme builder has been published and can be accessed here: ") ]
-            , a [ href ("/events/" ++ model.eventId ++ "/programme-builder/view") ] [ text (model.host ++ "/events/" ++ model.eventId ++ "/programme-builder/view") ]
+        div [ class "bar", style [ ( "display", displayPublishUrl ) ] ]
+            [ span [ class "bar__copy bar__copy--space" ]
+                [ text ("Your programme builder has been published and can be accessed here: ")
+                , a [ class "bar__copy bar__copy--link", href ("/events/" ++ model.eventId ++ "/programme-builder/view") ] [ text (model.host ++ "/events/" ++ model.eventId ++ "/programme-builder/view") ]
+                ]
             ]
