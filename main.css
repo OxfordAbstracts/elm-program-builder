@@ -1252,7 +1252,7 @@ pre {
     .form--add-to-view { /* for use when:
                           .form is initially hidden and then
                           added to view / brought in to view */
-      margin: 2rem auto;
+      margin: 0rem 2rem 1rem;
       padding: 1rem 2rem;
       max-width: 66rem; /* suitable for 3 columns as question-sections */
       background-color: #f0f0f0;
@@ -2318,6 +2318,7 @@ height: 1.4375rem;
 
 #programme-builder {
   background-color: #f6f6f6;
+  /*min-width: 70rem;*/
 }
 
 /*---------------------------------*/
@@ -2409,14 +2410,17 @@ height: 1.4375rem;
 /*---------------------------------*/
 .prog-table {
   border-collapse: collapse;
-  margin: 2rem auto;
-  table-layout: fixed;
+  min-width: 70rem; /* matched on the programme-controls */
+  table-layout: auto;
   width: 100%;
 }
 
   .prog-table__wrapper {
     /* markup goes around the prog-table element */
-    padding: 2rem;
+    padding: 1rem 2rem 2rem;
+    min-width: 80rem; /* 1280px ensures sessions aren't overly compressed
+                        on smaller screens and user can scroll x-axis */
+    background-color: rgb(246, 246, 246);
   }
 
   .prog-table__row {
@@ -2453,6 +2457,7 @@ height: 1.4375rem;
   border-top: solid 1px rgb(192, 192, 194);
   border-bottom: solid 1px rgb(192, 192, 194);
   padding: 0 2rem;
+  min-width: 70rem; /* matched on the prog-table */
 }
 
   .prog-controls__dividing-section{
