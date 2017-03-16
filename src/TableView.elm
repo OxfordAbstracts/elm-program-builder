@@ -20,17 +20,19 @@ view model =
         columnElements =
             model.columns |> List.map (\c -> col [] [])
     in
-        table [ class "prog-table" ]
-            [ col [ attribute "span" "2" ] []
-            , div [] columnElements
-            , thead []
-                [ tr []
-                    (defaultHeaders
-                        ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
-                    )
+        div [ class "prog-table__wrapper" ]
+            [ table [ class "prog-table" ]
+                [ col [ attribute "span" "2" ] []
+                , div [] columnElements
+                , thead []
+                    [ tr []
+                        (defaultHeaders
+                            ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
+                        )
+                    ]
+                , tbody []
+                    (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                 ]
-            , tbody []
-                (List.concatMap (viewDate model numColumns) model.datesWithSessions)
             ]
 
 
@@ -202,7 +204,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
             if String.isEmpty trackName then
                 "none"
             else
-                "block"
+                "inline-block"
     in
         if timeDelimiter == lastTime then
             text ""
@@ -335,6 +337,12 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 
         trackName =
             getTrackName model.tracks trackId
+
+        hideTrackName =
+            if String.isEmpty trackName then
+                "none"
+            else
+                "inline-block"
     in
         if timeDelimiter == lastTime then
             text ""
@@ -355,7 +363,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
-                        , span [ class "prog-session__data prog-session__track" ]
+                        , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
                             [ text trackName ]
                         ]
 

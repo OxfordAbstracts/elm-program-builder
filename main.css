@@ -1252,7 +1252,7 @@ pre {
     .form--add-to-view { /* for use when:
                           .form is initially hidden and then
                           added to view / brought in to view */
-      margin: 0;
+      margin: 0rem 2rem 1rem;
       padding: 1rem 2rem;
       max-width: 66rem; /* suitable for 3 columns as question-sections */
       background-color: #f0f0f0;
@@ -2344,9 +2344,11 @@ height: 1.4375rem;
   vertical-align: top;
   background-color: #ffffff;
 }
+
   .prog-session__divider {
     text-align: right;
   }
+
   .prog-session__action{
     font-family: Roboto;
     font-size: 0.6875rem; /* 11px */
@@ -2357,40 +2359,48 @@ height: 1.4375rem;
     margin-left: 0.2rem;
     cursor: pointer;
   }
+
   .prog-session__header { /* anchor tag */
     display: block;
     background-color: rgb(0, 48, 102);
     padding: 0.25rem; /* 4px */
     margin-bottom: 0.25rem; /* 4px */
   }
+
   .prog-session__name {
     display: block;
     font-size: 0.8125rem; /* 13px */
     color: #ffffff;
     text-transform: capitalize;
     text-decoration: none;
+    line-height:1rem;
   }
+
   .prog-session__body {
     padding: 0.25rem;
   }
+
   .prog-session__data {
     font-size: 0.6875rem; /* 11px */
     font-family: 'Raleway', sans-serif;
     display: block;
     margin: 0.25rem; /* 4px */
   }
+
   .prog-session__location {
     text-transform: capitalize;
   }
+
   .prog-session__chair {
     color: #808080;
     font-style: italic;
     font-weight: 600;
   }
+
   .prog-session__track {
     font-size: 0.625rem;
     background-color: #444444;
-    font-weight: 900;
+    font-weight: 600;
     color: #ffffff;
     padding: 0.125rem;
     display: inline-block;
@@ -2400,26 +2410,41 @@ height: 1.4375rem;
 /*---------------------------------*/
 .prog-table {
   border-collapse: collapse;
-  margin: 1rem;
+  min-width: 70rem; /* 1120px ensures sessions aren't overly compressed
+                      on smaller screens and user can scroll x-axis
+                       - matched on the programme-controls */
+  table-layout: auto;
 }
+
+  .prog-table__wrapper {
+    /* markup goes around the prog-table element */
+    padding: 1rem 2rem 2rem;
+    background-color: rgb(246, 246, 246);
+  }
+
   .prog-table__row {
     -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
     -moz-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
     box-shadow: inset 0px 1px 0px 0px #C0C0C2;
   }
+
   .prog-table__header {
     padding: 1rem 0.25rem;
     text-align: left;
   }
       .prog-table__header--datetime {
+        /* For use on date and time columns */
         padding: 1rem;
         font-family: 'Raleway', sans-serif;
+        width: 6rem;
       }
+
   .prog-table__time {
     display: block;
     font-size: 0.875rem; /* 14px */
     margin-bottom: 0.5em; /* 7px */
   }
+
   .prog-table__date {
     font-size: 0.875rem; /* 14px */
     font-weight: 600;
@@ -2431,13 +2456,16 @@ height: 1.4375rem;
   border-top: solid 1px rgb(192, 192, 194);
   border-bottom: solid 1px rgb(192, 192, 194);
   padding: 0 2rem;
+  min-width: 70rem; /* matched on the prog-table */
 }
+
   .prog-controls__dividing-section{
     display:inline-block;
     padding: 0.6875rem 1rem 0.625rem; /* 11px 16px 10px */
     border-left: solid 1px #c0c0c2;
     margin-left: 1rem;
   }
+
   .programme-controls__button-dropdown{
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -2486,6 +2514,7 @@ height: 1.4375rem;
   border-radius: 3px;
   z-index: -1;
 }
+
 .hidden {
   display: none;
 }
