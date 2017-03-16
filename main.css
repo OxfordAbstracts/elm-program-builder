@@ -2373,6 +2373,7 @@ height: 1.4375rem;
     color: #ffffff;
     text-transform: capitalize;
     text-decoration: none;
+    line-height:1rem;
   }
 
   .prog-session__body {
@@ -2399,7 +2400,7 @@ height: 1.4375rem;
   .prog-session__track {
     font-size: 0.625rem;
     background-color: #444444;
-    font-weight: 900;
+    font-weight: 600;
     color: #ffffff;
     padding: 0.125rem;
     display: inline-block;
