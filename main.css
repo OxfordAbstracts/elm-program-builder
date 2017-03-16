@@ -2318,7 +2318,6 @@ height: 1.4375rem;
 
 #programme-builder {
   background-color: #f6f6f6;
-  /*min-width: 70rem;*/
 }
 
 /*---------------------------------*/
@@ -2410,16 +2409,15 @@ height: 1.4375rem;
 /*---------------------------------*/
 .prog-table {
   border-collapse: collapse;
-  min-width: 70rem; /* matched on the programme-controls */
+  min-width: 70rem; /* 1120px ensures sessions aren't overly compressed
+                      on smaller screens and user can scroll x-axis
+                       - matched on the programme-controls */
   table-layout: auto;
-  width: 100%;
 }
 
   .prog-table__wrapper {
     /* markup goes around the prog-table element */
     padding: 1rem 2rem 2rem;
-    min-width: 80rem; /* 1280px ensures sessions aren't overly compressed
-                        on smaller screens and user can scroll x-axis */
     background-color: rgb(246, 246, 246);
   }
 
