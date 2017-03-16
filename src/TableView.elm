@@ -204,7 +204,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
             if String.isEmpty trackName then
                 "none"
             else
-                "block"
+                "inline-block"
     in
         if timeDelimiter == lastTime then
             text ""
