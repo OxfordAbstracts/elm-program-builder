@@ -1252,7 +1252,7 @@ pre {
     .form--add-to-view { /* for use when:
                           .form is initially hidden and then
                           added to view / brought in to view */
-      margin: 0;
+      margin: 2rem auto;
       padding: 1rem 2rem;
       max-width: 66rem; /* suitable for 3 columns as question-sections */
       background-color: #f0f0f0;
@@ -2400,7 +2400,7 @@ height: 1.4375rem;
 /*---------------------------------*/
 .prog-table {
   border-collapse: collapse;
-  margin: 1rem;
+  margin: 2rem auto;
 }
   .prog-table__row {
     -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
