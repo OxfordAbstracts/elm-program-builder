@@ -2410,7 +2410,14 @@ height: 1.4375rem;
 .prog-table {
   border-collapse: collapse;
   margin: 2rem auto;
+  table-layout: fixed;
+  width: 100%;
 }
+
+  .prog-table__wrapper {
+    /* markup goes around the prog-table element */
+    padding: 2rem;
+  }
 
   .prog-table__row {
     -webkit-box-shadow: inset 0px 1px 0px 0px #C0C0C2;
@@ -2423,8 +2430,10 @@ height: 1.4375rem;
     text-align: left;
   }
       .prog-table__header--datetime {
+        /* For use on date and time columns */
         padding: 1rem;
         font-family: 'Raleway', sans-serif;
+        width: 6rem;
       }
 
   .prog-table__time {

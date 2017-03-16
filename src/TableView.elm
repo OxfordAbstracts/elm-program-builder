@@ -20,17 +20,19 @@ view model =
         columnElements =
             model.columns |> List.map (\c -> col [] [])
     in
-        table [ class "prog-table" ]
-            [ col [ attribute "span" "2" ] []
-            , div [] columnElements
-            , thead []
-                [ tr []
-                    (defaultHeaders
-                        ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
-                    )
+        div [ class "prog-table__wrapper" ]
+            [ table [ class "prog-table" ]
+                [ col [ attribute "span" "2" ] []
+                , div [] columnElements
+                , thead []
+                    [ tr []
+                        (defaultHeaders
+                            ++ (model.columns |> List.sortBy .id |> List.map viewColumnHeader)
+                        )
+                    ]
+                , tbody []
+                    (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                 ]
-            , tbody []
-                (List.concatMap (viewDate model numColumns) model.datesWithSessions)
             ]
 
 
