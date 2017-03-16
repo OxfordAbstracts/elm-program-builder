@@ -335,6 +335,12 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 
         trackName =
             getTrackName model.tracks trackId
+
+        hideTrackName =
+            if String.isEmpty trackName then
+                "none"
+            else
+                "inline-block"
     in
         if timeDelimiter == lastTime then
             text ""
@@ -355,7 +361,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
-                        , span [ class "prog-session__data prog-session__track" ]
+                        , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
                             [ text trackName ]
                         ]
 
