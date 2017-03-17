@@ -374,7 +374,12 @@ update msg model =
                         ( updateNewSession model (\ns -> { ns | trackId = Nothing }), Cmd.none )
 
             UpdateNewSessionDate newDate ->
-                ( { model | newSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )
+                case model.idOfSessionBeingEdited of
+                    Just id ->
+                        ( { model | editSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )
+
+                    Nothing ->
+                        ( { model | newSessionDate = DateUtils.valueStringToDateWithoutTime newDate }, Cmd.none )
 
             UpdateNewSessionStartHour new ->
                 ( updateNewSessionStartTime model (\st -> { st | hour = clamp 0 23 (toInt model new) }), Cmd.none )
@@ -475,6 +480,7 @@ update msg model =
                                                 |> (::) editSessionWithSubmissionIds
                                         else
                                             dateWithSessions.sessions
+                                                |> List.filter (\s -> s.id /= id)
                                 }
 
                             editedSession =
