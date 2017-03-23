@@ -117,6 +117,8 @@ view model =
     in
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
             [ span [ class "form__hint" ]
+                [ i [ class "icon icon--warning icon--margin-right" ] [], text "You will be unable to change any columns that have sessions" ]
+            , span [ class "form__hint" ]
                 [ span [ class "form__hint form__hint--large" ] [ text "*" ], text " indicates field is mandatory" ]
             , div [] [ column1 ]
             ]
