@@ -336,6 +336,7 @@ update msg model =
                     invalidSubmissionIds =
                         newSubmissionIdsString
                             |> split ","
+                            |> List.map String.trim
                             |> List.filter (\sub -> not (List.member sub validSubmissionIds))
                             |> join ", "
                 in
