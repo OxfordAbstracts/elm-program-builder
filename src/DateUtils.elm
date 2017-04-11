@@ -34,12 +34,25 @@ fromStringWithDefault string =
 
 dateWithoutTimeToDate : DateWithoutTime -> Date.Date
 dateWithoutTimeToDate dateWithoutTime =
-    (toString dateWithoutTime.year)
+    add0PaddingVal (toString dateWithoutTime.year)
         ++ "-"
-        ++ (toString dateWithoutTime.month)
+        ++ add0PaddingVal (toString dateWithoutTime.month)
         ++ "-"
-        ++ (toString dateWithoutTime.day)
+        ++ add0PaddingVal (toString dateWithoutTime.day)
         |> fromStringWithDefault
+
+
+add0PaddingVal dateVal =
+    let
+        int =
+            dateVal
+                |> String.toInt
+                |> Result.withDefault 0
+    in
+        if int < 10 then
+            "0" ++ dateVal
+        else
+            dateVal
 
 
 dateToDateWithoutTime : Date.Date -> DateWithoutTime
