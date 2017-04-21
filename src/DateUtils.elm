@@ -27,9 +27,34 @@ add0Padding hour =
 
 fromStringWithDefault : String -> Date.Date
 fromStringWithDefault string =
-    string
-        |> Date.fromString
-        |> Result.withDefault (Date.fromTime 0)
+    let
+        -- we need to add 0 padding values to prevent https://git.io/v9Jnd
+        x =
+            Debug.log "x" (string |> String.split "T")
+
+        y =
+            Debug.log "y" (string |> String.split "T" |> List.head)
+
+        -- dateString =
+        -- let
+        -- -- i.e. removes     "2017-06-18T00:00:00.000+00:00"
+        -- dateWithoutTimeStampstring
+        --   string
+        --       |> String.split "T"
+        --       |> List.head
+        dateStringWith0Padding =
+            string
+                -- |> String.split "T"
+                -- |> List.head
+                -- |> Maybe.withDefault ("1970-01-01")
+                |>
+                    String.split "-"
+                |> List.map add0PaddingVal
+                |> String.join "-"
+    in
+        dateStringWith0Padding
+            |> Date.fromString
+            |> Result.withDefault (Date.fromTime 0)
 
 
 dateWithoutTimeToDate : DateWithoutTime -> Date.Date
@@ -44,13 +69,13 @@ dateWithoutTimeToDate dateWithoutTime =
 
 add0PaddingVal dateVal =
     let
-        int =
+        dateInt =
             dateVal
                 |> String.toInt
                 |> Result.withDefault 0
     in
-        if int < 10 then
-            "0" ++ dateVal
+        if dateInt < 10 then
+            "0" ++ (toString dateInt)
         else
             dateVal
 

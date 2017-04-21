@@ -34,7 +34,7 @@ all =
             \() ->
                 let
                     result =
-                        "2017-06-18T00:00:00.000+00:00"
+                        "2017-06-18"
                             |> DateUtils.fromStringWithDefault
                             |> DateUtils.dateToDateWithoutTime
                 in
