@@ -8,6 +8,7 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import GetWarning exposing (..)
+import Json.Decode
 
 
 type alias NewSessionContext =
@@ -136,7 +137,7 @@ view context model =
             div []
                 [ div []
                     [ label [ class "form__label", for "track-input" ] [ text "Track *" ]
-                    , select [ id "track-input", onInput (UpdateNewSessionTrack << toTrackId), class "form__input form__input--dropdown" ]
+                    , select [ id "track-input", onChange (UpdateNewSessionTrack << toTrackId), class "form__input form__input--dropdown" ]
                         (noTracksDropdownOption :: List.map (\t -> option [ value (toString t.id), selected (context.session.trackId == Just t.id) ] [ text t.name ]) model.tracks)
                     ]
                 , div []
@@ -272,7 +273,7 @@ view context model =
                 , div
                     [ class "form__question-sub-section form__question-sub-section--table" ]
                     [ label [ class "form__label", for "column-input" ] [ text "Column *" ]
-                    , select [ id "column-input", onInput UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
+                    , select [ id "column-input", onChange UpdateNewSessionColumn, class "form__input form__input--dropdown" ]
                         (allColumnsDropdownOption :: columnOptions)
                     ]
                 ]
@@ -282,3 +283,8 @@ view context model =
                 , div [ class "form__question-sub-section form__question-sub-section--table" ] [ column3 ]
                 ]
             ]
+
+
+onChange : (String -> msg) -> Attribute msg
+onChange handler =
+    on "change" <| Json.Decode.map handler <| Json.Decode.at [ "target", "value" ] Json.Decode.string
