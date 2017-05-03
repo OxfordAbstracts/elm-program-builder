@@ -43,16 +43,10 @@ dateWithoutTimeToDate dateWithoutTime =
 
 
 add0PaddingVal dateVal =
-    let
-        int =
-            dateVal
-                |> String.toInt
-                |> Result.withDefault 0
-    in
-        if int < 10 then
-            "0" ++ dateVal
-        else
-            dateVal
+    if String.length dateVal < 2 then
+        "0" ++ dateVal
+    else
+        dateVal
 
 
 dateToDateWithoutTime : Date.Date -> DateWithoutTime
@@ -84,9 +78,15 @@ dateWithoutTimeToValueString dateWithoutTime =
 
 valueStringToDateWithoutTime : String -> DateWithoutTime
 valueStringToDateWithoutTime dateString =
-    dateString
-        |> fromStringWithDefault
-        |> dateToDateWithoutTime
+    let
+        paddedDateString =
+            String.split "-" dateString
+                |> List.map add0PaddingVal
+                |> String.join "-"
+    in
+        paddedDateString
+            |> fromStringWithDefault
+            |> dateToDateWithoutTime
 
 
 displayDateWithoutTime : DateWithoutTime -> String
