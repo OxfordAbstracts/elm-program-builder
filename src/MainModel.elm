@@ -22,6 +22,7 @@ type alias Model =
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInput : String
+    , individualScheduledSubmissions: List IndividualScheduledSubmission
     , submissions : List Submission
     , datePickerClosed : Bool
     , pickedDates : List DateWithoutTime
@@ -32,8 +33,14 @@ type alias Model =
     , showPublishPage : Bool
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
+    , scheduleSubmissionsIndividually : Bool
     }
 
+type alias IndividualScheduledSubmission = {
+  submissionId: String
+  , startTime : TimeOfDay
+  , endTime : TimeOfDay
+}
 
 type alias Flags =
     { eventId : String
@@ -72,7 +79,8 @@ initialModel =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
-    , submissionIdsInput = ""
+    , submissionIdsInput = "",
+    , individualScheduledSubmissions = [ ],
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
@@ -83,6 +91,7 @@ initialModel =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = False
+    , scheduleSubmissionsIndividually = False
     }
 
 

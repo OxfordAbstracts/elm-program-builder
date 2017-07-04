@@ -81,6 +81,83 @@ view context model =
         noTracksDropdownOption =
             option [ value "", selected (context.session.trackId == Nothing) ] [ text "No track" ]
 
+        submissionsInput =
+            if model.scheduleSubmissionsIndividually then
+                div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
+                    [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                        [ label [ class "form__label" ]
+                            [ text "Submission Id" ]
+                        , input
+                            [ class "form__input"
+                            , value model.submissionIdsInput
+                            , onInput UpdateNewSessionSubmissionIds
+                              --UpdateIndividualSessionScheduleList
+                            ]
+                            []
+                        ]
+                    , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                        [ label [ class "form__label" ]
+                            [ text "Start time *" ]
+                        , input
+                            [ class "form__input form__input--time-hour-prog-builder"
+                            , type_ "number"
+                            , value (toStringIgnore0 context.session.startTime.hour)
+                            , onInput UpdateNewSessionStartHour
+                            , placeholder "00"
+                            ]
+                            []
+                        , input
+                            [ class "form__input form__input--time-min-prog-builder"
+                            , type_ "number"
+                            , value (toStringIgnore0 context.session.startTime.minute)
+                            , onInput UpdateNewSessionStartMinute
+                            , placeholder "00"
+                            ]
+                            []
+                        ]
+                    , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                        [ label [ class "form__label" ]
+                            [ text "End time *" ]
+                        , input
+                            [ class "form__input form__input--time-hour-prog-builder"
+                            , type_ "number"
+                            , value (toStringIgnore0 context.session.endTime.hour)
+                            , onInput UpdateNewSessionEndHour
+                            , placeholder "00"
+                            ]
+                            []
+                        , input
+                            [ class "form__input form__input--time-min-prog-builder"
+                            , type_ "number"
+                            , value (toStringIgnore0 context.session.startTime.minute)
+                            , onInput UpdateNewSessionStartMinute
+                            , placeholder "00"
+                            ]
+                            []
+                        ]
+                    , button
+                        [ class "button button--tertiary"
+                        , id "add-new-date-btn"
+                        , type_ "button"
+                        , onClick ScheduleAnotherIndividualSubmission
+                        ]
+                        [ text "Schedule another" ]
+                    ]
+            else
+                div []
+                    [ span [ class "form__label form__label--sub" ]
+                        [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                    , textarea
+                        [ class "form__input form__input--textarea"
+                        , id "submissions-input"
+                        , rows 2
+                        , cols 32
+                        , value model.submissionIdsInput
+                        , onInput UpdateNewSessionSubmissionIds
+                        ]
+                        [ text model.submissionIdsInput ]
+                    ]
+
         column1 =
             div []
                 [ label [ class "form__label", for "session-name-input" ]
@@ -106,21 +183,22 @@ view context model =
                     [ text context.session.description ]
                 , label [ for "submissions-input" ]
                     [ text "Submissions"
-                    , span [ class "form__label form__label--sub" ]
-                        [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                    , label
+                        [ class "form__label", for "session-name-input" ]
+                        [ text "Schedule submissions individually" ]
+                    , input
+                        [ class "form__input"
+                        , id "schedule-individually-input"
+                        , type_ "checkbox"
+                        , checked model.scheduleSubmissionsIndividually
+                        , onClick ToggleScheduleSubmissionsIndividually
+                        ]
+                        []
+                    , submissionsInput
+                    , span [ class "form__hint" ]
+                        [ text "" ]
+                    , b [] [ text (invalidSubmissionsWarning context model) ]
                     ]
-                , textarea
-                    [ class "form__input form__input--textarea"
-                    , id "submissions-input"
-                    , rows 2
-                    , cols 32
-                    , value model.submissionIdsInput
-                    , onInput UpdateNewSessionSubmissionIds
-                    ]
-                    [ text model.submissionIdsInput ]
-                , span [ class "form__hint" ]
-                    [ text "" ]
-                , b [] [ text (invalidSubmissionsWarning context model) ]
                 ]
 
         toTrackId trackIdString =

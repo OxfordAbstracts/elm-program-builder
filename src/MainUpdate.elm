@@ -170,6 +170,13 @@ update msg model =
                 , Cmd.none
                 )
 
+            ToggleScheduleSubmissionsIndividually ->
+                ( { model
+                    | scheduleSubmissionsIndividually = not model.scheduleSubmissionsIndividually
+                  }
+                , Cmd.none
+                )
+
             CancelAction ->
                 ( { model
                     | showNewTrackUi = False
@@ -672,3 +679,11 @@ update msg model =
 
             ShowValidationMessage ->
                 ( { model | showValidation = True }, Cmd.none )
+
+            ScheduleAnotherIndividualSubmission ->
+                ( { model
+                    | pickedTracks =
+                        appendNewElementToList model.pickedTracks (Track 0 "" "")
+                  }
+                , Cmd.none
+                )
