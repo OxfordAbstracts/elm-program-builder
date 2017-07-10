@@ -87,7 +87,7 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = (Just 1)
-                        , submissionIds = [ 1 ]
+                        , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }
 
                     modelWithEditingId =
@@ -131,7 +131,44 @@ all =
                         , chair = "test chair"
                         , location = "test location"
                         , trackId = (Just 1)
-                        , submissionIds = [ 1 ]
+                        , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
+                        }
+
+                    modelWithNewSession =
+                        { dummyModel
+                            | newSession = newSession
+                            , submissionIdsInput = "1,4,5"
+                        }
+
+                    modelAfterUpdate =
+                        modelWithNewSession
+                            |> MainUpdate.update MainMessages.CreateNewSession
+                            |> Tuple.first
+
+                    addedSession =
+                        modelAfterUpdate
+                            |> .datesWithSessions
+                            |> List.concatMap .sessions
+                            |> List.filter (\s -> s.id == 1)
+                            |> List.head
+                            |> Maybe.withDefault (MainModel.blankSession -1)
+                in
+                    Expect.equal (Just addedSession) (Just newSession)
+        , test """CreateNewSession should add the new session to sessions and the invalid submission
+            ids should not be added to submissionIds from the submissionIdInput""" <|
+            \() ->
+                let
+                    newSession =
+                        { id = 1
+                        , name = "new test name"
+                        , description = "new test description"
+                        , startTime = { hour = 12, minute = 0 }
+                        , endTime = { hour = 9, minute = 0 }
+                        , sessionColumn = MainModel.ColumnId 1
+                        , chair = "test chair"
+                        , location = "test location"
+                        , trackId = (Just 1)
+                        , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }
 
                     modelWithNewSession =

@@ -51,7 +51,7 @@ all =
                                 , chair = "test chair"
                                 , location = "test location"
                                 , trackId = (Just 1)
-                                , submissionIds = []
+                                , submissions = []
                                 }
                             , editSessionDate = { year = 2017, month = 1, day = 1 }
                             , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
@@ -137,7 +137,7 @@ all =
                                 , chair = "test chair"
                                 , location = "test location"
                                 , trackId = (Just 1)
-                                , submissionIds = []
+                                , submissions = []
                                 }
                             , datesWithSessions = [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = initialSessions } ]
                             , newSessionDate = { year = 2017, month = 1, day = 1 }

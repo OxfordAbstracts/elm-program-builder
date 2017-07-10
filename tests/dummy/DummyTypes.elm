@@ -33,6 +33,7 @@ dummyModel =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = True
+    , showEditSubmissionTimesView = False
     }
 
 
