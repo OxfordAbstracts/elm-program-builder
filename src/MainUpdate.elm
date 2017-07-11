@@ -69,6 +69,7 @@ submissionsToInputText sessionSubmissions =
                 { submissionIds = submissionIds
                 , startTime = first.startTime
                 , endTime = first.endTime
+                , id = first.id
                 }
     in
         List.Extra.lift2 zipIdsAndTime submissionIds groupedSubmissions
@@ -351,7 +352,7 @@ update msg model =
                     ( { model
                         | datesWithSessions = updateDatesWithSessions
                         , newSession = blankSession 1
-                        , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing } ]
+                        , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
                         , showValidation = False
                       }
                     , Api.postModelToDb apiModelPost model.eventId
@@ -426,7 +427,12 @@ update msg model =
                     addTimeIfNotExists submissionIdsInputs =
                         case List.Extra.find hasSameTime submissionIdsInputs of
                             Nothing ->
-                                { submissionIds = "", startTime = startTime, endTime = endTime } :: submissionIdsInputs
+                                { submissionIds = ""
+                                , startTime = startTime
+                                , endTime = endTime
+                                , id = generateId submissionIdsInputs
+                                }
+                                    :: submissionIdsInputs
 
                             Just _ ->
                                 submissionIdsInputs
@@ -601,7 +607,7 @@ update msg model =
                                 , editSession = blankSession 1
                                 , showNewSessionUi = False
                                 , idOfSessionBeingEdited = Nothing
-                                , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing } ]
+                                , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
                               }
                             , Api.postModelToDb apiUpdate model.eventId
                             )
@@ -815,3 +821,10 @@ updateSessionSubmissions model sessionId submissionIds update =
                 sub
     in
         { model | datesWithSessions = List.map updateDateWithSessions model.datesWithSessions }
+
+
+generateId =
+    List.map .id
+        >> List.maximum
+        >> Maybe.withDefault 0
+        >> (+) 1

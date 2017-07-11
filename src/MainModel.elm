@@ -42,6 +42,7 @@ type alias SubmissionIdInput =
     { submissionIds : String
     , startTime : Maybe TimeOfDay
     , endTime : Maybe TimeOfDay
+    , id : Int
     }
 
 
@@ -82,7 +83,7 @@ initialModel =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
-    , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing } ]
+    , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates

@@ -62,7 +62,7 @@ viewSessionSubmissionTimes submissionIdsInputs session =
     in
         table [ class "form" ]
             ([ tr []
-                [ th [] [ text "Sub id" ]
+                [ th [] [ text "Submission ids" ]
                 , th [] [ text "Start Time" ]
                 , th [] [ text "End Time" ]
                 ]
