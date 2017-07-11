@@ -275,4 +275,41 @@ all =
                         }
                 in
                     Expect.equal result ( expectedModel, Cmd.none )
+        , test """DeleteSubmissionInput should delete the submissionIdsInput
+                    with the given id""" <|
+            \() ->
+                let
+                    result =
+                        MainUpdate.update
+                            (MainMessages.DeleteSubmissionInput 1)
+                            model
+
+                    model =
+                        { dummyModel
+                            | submissionIdsInputs =
+                                [ { submissionIds = ""
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 1
+                                  }
+                                , { submissionIds = ""
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 2
+                                  }
+                                ]
+                        }
+
+                    expectedModel =
+                        { dummyModel
+                            | submissionIdsInputs =
+                                [ { submissionIds = ""
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 2
+                                  }
+                                ]
+                        }
+                in
+                    Expect.equal result ( expectedModel, Cmd.none )
         ]

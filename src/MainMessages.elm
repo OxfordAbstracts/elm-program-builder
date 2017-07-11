@@ -13,6 +13,7 @@ type Msg
     | UpdateColumns
     | CreateNewSession
     | CreateSubmissionInput
+    | DeleteSubmissionInput Int
     | UpdateTracks
     | DeleteColumn Int
     | DeleteDate Int

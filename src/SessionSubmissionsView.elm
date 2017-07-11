@@ -66,6 +66,7 @@ viewSessionSubmissionTimes submissionIdsInputs session =
                     [ th [] [ text "Submission ids" ]
                     , th [] [ text "Start Time" ]
                     , th [] [ text "End Time" ]
+                    , th [] [ text "" ]
                     ]
                  ]
                     ++ (List.map (viewSessionSubmissionTime session) submissionIdsInputs)
@@ -114,6 +115,8 @@ viewSessionSubmissionTime session submissionIdInput =
                     (SetSessionSubmissionEndTimes session.id submissionIds)
                     end
                 ]
+            , td []
+                [ span [ onClick (DeleteSubmissionInput submissionIdInput.id) ] [ text "X" ] ]
             ]
 
 

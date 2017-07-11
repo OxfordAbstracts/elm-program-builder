@@ -818,6 +818,16 @@ update msg model =
                 in
                     ( newModel, Cmd.none )
 
+            DeleteSubmissionInput id ->
+                let
+                    newModel =
+                        { model
+                            | submissionIdsInputs =
+                                List.filter (.id >> (/=) id) model.submissionIdsInputs
+                        }
+                in
+                    ( newModel, Cmd.none )
+
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
 updateSessionSubmissions model sessionId submissionIds update =
