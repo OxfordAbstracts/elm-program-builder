@@ -12,6 +12,7 @@ type Msg
     | CancelAction
     | UpdateColumns
     | CreateNewSession
+    | CreateSubmissionInput
     | UpdateTracks
     | DeleteColumn Int
     | DeleteDate Int
@@ -46,7 +47,7 @@ type Msg
     | UpdateNewSessionName String
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
-    | UpdateNewSessionSubmissionIds (Maybe MainModel.TimeOfDay) (Maybe MainModel.TimeOfDay) String
+    | UpdateNewSessionSubmissionIds Int (Maybe MainModel.TimeOfDay) (Maybe MainModel.TimeOfDay) String
     | UpdateNewSessionTrack (Maybe MainModel.TrackId)
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String

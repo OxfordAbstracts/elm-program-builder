@@ -42,7 +42,7 @@ view model session =
                     , rows 2
                     , cols 32
                     , value submissionsWithNoTimes
-                    , onInput (UpdateNewSessionSubmissionIds Nothing Nothing)
+                    , onInput (UpdateNewSessionSubmissionIds 1 Nothing Nothing)
                     ]
                     [ text submissionsWithNoTimes ]
                 , span [ class "form__hint" ]
@@ -60,15 +60,18 @@ viewSessionSubmissionTimes submissionIdsInputs session =
                 |> List.map getComparableTime
                 |> List.Extra.unique
     in
-        table [ class "form" ]
-            ([ tr []
-                [ th [] [ text "Submission ids" ]
-                , th [] [ text "Start Time" ]
-                , th [] [ text "End Time" ]
-                ]
-             ]
-                ++ (List.map (viewSessionSubmissionTime session) submissionIdsInputs)
-            )
+        div []
+            [ table [ class "form" ]
+                ([ tr []
+                    [ th [] [ text "Submission ids" ]
+                    , th [] [ text "Start Time" ]
+                    , th [] [ text "End Time" ]
+                    ]
+                 ]
+                    ++ (List.map (viewSessionSubmissionTime session) submissionIdsInputs)
+                )
+            , button [ class "button button--primary", onClick CreateSubmissionInput ] [ text "Add new time" ]
+            ]
 
 
 viewSessionSubmissionTime : Session -> SubmissionIdInput -> Html Msg
@@ -91,7 +94,11 @@ viewSessionSubmissionTime session submissionIdInput =
             [ td []
                 [ input
                     [ value submissionIdInput.submissionIds
-                    , onInput (UpdateNewSessionSubmissionIds submissionIdInput.startTime submissionIdInput.endTime)
+                    , onInput
+                        (UpdateNewSessionSubmissionIds submissionIdInput.id
+                            submissionIdInput.startTime
+                            submissionIdInput.endTime
+                        )
                     ]
                     []
                 ]

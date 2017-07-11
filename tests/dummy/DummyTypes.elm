@@ -32,7 +32,13 @@ makeDummyModel sessions =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
-    , submissionIdsInput = ""
+    , submissionIdsInputs =
+        [ { submissionIds = ""
+          , startTime = Nothing
+          , endTime = Nothing
+          , id = 1
+          }
+        ]
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates

@@ -405,7 +405,7 @@ update msg model =
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
 
-            UpdateNewSessionSubmissionIds startTime endTime newSubmissionIdsString ->
+            UpdateNewSessionSubmissionIds id startTime endTime newSubmissionIdsString ->
                 let
                     validSubmissionIds =
                         model.submissions
@@ -425,7 +425,7 @@ update msg model =
                             |> List.map setIfHasSameTime
 
                     addTimeIfNotExists submissionIdsInputs =
-                        case List.Extra.find hasSameTime submissionIdsInputs of
+                        case List.Extra.find hasId submissionIdsInputs of
                             Nothing ->
                                 { submissionIds = ""
                                 , startTime = startTime
@@ -438,13 +438,13 @@ update msg model =
                                 submissionIdsInputs
 
                     setIfHasSameTime submissionIdsInput =
-                        if hasSameTime submissionIdsInput then
+                        if hasId submissionIdsInput then
                             { submissionIdsInput | submissionIds = newSubmissionIdsString }
                         else
                             submissionIdsInput
 
-                    hasSameTime x =
-                        x.startTime == startTime && x.endTime == endTime
+                    hasId x =
+                        x.id == id
                 in
                     ( { model
                         | submissionIdsInputs = newSubmissionIdsInputs
@@ -798,6 +798,23 @@ update msg model =
                             sessionId
                             submissionIds
                             (\sub -> { sub | endTime = DateUtils.parseTimeOfDay val })
+                in
+                    ( newModel, Cmd.none )
+
+            CreateSubmissionInput ->
+                let
+                    newModel =
+                        ({ model
+                            | submissionIdsInputs =
+                                model.submissionIdsInputs
+                                    ++ [ { submissionIds = ""
+                                         , startTime = Nothing
+                                         , endTime = Nothing
+                                         , id = generateId model.submissionIdsInputs
+                                         }
+                                       ]
+                         }
+                        )
                 in
                     ( newModel, Cmd.none )
 

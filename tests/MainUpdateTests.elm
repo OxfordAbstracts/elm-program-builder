@@ -94,8 +94,13 @@ all =
                         { dummyModel
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
-                            , submissionIdsInput =
-                                "1 , 4,5"
+                            , submissionIdsInputs =
+                                [ { submissionIds = "1 , 4,5"
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 1
+                                  }
+                                ]
                                 -- numbers with whitespace should be parsed
                         }
 
@@ -137,7 +142,13 @@ all =
                     modelWithNewSession =
                         { dummyModel
                             | newSession = newSession
-                            , submissionIdsInput = "1,4,5"
+                            , submissionIdsInputs =
+                                [ { submissionIds = "1,4,5"
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 1
+                                  }
+                                ]
                         }
 
                     modelAfterUpdate =
@@ -236,6 +247,32 @@ all =
                                 ]
                                 "Chairwoman Sue"
                             ]
+                in
+                    Expect.equal result ( expectedModel, Cmd.none )
+        , test """CreateSubmissionInput should add a new submissionIdsInput
+                  with a unique id""" <|
+            \() ->
+                let
+                    result =
+                        MainUpdate.update
+                            MainMessages.CreateSubmissionInput
+                            dummyModel
+
+                    expectedModel =
+                        { dummyModel
+                            | submissionIdsInputs =
+                                [ { submissionIds = ""
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 1
+                                  }
+                                , { submissionIds = ""
+                                  , startTime = Nothing
+                                  , endTime = Nothing
+                                  , id = 2
+                                  }
+                                ]
+                        }
                 in
                     Expect.equal result ( expectedModel, Cmd.none )
         ]
