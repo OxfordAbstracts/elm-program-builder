@@ -9,6 +9,7 @@ import Ports exposing (..)
 import Task
 import Set
 import Date exposing (Date)
+import List.Extra
 
 
 addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
@@ -17,24 +18,32 @@ addSubmissionIdsInputToSession submissionIdsInput session submissions =
         validSubmissionIds =
             List.map .id submissions
 
-        -- set.fromlist and tolist remove duplicates from list
-        submissionIds =
+        removeDuplicates =
+            Set.fromList >> Set.toList
+
+        newSubmissions =
             submissionIdsInput
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
-                |> Set.fromList
-                |> Set.toList
+                |> removeDuplicates
+                |> List.map addNothingTimes
+
+        addNothingTimes id =
+            { id = id
+            , startTime = Nothing
+            , endTime = Nothing
+            }
     in
         { session
-            | submissionIds = submissionIds
+            | submissions = newSubmissions
         }
 
 
-submissionIdsToInputText : List Int -> String
-submissionIdsToInputText submissionIds =
+submissionsToInputText : List SessionSubmission -> String
+submissionsToInputText submissionIds =
     submissionIds
-        |> List.map toString
+        |> List.map (.id >> toString)
         |> join ","
 
 
@@ -215,6 +224,14 @@ update msg model =
                       }
                     , command
                     )
+
+            ToggleSubmissionTimesView ->
+                ( { model
+                    | showEditSubmissionTimesView =
+                        not model.showEditSubmissionTimesView
+                  }
+                , Cmd.none
+                )
 
             UpdateColumns ->
                 let
@@ -438,7 +455,7 @@ update msg model =
                             |> Maybe.withDefault (DateWithoutTime 2017 1 1)
 
                     submissionIdsInput =
-                        submissionIdsToInputText session.submissionIds
+                        submissionsToInputText session.submissions
                 in
                     ( { model
                         | idOfSessionBeingEdited =
@@ -672,3 +689,46 @@ update msg model =
 
             ShowValidationMessage ->
                 ( { model | showValidation = True }, Cmd.none )
+
+            SetSessionSubmissionStartTimes sessionId submissionIds val ->
+                let
+                    newModel =
+                        updateSessionSubmissions
+                            model
+                            sessionId
+                            submissionIds
+                            (\sub -> { sub | startTime = DateUtils.parseTimeOfDay val })
+                in
+                    ( newModel, Cmd.none )
+
+            SetSessionSubmissionEndTimes sessionId submissionIds val ->
+                let
+                    newModel =
+                        updateSessionSubmissions
+                            model
+                            sessionId
+                            submissionIds
+                            (\sub -> { sub | endTime = DateUtils.parseTimeOfDay val })
+                in
+                    ( newModel, Cmd.none )
+
+
+updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
+updateSessionSubmissions model sessionId submissionIds update =
+    let
+        updateDateWithSessions dws =
+            { dws | sessions = List.map updateSession dws.sessions }
+
+        updateSession s =
+            if s.id == sessionId then
+                { s | submissions = List.map updateSubmission s.submissions }
+            else
+                s
+
+        updateSubmission sub =
+            if List.member sub.id submissionIds then
+                update sub
+            else
+                sub
+    in
+        { model | datesWithSessions = List.map updateDateWithSessions model.datesWithSessions }

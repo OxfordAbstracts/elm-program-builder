@@ -32,6 +32,7 @@ type alias Model =
     , showPublishPage : Bool
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
+    , showEditSubmissionTimesView : Bool
     }
 
 
@@ -83,6 +84,7 @@ initialModel =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = False
+    , showEditSubmissionTimesView = False
     }
 
 
@@ -100,8 +102,15 @@ type alias Session =
     , sessionColumn : SessionColumn
     , trackId : Maybe TrackId
     , location : String
-    , submissionIds : List Int
+    , submissions : List SessionSubmission
     , chair : String
+    }
+
+
+type alias SessionSubmission =
+    { id : Int
+    , startTime : Maybe TimeOfDay
+    , endTime : Maybe TimeOfDay
     }
 
 

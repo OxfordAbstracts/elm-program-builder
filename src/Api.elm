@@ -2,10 +2,10 @@ module Api exposing (..)
 
 import MainModel exposing (..)
 import MainMessages exposing (..)
-import Json.Decode
-import Json.Decode.Pipeline exposing (required, decode)
+import Json.Decode exposing (nullable)
+import Json.Decode.Pipeline exposing (required, optional, decode)
 import Http
-import Json.Encode
+import Json.Encode as Encode
 
 
 apiUpdateGetDecoder : Json.Decode.Decoder ApiUpdateGet
@@ -27,60 +27,69 @@ apiUpdatePostDecoder =
         |> required "published" (Json.Decode.bool)
 
 
-encodeApiUpdatePost : ApiUpdatePost -> Json.Encode.Value
+encodeApiUpdatePost : ApiUpdatePost -> Encode.Value
 encodeApiUpdatePost record =
-    Json.Encode.object
-        [ ( "datesWithSessions", Json.Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
-        , ( "tracks", Json.Encode.list <| List.map trackEncoder record.tracks )
-        , ( "columns", Json.Encode.list <| List.map columnEncoder record.columns )
-        , ( "published", Json.Encode.bool record.published )
+    Encode.object
+        [ ( "datesWithSessions", Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
+        , ( "tracks", Encode.list <| List.map trackEncoder record.tracks )
+        , ( "columns", Encode.list <| List.map columnEncoder record.columns )
+        , ( "published", Encode.bool record.published )
         ]
 
 
-sessionEncoder : Session -> Json.Encode.Value
+sessionEncoder : Session -> Encode.Value
 sessionEncoder session =
-    Json.Encode.object
-        [ ( "id", Json.Encode.int session.id )
-        , ( "name", Json.Encode.string session.name )
-        , ( "description", Json.Encode.string session.description )
+    Encode.object
+        [ ( "id", Encode.int session.id )
+        , ( "name", Encode.string session.name )
+        , ( "description", Encode.string session.description )
         , ( "startTime", timeEncoder session.startTime )
         , ( "endTime", timeEncoder session.endTime )
         , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
         , ( "trackId", sessionTrackIdEncoder session.trackId )
-        , ( "location", Json.Encode.string session.location )
-        , ( "submissionIds", Json.Encode.list <| List.map Json.Encode.int session.submissionIds )
-        , ( "chair", Json.Encode.string session.chair )
+        , ( "location", Encode.string session.location )
+        , ( "submissions", Encode.list <| List.map sessionSubmissionEncoder session.submissions )
+        , ( "chair", Encode.string session.chair )
         ]
 
 
-sessionTrackIdEncoder : Maybe TrackId -> Json.Encode.Value
+sessionSubmissionEncoder : SessionSubmission -> Encode.Value
+sessionSubmissionEncoder submission =
+    Encode.object
+        [ ( "id", Encode.int submission.id )
+        , ( "startTime", Maybe.withDefault Encode.null (Maybe.map timeEncoder submission.startTime) )
+        , ( "endTime", Maybe.withDefault Encode.null (Maybe.map timeEncoder submission.endTime) )
+        ]
+
+
+sessionTrackIdEncoder : Maybe TrackId -> Encode.Value
 sessionTrackIdEncoder record =
     case record of
         Just int ->
-            Json.Encode.int int
+            Encode.int int
 
         Nothing ->
-            Json.Encode.null
+            Encode.null
 
 
-sessionColumnEncoder : SessionColumn -> Json.Encode.Value
+sessionColumnEncoder : SessionColumn -> Encode.Value
 sessionColumnEncoder record =
     case record of
         ColumnId int ->
-            Json.Encode.int int
+            Encode.int int
 
         AllColumns ->
-            Json.Encode.string "All columns"
+            Encode.string "All columns"
 
         NoColumns ->
-            Json.Encode.null
+            Encode.null
 
 
-dateWithSessionsEncoder : DateWithSessions -> Json.Encode.Value
+dateWithSessionsEncoder : DateWithSessions -> Encode.Value
 dateWithSessionsEncoder record =
-    Json.Encode.object
+    Encode.object
         [ ( "date", dateEncoder record.date )
-        , ( "sessions", Json.Encode.list <| List.map sessionEncoder record.sessions )
+        , ( "sessions", Encode.list <| List.map sessionEncoder record.sessions )
         ]
 
 
@@ -102,8 +111,16 @@ sessionDecoder =
         |> required "sessionColumn" sessionColumnDecoder
         |> required "trackId" sessionTrackIdDecoder
         |> required "location" Json.Decode.string
-        |> required "submissionIds" (Json.Decode.list Json.Decode.int)
+        |> required "submissions" (Json.Decode.list sessionSubmissionDecoder)
         |> required "chair" Json.Decode.string
+
+
+sessionSubmissionDecoder : Json.Decode.Decoder SessionSubmission
+sessionSubmissionDecoder =
+    decode SessionSubmission
+        |> required "id" Json.Decode.int
+        |> optional "startTime" (nullable timeDecoder) Nothing
+        |> optional "endTime" (nullable timeDecoder) Nothing
 
 
 sessionTrackIdDecoder : Json.Decode.Decoder (Maybe TrackId)
@@ -132,12 +149,12 @@ stringColumnDecoder string =
             NoColumns
 
 
-trackEncoder : Track -> Json.Encode.Value
+trackEncoder : Track -> Encode.Value
 trackEncoder record =
-    Json.Encode.object
-        [ ( "id", Json.Encode.int record.id )
-        , ( "name", Json.Encode.string record.name )
-        , ( "description", Json.Encode.string record.description )
+    Encode.object
+        [ ( "id", Encode.int record.id )
+        , ( "name", Encode.string record.name )
+        , ( "description", Encode.string record.description )
         ]
 
 
@@ -149,11 +166,11 @@ trackDecoder =
         |> required "description" Json.Decode.string
 
 
-columnEncoder : Column -> Json.Encode.Value
+columnEncoder : Column -> Encode.Value
 columnEncoder record =
-    Json.Encode.object
-        [ ( "id", Json.Encode.int record.id )
-        , ( "name", Json.Encode.string record.name )
+    Encode.object
+        [ ( "id", Encode.int record.id )
+        , ( "name", Encode.string record.name )
         ]
 
 
@@ -172,12 +189,12 @@ dateDecoder =
         |> required "day" Json.Decode.int
 
 
-dateEncoder : DateWithoutTime -> Json.Encode.Value
+dateEncoder : DateWithoutTime -> Encode.Value
 dateEncoder record =
-    Json.Encode.object
-        [ ( "year", Json.Encode.int record.year )
-        , ( "month", Json.Encode.int record.month )
-        , ( "day", Json.Encode.int record.day )
+    Encode.object
+        [ ( "year", Encode.int record.year )
+        , ( "month", Encode.int record.month )
+        , ( "day", Encode.int record.day )
         ]
 
 
@@ -188,11 +205,11 @@ timeDecoder =
         |> required "minute" Json.Decode.int
 
 
-timeEncoder : TimeOfDay -> Json.Encode.Value
+timeEncoder : TimeOfDay -> Encode.Value
 timeEncoder record =
-    Json.Encode.object
-        [ ( "hour", Json.Encode.int record.hour )
-        , ( "minute", Json.Encode.int record.minute )
+    Encode.object
+        [ ( "hour", Encode.int record.hour )
+        , ( "minute", Encode.int record.minute )
         ]
 
 
@@ -200,6 +217,11 @@ submissionDecoder : Json.Decode.Decoder Submission
 submissionDecoder =
     decode Submission
         |> required "id" Json.Decode.int
+
+
+
+-- |> optional "startTime" (nullable timeDecoder) Nothing
+-- |> optional "endTime" (nullable timeDecoder) Nothing
 
 
 getModelFromDb : String -> Cmd Msg

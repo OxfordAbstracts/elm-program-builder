@@ -18,18 +18,6 @@ all =
                 Expect.equal
                     (Ok (DateUtils.fromStringWithDefault "2017-06-18T00:00:00.000+00:00"))
                     (Date.fromString "2017-06-18T00:00:00.000+00:00")
-        , test "dateWithoutTimeToDate correctly converts a date record without a time to the correct date" <|
-            \() ->
-                let
-                    expectedDate =
-                        case Date.fromString "2017-6-18" of
-                            Err str ->
-                                Debug.crash str
-
-                            Ok date ->
-                                date
-                in
-                    Expect.equal (DateUtils.dateWithoutTimeToDate { year = 2017, month = 6, day = 18 }) expectedDate
         , test "dateToDateWithoutTime correctly converts a date to our date record without a time" <|
             \() ->
                 let

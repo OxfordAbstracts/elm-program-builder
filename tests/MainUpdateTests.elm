@@ -154,41 +154,88 @@ all =
                             |> Maybe.withDefault (MainModel.blankSession -1)
                 in
                     Expect.equal (Just addedSession) (Just newSession)
-        , test """CreateNewSession should add the new session to sessions and the invalid submission
-            ids should not be added to submissionIds from the submissionIdInput""" <|
+        , test """SetSessionSubmissionStartTimes should set the startTime
+            of the submissions with the specified ids in the session with the specified id""" <|
             \() ->
                 let
-                    newSession =
-                        { id = 1
-                        , name = "new test name"
-                        , description = "new test description"
-                        , startTime = { hour = 12, minute = 0 }
-                        , endTime = { hour = 9, minute = 0 }
-                        , sessionColumn = MainModel.ColumnId 1
-                        , chair = "test chair"
-                        , location = "test location"
-                        , trackId = (Just 1)
-                        , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
-                        }
+                    result =
+                        MainUpdate.update
+                            (MainMessages.SetSessionSubmissionStartTimes 1 [ 3, 4 ] "18:15")
+                            dummyModelWithSessions
 
-                    modelWithNewSession =
-                        { dummyModel
-                            | newSession = newSession
-                            , submissionIdsInput = "1,4,5"
-                        }
-
-                    modelAfterUpdate =
-                        modelWithNewSession
-                            |> MainUpdate.update MainMessages.CreateNewSession
-                            |> Tuple.first
-
-                    addedSession =
-                        modelAfterUpdate
-                            |> .datesWithSessions
-                            |> List.concatMap .sessions
-                            |> List.filter (\s -> s.id == 1)
-                            |> List.head
-                            |> Maybe.withDefault (MainModel.blankSession -1)
+                    expectedModel =
+                        makeDummyModel
+                            [ MainModel.Session
+                                1
+                                "Conceptualising diabetes self-management as an occupation"
+                                "This a description of the inital session"
+                                (MainModel.TimeOfDay 9 0)
+                                (MainModel.TimeOfDay 9 1)
+                                (MainModel.ColumnId 1)
+                                (Just 1)
+                                "The aquariam"
+                                [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
+                                , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
+                                , { id = 3, startTime = Just { hour = 18, minute = 15 }, endTime = Just { hour = 12, minute = 30 } }
+                                , { id = 4, startTime = Just { hour = 18, minute = 15 }, endTime = Just { hour = 12, minute = 30 } }
+                                ]
+                                "Chairman Dave"
+                            , MainModel.Session
+                                2
+                                "Computers n stuff sesh 2"
+                                "This a description of the second inital session"
+                                (MainModel.TimeOfDay 10 30)
+                                (MainModel.TimeOfDay 11 0)
+                                (MainModel.ColumnId 1)
+                                (Just 1)
+                                "The observatory"
+                                [ { id = 5, startTime = Nothing, endTime = Nothing }
+                                , { id = 2, startTime = Nothing, endTime = Nothing }
+                                ]
+                                "Chairwoman Sue"
+                            ]
                 in
-                    Expect.equal (Just addedSession) (Just newSession)
+                    Expect.equal result ( expectedModel, Cmd.none )
+        , test """SetSessionSubmissionEndTimes should set the endTime
+              of the submissions with the specified ids in the session with the specified id""" <|
+            \() ->
+                let
+                    result =
+                        MainUpdate.update
+                            (MainMessages.SetSessionSubmissionEndTimes 1 [ 3, 4 ] "18:00")
+                            dummyModelWithSessions
+
+                    expectedModel =
+                        makeDummyModel
+                            [ MainModel.Session
+                                1
+                                "Conceptualising diabetes self-management as an occupation"
+                                "This a description of the inital session"
+                                (MainModel.TimeOfDay 9 0)
+                                (MainModel.TimeOfDay 9 1)
+                                (MainModel.ColumnId 1)
+                                (Just 1)
+                                "The aquariam"
+                                [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
+                                , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
+                                , { id = 3, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 18, minute = 0 } }
+                                , { id = 4, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 18, minute = 0 } }
+                                ]
+                                "Chairman Dave"
+                            , MainModel.Session
+                                2
+                                "Computers n stuff sesh 2"
+                                "This a description of the second inital session"
+                                (MainModel.TimeOfDay 10 30)
+                                (MainModel.TimeOfDay 11 0)
+                                (MainModel.ColumnId 1)
+                                (Just 1)
+                                "The observatory"
+                                [ { id = 5, startTime = Nothing, endTime = Nothing }
+                                , { id = 2, startTime = Nothing, endTime = Nothing }
+                                ]
+                                "Chairwoman Sue"
+                            ]
+                in
+                    Expect.equal result ( expectedModel, Cmd.none )
         ]

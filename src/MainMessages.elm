@@ -26,11 +26,14 @@ type Msg
     | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
+    | SetSessionSubmissionStartTimes Int (List Int) String
+    | SetSessionSubmissionEndTimes Int (List Int) String
     | ShowValidationMessage
     | ToggleManageDatesUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
+    | ToggleSubmissionTimesView
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String
