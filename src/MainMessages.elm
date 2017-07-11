@@ -46,7 +46,7 @@ type Msg
     | UpdateNewSessionName String
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
-    | UpdateNewSessionSubmissionIds String
+    | UpdateNewSessionSubmissionIds (Maybe MainModel.TimeOfDay) (Maybe MainModel.TimeOfDay) String
     | UpdateNewSessionTrack (Maybe MainModel.TrackId)
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String

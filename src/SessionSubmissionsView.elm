@@ -7,6 +7,7 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import DateUtils
 import List.Extra
+import Dict
 
 
 view : Model -> Session -> Html Msg
@@ -22,10 +23,17 @@ view model session =
                     ]
                     []
                 ]
+
+        submissionsWithNoTimes =
+            model.submissionIdsInputs
+                |> List.Extra.find
+                    (\{ submissionIds, startTime, endTime } -> startTime == Nothing && endTime == Nothing)
+                |> Maybe.map .submissionIds
+                |> Maybe.withDefault ""
     in
         div []
             (if model.showEditSubmissionTimesView then
-                [ toggleScheduleIndividually, viewSessionSubmissionTimes session ]
+                [ toggleScheduleIndividually, viewSessionSubmissionTimes model.submissionIdsInputs session ]
              else
                 [ toggleScheduleIndividually
                 , textarea
@@ -33,10 +41,10 @@ view model session =
                     , id "submissions-input"
                     , rows 2
                     , cols 32
-                    , value model.submissionIdsInput
-                    , onInput UpdateNewSessionSubmissionIds
+                    , value submissionsWithNoTimes
+                    , onInput (UpdateNewSessionSubmissionIds Nothing Nothing)
                     ]
-                    [ text model.submissionIdsInput ]
+                    [ text submissionsWithNoTimes ]
                 , span [ class "form__hint" ]
                     [ text "" ]
                 , b [] [ text (invalidSubmissionsWarning model) ]
@@ -44,8 +52,8 @@ view model session =
             )
 
 
-viewSessionSubmissionTimes : Session -> Html Msg
-viewSessionSubmissionTimes session =
+viewSessionSubmissionTimes : List SubmissionIdInput -> Session -> Html Msg
+viewSessionSubmissionTimes submissionIdsInputs session =
     let
         times =
             session.submissions
@@ -59,13 +67,16 @@ viewSessionSubmissionTimes session =
                 , th [] [ text "End Time" ]
                 ]
              ]
-                ++ (List.map (viewSessionSubmissionTime session) times)
+                ++ (List.map (viewSessionSubmissionTime session) submissionIdsInputs)
             )
 
 
-viewSessionSubmissionTime : Session -> ( String, String ) -> Html Msg
-viewSessionSubmissionTime session ( start, end ) =
+viewSessionSubmissionTime : Session -> SubmissionIdInput -> Html Msg
+viewSessionSubmissionTime session submissionIdInput =
     let
+        ( start, end ) =
+            getComparableTime { startTime = submissionIdInput.startTime, endTime = submissionIdInput.endTime, id = 0 }
+
         submissionIds =
             session.submissions
                 |> List.filter (getComparableTime >> (==) ( start, end ))
@@ -77,9 +88,25 @@ viewSessionSubmissionTime session ( start, end ) =
                 |> String.join ", "
     in
         tr []
-            [ td [] [ input [ value submissionIdsString ] [] ]
-            , td [] [ dateSelect session.startTime session.endTime (SetSessionSubmissionStartTimes session.id submissionIds) start ]
-            , td [] [ dateSelect session.startTime session.endTime (SetSessionSubmissionEndTimes session.id submissionIds) end ]
+            [ td []
+                [ input
+                    [ value submissionIdInput.submissionIds
+                    , onInput (UpdateNewSessionSubmissionIds submissionIdInput.startTime submissionIdInput.endTime)
+                    ]
+                    []
+                ]
+            , td []
+                [ dateSelect session.startTime
+                    session.endTime
+                    (SetSessionSubmissionStartTimes session.id submissionIds)
+                    start
+                ]
+            , td []
+                [ dateSelect session.startTime
+                    session.endTime
+                    (SetSessionSubmissionEndTimes session.id submissionIds)
+                    end
+                ]
             ]
 
 

@@ -9,11 +9,12 @@ import Ports exposing (..)
 import Task
 import Set
 import Date exposing (Date)
+import Dict
 import List.Extra
 
 
-addSubmissionIdsInputToSession : String -> Session -> List Submission -> Session
-addSubmissionIdsInputToSession submissionIdsInput session submissions =
+addSubmissionIdsInputToSession : List SubmissionIdInput -> Session -> List Submission -> Session
+addSubmissionIdsInputToSession submissionIdInputs session submissions =
     let
         validSubmissionIds =
             List.map .id submissions
@@ -21,30 +22,82 @@ addSubmissionIdsInputToSession submissionIdsInput session submissions =
         removeDuplicates =
             Set.fromList >> Set.toList
 
-        newSubmissions =
-            submissionIdsInput
+        getSessionSubmissionFromInputs submissionIdInputs =
+            List.concatMap getSessionSubmissionFromInput submissionIdInputs
+
+        getSessionSubmissionFromInput submissionIdInput =
+            submissionIdInput
+                |> .submissionIds
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
                 |> removeDuplicates
-                |> List.map addNothingTimes
+                |> List.map (addTimes submissionIdInput.startTime submissionIdInput.endTime)
 
-        addNothingTimes id =
+        addTimes startTime endTime id =
             { id = id
-            , startTime = Nothing
-            , endTime = Nothing
+            , startTime = startTime
+            , endTime = endTime
             }
     in
         { session
-            | submissions = newSubmissions
+            | submissions = getSessionSubmissionFromInputs submissionIdInputs
         }
 
 
-submissionsToInputText : List SessionSubmission -> String
-submissionsToInputText submissionIds =
-    submissionIds
-        |> List.map (.id >> toString)
-        |> join ","
+submissionsToInputText : List SessionSubmission -> List SubmissionIdInput
+submissionsToInputText sessionSubmissions =
+    let
+        sameStartAndEndTimes x y =
+            x.startTime == y.startTime && x.endTime == y.endTime
+
+        groupedSubmissions =
+            List.Extra.groupWhile sameStartAndEndTimes sessionSubmissions
+
+        submissionIds =
+            groupedSubmissions
+                |> List.map (List.map (.id >> toString))
+                |> List.map (String.join ", ")
+
+        zipIdsAndTime submissionIds submissions =
+            let
+                first =
+                    submissions
+                        |> List.head
+                        |> Maybe.withDefault { id = 0, startTime = Nothing, endTime = Nothing }
+            in
+                { submissionIds = submissionIds
+                , startTime = first.startTime
+                , endTime = first.endTime
+                }
+    in
+        List.Extra.lift2 zipIdsAndTime submissionIds groupedSubmissions
+
+
+
+-- submissionsToInputText : List SessionSubmission -> List SubmissionIdInput
+-- submissionsToInputText sessionSubmissions =
+--     let
+--         getSubmissionIdInputs sub idInputs =
+--             case List.Extra.find (sameStartAndEndTimes sub) idInputs of
+--                 Nothing ->
+--                     idInputs
+--                         ++ [ { submissionIds = toString sub.id
+--                              , startTime = sub.startTime
+--                              , endTime = sub.endTime
+--                              }
+--                            ]
+--
+--                 Just _ ->
+--                     List.Extra.updateIf (sameStartAndEndTimes sub) (update sub) idInputs
+--
+--         sameStartAndEndTimes x y =
+--             x.startTime == y.startTime && x.endTime == y.endTime
+--
+--         update sub idInput =
+--             { sub | submissionIds = sub.submissionIds ++ ", " ++ (toString sub.id) }
+--     in
+--         List.foldr getSubmissionIdInputs [] sessionSubmissions
 
 
 getSession model =
@@ -108,6 +161,14 @@ updateModelWithApiUpdateGet model apiUpdateGet =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
+        x =
+            Debug.log "msg" msg
+
+        -- y =
+        --     Debug.log "model.datesWithSessions" List.map .sessions model.datesWithSessions
+        z =
+            Debug.log "model.submissionIdsInputs" model.submissionIdsInputs
+
         appendNewElementToList list newElement =
             let
                 highestId =
@@ -263,7 +324,7 @@ update msg model =
                             |> Maybe.withDefault 0
 
                     newSessionWithSubmissionIds =
-                        addSubmissionIdsInputToSession model.submissionIdsInput model.newSession model.submissions
+                        addSubmissionIdsInputToSession model.submissionIdsInputs model.newSession model.submissions
 
                     newSession =
                         { newSessionWithSubmissionIds | id = highestSessionId + 1 }
@@ -290,7 +351,7 @@ update msg model =
                     ( { model
                         | datesWithSessions = updateDatesWithSessions
                         , newSession = blankSession 1
-                        , submissionIdsInput = ""
+                        , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing } ]
                         , showValidation = False
                       }
                     , Api.postModelToDb apiModelPost model.eventId
@@ -343,7 +404,7 @@ update msg model =
             UpdateNewSessionDescription newDescription ->
                 ( (updateNewSession model (\ns -> { ns | description = newDescription })), Cmd.none )
 
-            UpdateNewSessionSubmissionIds newSubmissionIdsString ->
+            UpdateNewSessionSubmissionIds startTime endTime newSubmissionIdsString ->
                 let
                     validSubmissionIds =
                         model.submissions
@@ -356,9 +417,31 @@ update msg model =
                             |> List.map String.trim
                             |> List.filter (\sub -> not (List.member sub validSubmissionIds))
                             |> join ", "
+
+                    newSubmissionIdsInputs =
+                        model.submissionIdsInputs
+                            |> addTimeIfNotExists
+                            |> List.map setIfHasSameTime
+
+                    addTimeIfNotExists submissionIdsInputs =
+                        case List.Extra.find hasSameTime submissionIdsInputs of
+                            Nothing ->
+                                { submissionIds = "", startTime = startTime, endTime = endTime } :: submissionIdsInputs
+
+                            Just _ ->
+                                submissionIdsInputs
+
+                    setIfHasSameTime submissionIdsInput =
+                        if hasSameTime submissionIdsInput then
+                            { submissionIdsInput | submissionIds = newSubmissionIdsString }
+                        else
+                            submissionIdsInput
+
+                    hasSameTime x =
+                        x.startTime == startTime && x.endTime == endTime
                 in
                     ( { model
-                        | submissionIdsInput = newSubmissionIdsString
+                        | submissionIdsInputs = newSubmissionIdsInputs
                         , invalidSubmissionIdsInput = invalidSubmissionIds
                       }
                     , Cmd.none
@@ -472,7 +555,7 @@ update msg model =
                         , showNewColumnUi = False
                         , showManageDatesUi = False
                         , editSession = session
-                        , submissionIdsInput = submissionIdsInput
+                        , submissionIdsInputs = submissionIdsInput
                         , editSessionDate = sessionDate
                       }
                     , Cmd.none
@@ -483,7 +566,7 @@ update msg model =
                     Just id ->
                         let
                             editSessionWithSubmissionIds =
-                                addSubmissionIdsInputToSession model.submissionIdsInput model.editSession model.submissions
+                                addSubmissionIdsInputToSession model.submissionIdsInputs model.editSession model.submissions
 
                             updateDatesWithSessions =
                                 List.map updateDateWithSessions model.datesWithSessions
@@ -518,7 +601,7 @@ update msg model =
                                 , editSession = blankSession 1
                                 , showNewSessionUi = False
                                 , idOfSessionBeingEdited = Nothing
-                                , submissionIdsInput = ""
+                                , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing } ]
                               }
                             , Api.postModelToDb apiUpdate model.eventId
                             )
