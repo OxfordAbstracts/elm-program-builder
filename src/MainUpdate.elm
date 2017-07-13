@@ -130,9 +130,6 @@ updateModelWithApiUpdateGet model apiUpdateGet =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        x =
-            Debug.log "X" ( msg, model )
-
         appendNewElementToList list newElement =
             let
                 highestId =
