@@ -65,9 +65,9 @@ viewSessionSubmissionTimes submissionIdsInputs session =
                 |> List.Extra.unique
     in
         div []
-            [ table [ class "form" ]
+            [ table []
                 ([ tr []
-                    [ th [] [ text "Submission ids" ]
+                    [ th [] [ text "Ids" ]
                     , th [] [ text "Start Time" ]
                     , th [] [ text "End Time" ]
                     , th [] [ text "" ]
@@ -99,6 +99,7 @@ viewSessionSubmissionTime session submissionIdInput =
             [ td []
                 [ input
                     [ value submissionIdInput.submissionIds
+                    , class "form__input"
                     , onInput
                         (UpdateNewSessionSubmissionIds submissionIdInput.id
                             submissionIdInput.startTime
@@ -120,7 +121,7 @@ viewSessionSubmissionTime session submissionIdInput =
                     end
                 ]
             , td []
-                [ span [ style [ ( "cursor", "pointer" ) ], onClick (DeleteSubmissionInput submissionIdInput.id) ] [ text "X" ] ]
+                [ button [ class "button button--secondary icon icon--bin icon--bin-compact-table", onClick (DeleteSubmissionInput submissionIdInput.id) ] [] ]
             ]
 
 
@@ -156,7 +157,7 @@ dateSelect min max msg timeString =
         viewOption time =
             option [ selected (time == timeString) ] [ text time ]
     in
-        select [ onInput msg ]
+        select [ onInput msg, class "form__input form__input--dropdown-compact" ]
             (List.map viewOption ([ "none" ] ++ times))
 
 

@@ -130,6 +130,9 @@ updateModelWithApiUpdateGet model apiUpdateGet =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
+        x =
+            Debug.log "X" ( msg, model )
+
         appendNewElementToList list newElement =
             let
                 highestId =
@@ -169,6 +172,8 @@ update msg model =
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
                         , showPreviewUi = False
+                        , submissionIdsInputs = [ { id = 1, submissionIds = "", startTime = Nothing, endTime = Nothing } ]
+                        , scheduleSubmissionsIndividually = False
                       }
                     , Cmd.none
                     )
