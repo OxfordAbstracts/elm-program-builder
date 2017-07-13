@@ -19,11 +19,10 @@ addSubmissionIdsInputToSession submissionIdInputs session submissions =
         validSubmissionIds =
             List.map .id submissions
 
-        removeDuplicates =
-            Set.fromList >> Set.toList
-
         getSessionSubmissionFromInputs submissionIdInputs =
-            List.concatMap getSessionSubmissionFromInput submissionIdInputs
+            submissionIdInputs
+                |> List.concatMap getSessionSubmissionFromInput
+                |> List.Extra.uniqueBy .id
 
         getSessionSubmissionFromInput submissionIdInput =
             submissionIdInput
@@ -31,7 +30,6 @@ addSubmissionIdsInputToSession submissionIdInputs session submissions =
                 |> split ","
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
-                |> removeDuplicates
                 |> List.map (addTimes submissionIdInput.startTime submissionIdInput.endTime)
 
         addTimes startTime endTime id =
@@ -524,8 +522,13 @@ update msg model =
                             |> List.head
                             |> Maybe.withDefault (DateWithoutTime 2017 1 1)
 
-                    submissionIdsInput =
+                    submissionIdsInputs =
                         submissionsToInputText session.submissions
+
+                    scheduleSubmissionsIndividually =
+                        List.any
+                            (\i -> i.startTime /= Nothing || i.endTime /= Nothing)
+                            submissionIdsInputs
                 in
                     ( { model
                         | idOfSessionBeingEdited =
@@ -542,9 +545,9 @@ update msg model =
                         , showNewColumnUi = False
                         , showManageDatesUi = False
                         , editSession = session
-                        , submissionIdsInputs = submissionIdsInput
+                        , submissionIdsInputs = submissionIdsInputs
                         , editSessionDate = sessionDate
-                        , scheduleSubmissionsIndividually = (List.length submissionIdsInput) > 1
+                        , scheduleSubmissionsIndividually = scheduleSubmissionsIndividually
                       }
                     , Cmd.none
                     )

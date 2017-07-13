@@ -96,13 +96,14 @@ all =
                             , editSession = editSession
                             , submissions = [ Submission 1, Submission 2, Submission 3, Submission 4 ]
                             , submissionIdsInputs =
-                                [ { submissionIds = "1"
+                                [ { submissionIds = "1, 2"
                                   , startTime = Nothing
                                   , endTime = Nothing
                                   , id = 1
                                   }
                                   -- numbers with whitespace should be parsed
-                                , { submissionIds = " 4, 5"
+                                  -- and dups from previous inputs should be removed
+                                , { submissionIds = "2, 4, 5"
                                   , startTime = Just { hour = 11, minute = 30 }
                                   , endTime = Just { hour = 12, minute = 0 }
                                   , id = 2
@@ -138,6 +139,10 @@ all =
                                   , location = "test location"
                                   , submissions =
                                         [ { id = 1
+                                          , startTime = Nothing
+                                          , endTime = Nothing
+                                          }
+                                        , { id = 2
                                           , startTime = Nothing
                                           , endTime = Nothing
                                           }

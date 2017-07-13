@@ -8,6 +8,7 @@ import MainModel exposing (..)
 import DateUtils
 import List.Extra
 import Dict
+import String
 
 
 view : Model -> Session -> Html Msg
@@ -33,7 +34,10 @@ view model session =
     in
         div []
             (if model.scheduleSubmissionsIndividually then
-                [ toggleScheduleIndividually, viewSessionSubmissionTimes model.submissionIdsInputs session ]
+                [ toggleScheduleIndividually
+                , viewSessionSubmissionTimes model.submissionIdsInputs session
+                , b [] [ text (invalidSubmissionsWarning model) ]
+                ]
              else
                 [ toggleScheduleIndividually
                 , textarea
@@ -116,7 +120,7 @@ viewSessionSubmissionTime session submissionIdInput =
                     end
                 ]
             , td []
-                [ span [ onClick (DeleteSubmissionInput submissionIdInput.id) ] [ text "X" ] ]
+                [ span [ style [ ( "cursor", "pointer" ) ], onClick (DeleteSubmissionInput submissionIdInput.id) ] [ text "X" ] ]
             ]
 
 
@@ -158,7 +162,34 @@ dateSelect min max msg timeString =
 
 invalidSubmissionsWarning : Model -> String
 invalidSubmissionsWarning model =
-    if not (String.isEmpty model.invalidSubmissionIdsInput) then
-        "The following submissions are invalid and will not be saved to this session: " ++ model.invalidSubmissionIdsInput
-    else
-        ""
+    let
+        duplicates =
+            getDuplicateSubmssionIds model.submissionIdsInputs
+    in
+        if not (String.isEmpty model.invalidSubmissionIdsInput) then
+            "The following ids are not accepted submission ids and will not be saved to this session: " ++ model.invalidSubmissionIdsInput
+        else if String.isEmpty duplicates then
+            ""
+        else
+            "The following ids are duplicates: " ++ duplicates
+
+
+getDuplicateSubmssionIds : List SubmissionIdInput -> String
+getDuplicateSubmssionIds =
+    List.map .submissionIds
+        >> List.concatMap (String.split ",")
+        >> List.filterMap (String.trim >> String.toInt >> Result.toMaybe)
+        >> getDuplicates
+        >> List.map toString
+        >> String.join ", "
+
+
+getDuplicates : List comparable -> List comparable
+getDuplicates xs =
+    let
+        isDup x =
+            xs |> List.filter ((==) x) |> List.length |> (<) 1
+    in
+        xs
+            |> List.filter isDup
+            |> List.Extra.unique
