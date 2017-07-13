@@ -15,10 +15,14 @@ view : Model -> Session -> Html Msg
 view model session =
     let
         toggleScheduleIndividually =
-            label []
-                [ text "Schedule individually"
+            span []
+                [ label
+                    [ for "schedule-individually" ]
+                    [ text "Schedule individually" ]
                 , input
                     [ type_ "checkbox"
+                    , id "schedule-individually"
+                    , class "form__checkbox"
                     , checked model.scheduleSubmissionsIndividually
                     , onClick ToogleScheduleSubmissionsIndividually
                     ]
