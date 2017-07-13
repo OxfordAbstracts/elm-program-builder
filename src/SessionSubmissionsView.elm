@@ -18,8 +18,8 @@ view model session =
                 [ text "Schedule individually"
                 , input
                     [ type_ "checkbox"
-                    , checked model.showEditSubmissionTimesView
-                    , onClick ToggleSubmissionTimesView
+                    , checked model.scheduleSubmissionsIndividually
+                    , onClick ToogleScheduleSubmissionsIndividually
                     ]
                     []
                 ]
@@ -32,7 +32,7 @@ view model session =
                 |> Maybe.withDefault ""
     in
         div []
-            (if model.showEditSubmissionTimesView then
+            (if model.scheduleSubmissionsIndividually then
                 [ toggleScheduleIndividually, viewSessionSubmissionTimes model.submissionIdsInputs session ]
              else
                 [ toggleScheduleIndividually
@@ -106,13 +106,13 @@ viewSessionSubmissionTime session submissionIdInput =
             , td []
                 [ dateSelect session.startTime
                     session.endTime
-                    (SetSessionSubmissionStartTimes session.id submissionIds)
+                    (SetSessionSubmissionStartTimes submissionIdInput.id)
                     start
                 ]
             , td []
                 [ dateSelect session.startTime
                     session.endTime
-                    (SetSessionSubmissionEndTimes session.id submissionIds)
+                    (SetSessionSubmissionEndTimes submissionIdInput.id)
                     end
                 ]
             , td []

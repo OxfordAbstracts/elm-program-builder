@@ -49,7 +49,7 @@ makeDummyModel sessions =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = True
-    , showEditSubmissionTimesView = False
+    , scheduleSubmissionsIndividually = False
     }
 
 

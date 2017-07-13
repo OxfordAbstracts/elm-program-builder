@@ -34,7 +34,7 @@ type alias Model =
     , showPublishPage : Bool
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
-    , showEditSubmissionTimesView : Bool
+    , scheduleSubmissionsIndividually : Bool
     }
 
 
@@ -94,7 +94,7 @@ initialModel =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = False
-    , showEditSubmissionTimesView = False
+    , scheduleSubmissionsIndividually = False
     }
 
 
