@@ -219,11 +219,6 @@ submissionDecoder =
         |> required "id" Json.Decode.int
 
 
-
--- |> optional "startTime" (nullable timeDecoder) Nothing
--- |> optional "endTime" (nullable timeDecoder) Nothing
-
-
 getModelFromDb : String -> Cmd Msg
 getModelFromDb eventId =
     let

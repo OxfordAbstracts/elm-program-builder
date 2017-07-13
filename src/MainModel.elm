@@ -3,8 +3,6 @@
 
 module MainModel exposing (..)
 
-import Dict
-
 
 type alias Model =
     { tracks : List Track

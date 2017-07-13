@@ -9,7 +9,6 @@ import Ports exposing (..)
 import Task
 import Set
 import Date exposing (Date)
-import Dict
 import List.Extra
 
 
