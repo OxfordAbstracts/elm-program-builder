@@ -79,7 +79,7 @@ viewSessionSubmissionTimes submissionIdsInputs session =
                  ]
                     ++ (List.map (viewSessionSubmissionTime session) submissionIdsInputs)
                 )
-            , button [ class "button button--primary", onClick CreateSubmissionInput ] [ text "Add new time" ]
+            , button [ class "button button--tertiary", onClick CreateSubmissionInput ] [ text "Add new time" ]
             ]
 
 
