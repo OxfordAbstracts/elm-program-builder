@@ -6,6 +6,16 @@ import MainUpdate
 
 dummyModel : MainModel.Model
 dummyModel =
+    makeDummyModel []
+
+
+dummyModelWithSessions : MainModel.Model
+dummyModelWithSessions =
+    makeDummyModel dummySessions
+
+
+makeDummyModel : List Session -> MainModel.Model
+makeDummyModel sessions =
     { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , showNewSessionUi = False
@@ -22,17 +32,24 @@ dummyModel =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
-    , submissionIdsInput = ""
+    , submissionIdsInputs =
+        [ { submissionIds = ""
+          , startTime = Nothing
+          , endTime = Nothing
+          , id = 1
+          }
+        ]
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
     , pickedTracks = []
     , pickedColumns = []
-    , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = [] } ]
+    , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = sessions } ]
     , host = ""
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = True
+    , scheduleSubmissionsIndividually = False
     }
 
 
@@ -93,7 +110,11 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         "The aquariam"
-        []
+        [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
+        , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
+        , { id = 3, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
+        , { id = 4, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
+        ]
         "Chairman Dave"
     , MainModel.Session
         2
@@ -104,6 +125,8 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         "The observatory"
-        []
+        [ { id = 5, startTime = Nothing, endTime = Nothing }
+        , { id = 2, startTime = Nothing, endTime = Nothing }
+        ]
         "Chairwoman Sue"
     ]

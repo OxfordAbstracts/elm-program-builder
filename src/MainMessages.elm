@@ -12,6 +12,8 @@ type Msg
     | CancelAction
     | UpdateColumns
     | CreateNewSession
+    | CreateSubmissionInput
+    | DeleteSubmissionInput Int
     | UpdateTracks
     | DeleteColumn Int
     | DeleteDate Int
@@ -26,11 +28,14 @@ type Msg
     | UpdateDates (List String)
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
+    | SetSessionSubmissionStartTimes Int String
+    | SetSessionSubmissionEndTimes Int String
     | ShowValidationMessage
     | ToggleManageDatesUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
+    | ToogleScheduleSubmissionsIndividually
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String
@@ -43,7 +48,7 @@ type Msg
     | UpdateNewSessionName String
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
-    | UpdateNewSessionSubmissionIds String
+    | UpdateNewSessionSubmissionIds Int (Maybe MainModel.TimeOfDay) (Maybe MainModel.TimeOfDay) String
     | UpdateNewSessionTrack (Maybe MainModel.TrackId)
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String

@@ -6,9 +6,11 @@ module DateUtils
         , displayDateWithoutTime
         , displayTime
         , displayTimeOfDay
+        , parseTimeOfDay
         , dateWithoutTimeToValueString
         , getDateMonthInt
         , fromStringWithDefault
+        , timeIsBetween
         , timeOfDayToTime
         , valueStringToDateWithoutTime
         )
@@ -16,8 +18,10 @@ module DateUtils
 import Date
 import MainModel exposing (..)
 import Time
+import List.Extra
 
 
+add0Padding : String -> String
 add0Padding hour =
     if String.length hour == 1 then
         "0" ++ hour
@@ -42,6 +46,7 @@ dateWithoutTimeToDate dateWithoutTime =
         |> fromStringWithDefault
 
 
+add0PaddingVal : String -> String
 add0PaddingVal dateVal =
     if String.length dateVal < 2 then
         "0" ++ dateVal
@@ -107,6 +112,33 @@ displayTimeOfDay timeOfDay =
         |> String.join ":"
 
 
+parseTimeOfDay : String -> Maybe TimeOfDay
+parseTimeOfDay s =
+    let
+        parts =
+            String.split ":" s
+
+        hour =
+            parts
+                |> List.head
+                |> Maybe.andThen (String.toInt >> Result.toMaybe)
+
+        minute =
+            parts
+                |> List.Extra.last
+                |> Maybe.andThen (String.toInt >> Result.toMaybe)
+    in
+        case ( hour, minute ) of
+            ( Just hour, Just minute ) ->
+                Just
+                    { hour = hour
+                    , minute = minute
+                    }
+
+            _ ->
+                Nothing
+
+
 {-| Converts a timestamp into a humam readable hours and minutes format
 -}
 displayTime : Time.Time -> String
@@ -152,3 +184,20 @@ getDateMonthInt date =
 
         Date.Dec ->
             12
+
+
+timeIsBetween : TimeOfDay -> TimeOfDay -> TimeOfDay -> Bool
+timeIsBetween min max t =
+    let
+        greaterThanOrEqual t1 t2 =
+            case compare t1.hour t2.hour of
+                GT ->
+                    True
+
+                LT ->
+                    False
+
+                EQ ->
+                    t1.minute >= t2.minute
+    in
+        (greaterThanOrEqual t min) && (greaterThanOrEqual max t)

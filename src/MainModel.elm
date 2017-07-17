@@ -21,7 +21,7 @@ type alias Model =
     , newTrack : Track
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
-    , submissionIdsInput : String
+    , submissionIdsInputs : List SubmissionIdInput
     , submissions : List Submission
     , datePickerClosed : Bool
     , pickedDates : List DateWithoutTime
@@ -32,6 +32,15 @@ type alias Model =
     , showPublishPage : Bool
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
+    , scheduleSubmissionsIndividually : Bool
+    }
+
+
+type alias SubmissionIdInput =
+    { submissionIds : String
+    , startTime : Maybe TimeOfDay
+    , endTime : Maybe TimeOfDay
+    , id : Int
     }
 
 
@@ -72,7 +81,7 @@ initialModel =
     , newTrack = blankTrack 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
-    , submissionIdsInput = ""
+    , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
     , submissions = [ Submission 1 ]
     , datePickerClosed = True
     , pickedDates = initialDates
@@ -83,6 +92,7 @@ initialModel =
     , showPublishPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = False
+    , scheduleSubmissionsIndividually = False
     }
 
 
@@ -100,8 +110,15 @@ type alias Session =
     , sessionColumn : SessionColumn
     , trackId : Maybe TrackId
     , location : String
-    , submissionIds : List Int
+    , submissions : List SessionSubmission
     , chair : String
+    }
+
+
+type alias SessionSubmission =
+    { id : Int
+    , startTime : Maybe TimeOfDay
+    , endTime : Maybe TimeOfDay
     }
 
 

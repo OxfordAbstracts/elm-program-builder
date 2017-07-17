@@ -6,8 +6,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput, onBlur, targetChecked, on)
 import MainMessages exposing (..)
 import MainModel exposing (..)
-import MainMessages exposing (..)
 import GetWarning exposing (..)
+import SessionSubmissionsView
 import Json.Decode
 
 
@@ -38,14 +38,6 @@ newSessionViewWarning context model =
                 model.idOfSessionBeingEdited
     then
         getWarning "Session times overlap another session in the same column" model
-    else
-        ""
-
-
-invalidSubmissionsWarning : NewSessionContext -> Model -> String
-invalidSubmissionsWarning context model =
-    if not (String.isEmpty model.invalidSubmissionIdsInput) then
-        "The following submissions are invalid and will not be saved to this session: " ++ model.invalidSubmissionIdsInput
     else
         ""
 
@@ -109,18 +101,7 @@ view context model =
                     , span [ class "form__label form__label--sub" ]
                         [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
                     ]
-                , textarea
-                    [ class "form__input form__input--textarea"
-                    , id "submissions-input"
-                    , rows 2
-                    , cols 32
-                    , value model.submissionIdsInput
-                    , onInput UpdateNewSessionSubmissionIds
-                    ]
-                    [ text model.submissionIdsInput ]
-                , span [ class "form__hint" ]
-                    [ text "" ]
-                , b [] [ text (invalidSubmissionsWarning context model) ]
+                , SessionSubmissionsView.view model context.session
                 ]
 
         toTrackId trackIdString =
