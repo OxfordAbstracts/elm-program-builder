@@ -681,7 +681,7 @@ update msg model =
             DeleteTrack trackId ->
                 let
                     newPickedTracks =
-                        List.filter (\t -> t.id /= trackId) model.tracks
+                        List.filter (\t -> t.id /= trackId) model.pickedTracks
                 in
                     ( { model | pickedTracks = newPickedTracks }
                     , Cmd.none
