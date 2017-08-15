@@ -24,7 +24,7 @@ view model session =
                     , id "schedule-individually"
                     , class "form__checkbox"
                     , checked model.scheduleSubmissionsIndividually
-                    , onClick ToogleScheduleSubmissionsIndividually
+                    , onClick ToggleScheduleSubmissionsIndividually
                     ]
                     []
                 ]

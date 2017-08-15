@@ -35,7 +35,7 @@ type Msg
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
-    | ToogleScheduleSubmissionsIndividually
+    | ToggleScheduleSubmissionsIndividually
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String

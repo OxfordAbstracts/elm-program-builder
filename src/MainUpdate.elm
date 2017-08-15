@@ -248,7 +248,7 @@ update msg model =
                     , command
                     )
 
-            ToogleScheduleSubmissionsIndividually ->
+            ToggleScheduleSubmissionsIndividually ->
                 let
                     firstSubmissionIdInput =
                         model.submissionIdsInputs
