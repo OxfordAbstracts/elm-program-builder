@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/OxfordAbstracts/elm-program-builder#readme",
   "dependencies": {
-    "elm-test": "^0.18.2"
+    "elm-test": "0.18.2"
   }
 }
