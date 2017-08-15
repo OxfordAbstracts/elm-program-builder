@@ -2,13 +2,14 @@ module SessionSubmissionsView exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onBlur, targetChecked, on)
+import Html.Events exposing (onClick, onInput, onBlur, targetChecked)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import DateUtils
 import List.Extra
 import Dict
 import String
+import Helpers exposing (onChange)
 
 
 view : Model -> Session -> Html Msg
@@ -161,7 +162,7 @@ dateSelect min max msg timeString =
         viewOption time =
             option [ selected (time == timeString) ] [ text time ]
     in
-        select [ onInput msg, class "form__input form__input--dropdown-compact" ]
+        select [ Helpers.onChange msg, class "form__input form__input--dropdown-compact" ]
             (List.map viewOption ([ "none" ] ++ times))
 
 
