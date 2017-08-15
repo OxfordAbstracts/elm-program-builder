@@ -1,7 +1,6 @@
 module Helpers exposing (onChange)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Json.Decode
 import Html.Events exposing (on)
 
