@@ -148,6 +148,7 @@ dateSelect min max msg timeString =
         minutes =
             List.range 0 12
                 |> List.map ((*) 5)
+                |> List.filter (\m -> m <= 55)
 
         times =
             List.range 0 23
