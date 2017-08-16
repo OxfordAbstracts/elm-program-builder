@@ -7,6 +7,7 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import MainMessages exposing (..)
 import GetWarning exposing (..)
+import List.Extra
 
 
 newColumnWarning model =
@@ -59,9 +60,8 @@ view model =
 
         listColumns =
             model.pickedColumns
-                |> List.sortBy .id
-                |> List.map
-                    (\c ->
+                |> List.indexedMap
+                    (\i c ->
                         div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
                             [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ label [ class "form__label" ]
@@ -78,6 +78,20 @@ view model =
                                     [ onClick (DeleteColumn c.id)
                                     , disableInput (ColumnId c.id)
                                     , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
+                                ]
+                            , div [ class "constructor__question-controls" ]
+                                [ button
+                                    [ class "button button--glass icon icon--up-open"
+                                    , onClick (MoveColumnUp i)
+                                    , disabled (i == 0)
+                                    ]
+                                    []
+                                , button
+                                    [ class "button button--glass icon icon--down-open"
+                                    , onClick (MoveColumnDown i)
+                                    , disabled (i == ((List.length model.pickedColumns) - 1))
                                     ]
                                     []
                                 ]

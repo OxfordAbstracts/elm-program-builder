@@ -21,6 +21,8 @@ type Msg
     | DeleteTrack MainModel.TrackId
     | EditSession
     | GetDateAndThenAddDate String
+    | MoveColumnUp Int
+    | MoveColumnDown Int
     | NewColumn
     | NewTrack
     | PublishProgrammeBuilder

@@ -278,7 +278,7 @@ update msg model =
             UpdateColumns ->
                 let
                     newColumns =
-                        List.sortBy .id model.pickedColumns
+                        model.pickedColumns
 
                     apiPostModel =
                         { datesWithSessions = model.datesWithSessions
@@ -752,12 +752,16 @@ update msg model =
                             | name = newPickedColumnInput
                         }
 
-                    pickedColumnsWithoutUpdatedColumn =
-                        model.pickedColumns
-                            |> List.filter (\c -> c.id /= columnId)
+                    pickedColumnIndex =
+                        List.Extra.findIndex (\c -> c.id == columnId) model.pickedColumns
+                            |> Maybe.withDefault 0
+
+                    newPickedColumns =
+                        List.Extra.setAt pickedColumnIndex newPickedColumn model.pickedColumns
+                            |> Maybe.withDefault [ blankColumn 1 ]
                 in
                     ( { model
-                        | pickedColumns = newPickedColumn :: pickedColumnsWithoutUpdatedColumn
+                        | pickedColumns = newPickedColumns
                       }
                     , Cmd.none
                     )
@@ -817,6 +821,24 @@ update msg model =
                         }
                 in
                     ( newModel, Cmd.none )
+
+            MoveColumnUp columnIndex ->
+                let
+                    newPickedColumns =
+                        model.pickedColumns
+                            |> List.Extra.swapAt columnIndex (columnIndex - 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | pickedColumns = newPickedColumns }, Cmd.none )
+
+            MoveColumnDown columnIndex ->
+                let
+                    newPickedColumns =
+                        model.pickedColumns
+                            |> List.Extra.swapAt columnIndex (columnIndex + 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | pickedColumns = newPickedColumns }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
