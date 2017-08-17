@@ -21,6 +21,8 @@ type Msg
     | DeleteTrack MainModel.TrackId
     | EditSession
     | GetDateAndThenAddDate String
+    | MoveColumnUp Int
+    | MoveColumnDown Int
     | NewColumn
     | NewTrack
     | PublishProgrammeBuilder
@@ -35,7 +37,7 @@ type Msg
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
-    | ToogleScheduleSubmissionsIndividually
+    | ToggleScheduleSubmissionsIndividually
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair String

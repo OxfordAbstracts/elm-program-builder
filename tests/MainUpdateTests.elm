@@ -392,7 +392,7 @@ all =
                         ]
                 in
                     Expect.equal result expectedResult
-        , test """ToogleScheduleSubmissionsIndividually should toggle the scheduleSubmissionsIndividually property
+        , test """ToggleScheduleSubmissionsIndividually should toggle the scheduleSubmissionsIndividually property
         and condense all submissionIdsInputs to a single submissionIdsInput and with no start or end time""" <|
             \() ->
                 let
@@ -420,7 +420,7 @@ all =
 
                     result =
                         MainUpdate.update
-                            MainMessages.ToogleScheduleSubmissionsIndividually
+                            MainMessages.ToggleScheduleSubmissionsIndividually
                             model
 
                     expectedModel =
