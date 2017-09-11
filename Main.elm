@@ -23,6 +23,7 @@ init flags =
         , host = flags.host
         , showPreviewUi = flags.showPreviewUi
         , showPublishPage = flags.showPublishPage
+        , showBasicPage = flags.showBasicPage
       }
     , Api.getModelFromDb flags.eventId
     )
@@ -35,7 +36,7 @@ init flags =
 view : Model -> Html Msg
 view model =
     -- publishView
-    if model.showPreviewUi || model.showPublishPage then
+    if model.showPreviewUi || model.showPublishPage || model.showBasicPage then
         div [ class "container" ]
             [ Stylesheet.view
             , TableView.view model

@@ -30,6 +30,7 @@ type alias Model =
     , datesWithSessions : List DateWithSessions
     , host : String
     , showPublishPage : Bool
+    , showBasicPage : Bool
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
     , scheduleSubmissionsIndividually : Bool
@@ -49,6 +50,7 @@ type alias Flags =
     , host : String
     , showPreviewUi : Bool
     , showPublishPage : Bool
+    , showBasicPage : Bool
     }
 
 
@@ -90,6 +92,7 @@ initialModel =
     , datesWithSessions = []
     , host = ""
     , showPublishPage = False
+    , showBasicPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = False
     , scheduleSubmissionsIndividually = False
