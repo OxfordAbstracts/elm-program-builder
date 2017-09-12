@@ -221,12 +221,18 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 Just sessionStarting ->
                     td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
                         [ div [ class "prog-session__header" ]
-                            [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id) ++ query) ]
-                                [ text (sessionStarting.name)
-                                ]
+                            [ (if model.showBasicPage then
+                                span [ class "prog-session__name" ]
+                                    [ text (sessionStarting.name)
+                                    ]
+                               else
+                                a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id) ++ query) ]
+                                    [ text (sessionStarting.name)
+                                    ]
+                              )
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden (model.showPreviewUi || model.showPublishPage || model.showBasicPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden (model.showPreviewUi || model.showPublishPage || model.showBasicPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
@@ -370,8 +376,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id) ++ query) ]
                                 [ text (sessionStarting.name) ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button [ hidden (model.showPreviewUi || model.showPublishPage || model.showBasicPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
+                                , button [ hidden (model.showPreviewUi || model.showPublishPage || model.showBasicPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]

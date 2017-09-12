@@ -47,6 +47,7 @@ makeDummyModel sessions =
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = sessions } ]
     , host = ""
     , showPublishPage = False
+    , showBasicPage = False
     , invalidSubmissionIdsInput = ""
     , showValidation = True
     , scheduleSubmissionsIndividually = False

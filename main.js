@@ -9,7 +9,8 @@ function init (options, dev) {
     eventId: options.eventId,
     host: options.host,
     showPreviewUi: options.showPreviewUi,
-    showPublishPage: options.showPublishPage
+    showPublishPage: options.showPublishPage,
+    showBasicPage: options.showBasicPage
   })
 
   app.ports.openDatepicker.subscribe(function (id) {
