@@ -364,10 +364,7 @@ update msg model =
             UpdateModel (Err str) ->
                 ( model, Cmd.none )
 
-            SaveModel (Err str) ->
-                ( model, Cmd.none )
-
-            SaveModel (Ok apiUpdate) ->
+            SaveModel _ ->
                 ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
@@ -605,7 +602,7 @@ update msg model =
                 let
                     datesListToDateWithoutTime =
                         datesList
-                            |> List.map DateUtils.valueStringToDateWithoutTime
+                            |> List.map DateUtils.pikadayValueToDate
 
                     allExistingDates =
                         model.datesWithSessions
@@ -658,7 +655,8 @@ update msg model =
             UpdatePickedDates pickedDatesList ->
                 let
                     dateWithoutTimeList =
-                        List.map DateUtils.valueStringToDateWithoutTime pickedDatesList
+                        List.map DateUtils.pikadayValueToDate
+                            pickedDatesList
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
 

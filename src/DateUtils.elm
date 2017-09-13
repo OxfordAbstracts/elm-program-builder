@@ -3,9 +3,12 @@ module DateUtils
         ( add0Padding
         , dateWithoutTimeToDate
         , dateToDateWithoutTime
+        , dateWithoutTimeToDay
         , displayDateWithoutTime
         , displayTime
         , displayTimeOfDay
+        , intToMonth
+        , intToMonthString
         , parseTimeOfDay
         , dateWithoutTimeToValueString
         , getDateMonthInt
@@ -13,12 +16,14 @@ module DateUtils
         , timeIsBetween
         , timeOfDayToTime
         , valueStringToDateWithoutTime
+        , pikadayValueToDate
         )
 
 import Date
 import MainModel exposing (..)
 import Time
 import List.Extra
+import Date.Extra exposing (calendarDate)
 
 
 add0Padding : String -> String
@@ -94,11 +99,47 @@ valueStringToDateWithoutTime dateString =
             |> dateToDateWithoutTime
 
 
+pikadayValueToDate : String -> DateWithoutTime
+pikadayValueToDate val =
+    let
+        parts =
+            String.split " " val
+
+        day =
+            parts
+                |> List.Extra.getAt 0
+                |> Maybe.withDefault ""
+                |> String.toInt
+                |> Result.withDefault -1
+
+        month =
+            parts
+                |> List.Extra.getAt 1
+                |> Maybe.withDefault ""
+                |> monthToInt
+
+        year =
+            parts
+                |> List.Extra.getAt 2
+                |> Maybe.withDefault ""
+                |> String.toInt
+                |> Result.map
+                    (\i ->
+                        if i < 2000 then
+                            i + 2000
+                        else
+                            i
+                    )
+                |> Result.withDefault -1
+
+        -- |> (+) 2000
+    in
+        { year = year, month = month, day = day }
+
+
 displayDateWithoutTime : DateWithoutTime -> String
-displayDateWithoutTime dateWithoutTime =
-    dateWithoutTime
-        |> dateWithoutTimeToDate
-        |> (\d -> (toString (Date.day d)) ++ " " ++ (toString (Date.month d)) ++ " " ++ (toString (Date.year d)))
+displayDateWithoutTime d =
+    (toString d.day) ++ " " ++ (intToMonthString d.month) ++ " " ++ (toString d.year)
 
 
 displayTimeOfDay : TimeOfDay -> String
@@ -144,6 +185,94 @@ parseTimeOfDay s =
 displayTime : Time.Time -> String
 displayTime =
     Date.fromTime >> dateToTimeOfDay >> displayTimeOfDay
+
+
+monthToInt : String -> Int
+monthToInt dateString =
+    case dateString of
+        "Jan" ->
+            1
+
+        "Feb" ->
+            2
+
+        "Mar" ->
+            3
+
+        "Apr" ->
+            4
+
+        "May" ->
+            5
+
+        "Jun" ->
+            6
+
+        "Jul" ->
+            7
+
+        "Aug" ->
+            8
+
+        "Sep" ->
+            9
+
+        "Oct" ->
+            10
+
+        "Nov" ->
+            11
+
+        "Dec" ->
+            12
+
+        _ ->
+            -1
+
+
+intToMonth : Int -> Date.Month
+intToMonth int =
+    case int of
+        1 ->
+            Date.Jan
+
+        2 ->
+            Date.Feb
+
+        3 ->
+            Date.Mar
+
+        4 ->
+            Date.Apr
+
+        5 ->
+            Date.May
+
+        6 ->
+            Date.Jun
+
+        7 ->
+            Date.Jul
+
+        8 ->
+            Date.Aug
+
+        9 ->
+            Date.Sep
+
+        10 ->
+            Date.Oct
+
+        11 ->
+            Date.Nov
+
+        _ ->
+            Date.Dec
+
+
+intToMonthString : Int -> String
+intToMonthString =
+    intToMonth >> toString
 
 
 getDateMonthInt : Date.Date -> Int
@@ -201,3 +330,11 @@ timeIsBetween min max t =
                     t1.minute >= t2.minute
     in
         (greaterThanOrEqual t min) && (greaterThanOrEqual max t)
+
+
+dateWithoutTimeToDay : DateWithoutTime -> String
+dateWithoutTimeToDay d =
+    Date.Extra.calendarDate d.year (intToMonth d.month) d.day
+        |> Date.Extra.fromSpec Date.Extra.local Date.Extra.noTime
+        |> Date.dayOfWeek
+        |> toString
