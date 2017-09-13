@@ -601,10 +601,8 @@ update msg model =
             UpdateDates datesList ->
                 let
                     datesListToDateWithoutTime =
-                        Debug.log "UpdateDates datesListToDateWithoutTime"
-                            (Debug.log "UpdateDates datesList" datesList
-                                |> List.map DateUtils.pikadayValueToDate
-                            )
+                        datesList
+                            |> List.map DateUtils.pikadayValueToDate
 
                     allExistingDates =
                         model.datesWithSessions
@@ -636,8 +634,8 @@ update msg model =
                             datesWithSessionsWithUpdatedDates
                 in
                     ( { model
-                        | datesWithSessions = Debug.log "orderedDatesWithSessions" orderedDatesWithSessions
-                        , pickedDates = Debug.log "datesListToDateWithoutTime" datesListToDateWithoutTime
+                        | datesWithSessions = orderedDatesWithSessions
+                        , pickedDates = datesListToDateWithoutTime
                       }
                     , Cmd.none
                     )
@@ -657,10 +655,8 @@ update msg model =
             UpdatePickedDates pickedDatesList ->
                 let
                     dateWithoutTimeList =
-                        Debug.log "dateWithoutTimeList"
-                            (List.map DateUtils.pikadayValueToDate
-                                (Debug.log "pickedDatesList" pickedDatesList)
-                            )
+                        List.map DateUtils.pikadayValueToDate
+                            pickedDatesList
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
 

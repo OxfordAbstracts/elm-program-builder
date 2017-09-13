@@ -126,8 +126,6 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
                         span [ class "prog-table__time " ] [ text t ]
                     )
 
-        -- elmDate =
-        --     DateUtils.dateWithoutTimeToDate dateWithSessions.date
         date =
             dateWithSessions.date
     in
