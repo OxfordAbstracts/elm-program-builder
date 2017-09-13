@@ -364,10 +364,7 @@ update msg model =
             UpdateModel (Err str) ->
                 ( model, Cmd.none )
 
-            SaveModel (Err str) ->
-                ( model, Cmd.none )
-
-            SaveModel (Ok apiUpdate) ->
+            SaveModel _ ->
                 ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
@@ -604,8 +601,10 @@ update msg model =
             UpdateDates datesList ->
                 let
                     datesListToDateWithoutTime =
-                        datesList
-                            |> List.map DateUtils.valueStringToDateWithoutTime
+                        Debug.log "UpdateDates datesListToDateWithoutTime"
+                            (Debug.log "UpdateDates datesList" datesList
+                                |> List.map DateUtils.pikadayValueToDate
+                            )
 
                     allExistingDates =
                         model.datesWithSessions
@@ -637,8 +636,8 @@ update msg model =
                             datesWithSessionsWithUpdatedDates
                 in
                     ( { model
-                        | datesWithSessions = orderedDatesWithSessions
-                        , pickedDates = datesListToDateWithoutTime
+                        | datesWithSessions = Debug.log "orderedDatesWithSessions" orderedDatesWithSessions
+                        , pickedDates = Debug.log "datesListToDateWithoutTime" datesListToDateWithoutTime
                       }
                     , Cmd.none
                     )
@@ -658,7 +657,10 @@ update msg model =
             UpdatePickedDates pickedDatesList ->
                 let
                     dateWithoutTimeList =
-                        List.map DateUtils.valueStringToDateWithoutTime pickedDatesList
+                        Debug.log "dateWithoutTimeList"
+                            (List.map DateUtils.pikadayValueToDate
+                                (Debug.log "pickedDatesList" pickedDatesList)
+                            )
                 in
                     ( { model | pickedDates = dateWithoutTimeList }, Cmd.none )
 

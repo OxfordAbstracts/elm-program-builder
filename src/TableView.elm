@@ -123,17 +123,19 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
                         span [ class "prog-table__time " ] [ text t ]
                     )
 
-        elmDate =
-            DateUtils.dateWithoutTimeToDate dateWithSessions.date
+        -- elmDate =
+        --     DateUtils.dateWithoutTimeToDate dateWithSessions.date
+        date =
+            dateWithSessions.date
     in
         [ td [ class "prog-cell", attribute "rowspan" (toString ((List.length timeDelimiters) - 1)) ]
             [ span [ class "prog-table__date dayofweek" ]
-                [ text (toString (Date.dayOfWeek elmDate)) ]
+                [ text (DateUtils.dateWithoutTimeToDay date) ]
             , br [] []
             , span [ class "prog-table__date dayofmonth" ]
-                [ text (toString (Date.day elmDate) ++ " ") ]
+                [ text (toString (date.day) ++ " ") ]
             , span [ class "prog-table__date shortdate text-muted" ]
-                [ text ((toString (Date.month elmDate)) ++ " " ++ (toString (Date.year elmDate))) ]
+                [ text ((DateUtils.intToMonthString date.month) ++ " " ++ (toString date.year)) ]
             ]
         , td [ class "prog-cell" ]
             timeElements
@@ -213,12 +215,30 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 Just sessionStarting ->
                     td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
                         [ div [ class "prog-session__header" ]
-                            [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
+                            [ a
+                                [ class "prog-session__name"
+                                , href
+                                    ("/events/"
+                                        ++ model.eventId
+                                        ++ "/sessions/"
+                                        ++ (toString sessionStarting.id)
+                                    )
+                                ]
                                 [ text (sessionStarting.name)
                                 ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button
+                                    [ hidden (model.showPreviewUi || model.showPublishPage)
+                                    , class "prog-session__action"
+                                    , onClick (DeleteSession sessionStarting.id)
+                                    ]
+                                    [ text "delete" ]
+                                , button
+                                    [ hidden (model.showPreviewUi || model.showPublishPage)
+                                    , class "prog-session__action"
+                                    , onClick (SelectSessionToEdit sessionStarting.id)
+                                    ]
+                                    [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
@@ -351,11 +371,29 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 Just sessionStarting ->
                     td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
                         [ div [ class "prog-session__header" ]
-                            [ a [ class "prog-session__name", href ("/events/" ++ model.eventId ++ "/sessions/" ++ (toString sessionStarting.id)) ]
+                            [ a
+                                [ class "prog-session__name"
+                                , href
+                                    ("/events/"
+                                        ++ model.eventId
+                                        ++ "/sessions/"
+                                        ++ (toString sessionStarting.id)
+                                    )
+                                ]
                                 [ text (sessionStarting.name) ]
                             , div [ class "prog-session__divider" ]
-                                [ button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (DeleteSession sessionStarting.id) ] [ text "delete" ]
-                                , button [ hidden (model.showPreviewUi || model.showPublishPage), class "prog-session__action", onClick (SelectSessionToEdit sessionStarting.id) ] [ text "edit" ]
+                                [ button
+                                    [ hidden (model.showPreviewUi || model.showPublishPage)
+                                    , class "prog-session__action"
+                                    , onClick (DeleteSession sessionStarting.id)
+                                    ]
+                                    [ text "delete" ]
+                                , button
+                                    [ hidden (model.showPreviewUi || model.showPublishPage)
+                                    , class "prog-session__action"
+                                    , onClick (SelectSessionToEdit sessionStarting.id)
+                                    ]
+                                    [ text "edit" ]
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
@@ -363,7 +401,10 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
-                        , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
+                        , span
+                            [ class "prog-session__data prog-session__track"
+                            , style [ ( "display", hideTrackName ) ]
+                            ]
                             [ text trackName ]
                         ]
 
