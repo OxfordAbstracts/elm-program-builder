@@ -12,7 +12,8 @@ function init(options, dev) {
     eventId: options.eventId,
     host: options.host,
     showPreviewUi: options.showPreviewUi,
-    showPublishPage: options.showPublishPage
+    showPublishPage: options.showPublishPage,
+    showBasicPage: options.showBasicPage
   });
 
   app.ports.openDatepicker.subscribe(function(id) {
@@ -49,10 +50,8 @@ function init(options, dev) {
 
     function sendDates(port) {
       var pikadayDateArray = [].map.call(pikadayInputs, function(pikaDayInput) {
-        console.log('pikaDayInput.value', pikaDayInput.value);
         return pikaDayInput.value;
       });
-      console.log('pikadayDateArray', pikadayDateArray)
       app.ports[port].send(pikadayDateArray);
     }
   });
