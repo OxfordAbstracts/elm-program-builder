@@ -632,12 +632,19 @@ update msg model =
                                     LT
                             )
                             datesWithSessionsWithUpdatedDates
+
+                    apiUpdate =
+                        { datesWithSessions = orderedDatesWithSessions
+                        , tracks = model.tracks
+                        , columns = model.columns
+                        , published = model.published
+                        }
                 in
                     ( { model
                         | datesWithSessions = orderedDatesWithSessions
                         , pickedDates = datesListToDateWithoutTime
                       }
-                    , Cmd.none
+                    , Api.postModelToDb apiUpdate model.eventId
                     )
 
             AddNewDate id date ->
