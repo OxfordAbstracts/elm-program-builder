@@ -89,14 +89,38 @@ dateWithoutTimeToValueString dateWithoutTime =
 valueStringToDateWithoutTime : String -> DateWithoutTime
 valueStringToDateWithoutTime dateString =
     let
-        paddedDateString =
+        parts =
             String.split "-" dateString
-                |> List.map add0PaddingVal
-                |> String.join "-"
+
+        day =
+            parts
+                |> List.Extra.getAt 2
+                |> Maybe.withDefault ""
+                |> String.toInt
+                |> Result.withDefault -1
+
+        month =
+            parts
+                |> List.Extra.getAt 1
+                |> Maybe.withDefault ""
+                |> String.toInt
+                |> Result.withDefault -1
+
+        year =
+            parts
+                |> List.Extra.getAt 0
+                |> Maybe.withDefault ""
+                |> String.toInt
+                |> Result.map
+                    (\i ->
+                        if i < 2000 then
+                            i + 2000
+                        else
+                            i
+                    )
+                |> Result.withDefault -1
     in
-        paddedDateString
-            |> fromStringWithDefault
-            |> dateToDateWithoutTime
+        { year = year, month = month, day = day }
 
 
 pikadayValueToDate : String -> DateWithoutTime
@@ -131,8 +155,6 @@ pikadayValueToDate val =
                             i
                     )
                 |> Result.withDefault -1
-
-        -- |> (+) 2000
     in
         { year = year, month = month, day = day }
 

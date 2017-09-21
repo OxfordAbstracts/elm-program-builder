@@ -218,6 +218,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 "?view=preview"
             else if model.showPublishPage then
                 "?view=published"
+            else if model.showBasicPage then
+                "?view=basic"
             else
                 ""
     in
@@ -228,24 +230,18 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 Just sessionStarting ->
                     td [ class "prog-session", rowspan rowSpanVal, colspan colSpanVal ]
                         [ div [ class "prog-session__header" ]
-                            [ (if model.showBasicPage then
-                                span [ class "prog-session__name" ]
-                                    [ text (sessionStarting.name)
-                                    ]
-                               else
-                                a
-                                    [ class "prog-session__name"
-                                    , href
-                                        ("/events/"
-                                            ++ model.eventId
-                                            ++ "/sessions/"
-                                            ++ (toString sessionStarting.id)
-                                            ++ query
-                                        )
-                                    ]
-                                    [ text (sessionStarting.name)
-                                    ]
-                              )
+                            [ a
+                                [ class "prog-session__name"
+                                , href
+                                    ("/events/"
+                                        ++ model.eventId
+                                        ++ "/sessions/"
+                                        ++ (toString sessionStarting.id)
+                                        ++ query
+                                    )
+                                ]
+                                [ text (sessionStarting.name)
+                                ]
                             , div [ class "prog-session__divider" ]
                                 [ button
                                     [ hidden
@@ -397,6 +393,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 "?view=preview"
             else if model.showPublishPage then
                 "?view=published"
+            else if model.showBasicPage then
+                "?view=basic"
             else
                 ""
     in
