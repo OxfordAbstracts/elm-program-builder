@@ -73,6 +73,9 @@ view context model =
         noTracksDropdownOption =
             option [ value "", selected (context.session.trackId == Nothing) ] [ text "No track" ]
 
+        noLocationDropdownOption =
+            option [ value "", selected (context.session.locationId == Nothing) ] [ text "No location" ]
+
         column1 =
             div []
                 [ label [ class "form__label", for "session-name-input" ]
@@ -114,6 +117,16 @@ view context model =
                         |> Result.withDefault 0
                     )
 
+        toLocationId locationIdString =
+            if locationIdString == "" then
+                Nothing
+            else
+                Just
+                    (locationIdString
+                        |> String.toInt
+                        |> Result.withDefault 0
+                    )
+
         column2 =
             div []
                 [ div []
@@ -139,14 +152,8 @@ view context model =
                 , div []
                     [ label [ class "form__label", for "location-input" ]
                         [ text "Location" ]
-                    , input
-                        [ class "form__input"
-                        , id "location-input"
-                        , type_ "text"
-                        , value context.session.location
-                        , onInput UpdateNewSessionLocation
-                        ]
-                        [ text context.session.location ]
+                    , select [ id "location-input", onChange (UpdateNewSessionLocation << toLocationId), class "form__input form__input--dropdown" ]
+                        (noLocationDropdownOption :: List.map (\l -> option [ value (toString l.id), selected (context.session.locationId == Just l.id) ] [ text l.name ]) model.locations)
                     ]
                 ]
 

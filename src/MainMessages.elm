@@ -9,6 +9,7 @@ type Msg
     = AddNewColumn
     | AddNewDate String Date
     | AddNewTrack
+    | AddNewLocation
     | CancelAction
     | UpdateColumns
     | CreateNewSession
@@ -19,6 +20,7 @@ type Msg
     | DeleteDate Int
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
+    | DeleteLocation MainModel.TrackId
     | EditSession
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
@@ -34,6 +36,7 @@ type Msg
     | SetSessionSubmissionEndTimes Int String
     | ShowValidationMessage
     | ToggleManageDatesUi
+    | ToggleManageLocationsUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
@@ -46,7 +49,7 @@ type Msg
     | UpdateNewSessionDescription String
     | UpdateNewSessionEndHour String
     | UpdateNewSessionEndMinute String
-    | UpdateNewSessionLocation String
+    | UpdateNewSessionLocation (Maybe MainModel.LocationId)
     | UpdateNewSessionName String
     | UpdateNewSessionStartHour String
     | UpdateNewSessionStartMinute String
@@ -56,3 +59,5 @@ type Msg
     | UpdateNewTrackName String
     | UpdatePickedColumn Int String
     | UpdatePickedTrack Int MainModel.TrackFields String
+    | UpdatePickedLocation Int String
+    | UpdateLocations

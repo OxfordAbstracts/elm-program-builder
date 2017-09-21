@@ -120,6 +120,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
         | datesWithSessions = apiUpdateGet.datesWithSessions
         , tracks = apiUpdateGet.tracks
         , columns = apiUpdateGet.columns
+        , locations = apiUpdateGet.locations
         , submissions = apiUpdateGet.submissions
         , published = apiUpdateGet.published
      }
@@ -165,6 +166,7 @@ update msg model =
                         , showNewColumnUi = False
                         , showNewTrackUi = False
                         , showManageDatesUi = False
+                        , showManageLocationsUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
                         , showPreviewUi = False
@@ -180,6 +182,7 @@ update msg model =
                         { datesWithSessions = model.datesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
+                        , locations = model.locations
                         , published = not model.published
                         }
                 in
@@ -195,6 +198,7 @@ update msg model =
                     , showNewColumnUi = False
                     , showNewSessionUi = False
                     , showManageDatesUi = False
+                    , showManageLocationsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                     , pickedTracks = model.tracks
@@ -208,6 +212,7 @@ update msg model =
                     , showNewColumnUi = False
                     , showNewSessionUi = False
                     , showManageDatesUi = False
+                    , showManageLocationsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                   }
@@ -221,6 +226,7 @@ update msg model =
                     , showNewTrackUi = False
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
+                    , showManageLocationsUi = False
                     , showPreviewUi = False
                     , pickedColumns = model.columns
                   }
@@ -239,6 +245,7 @@ update msg model =
                         | showManageDatesUi = not model.showManageDatesUi
                         , showNewSessionUi = False
                         , showNewTrackUi = False
+                        , showManageLocationsUi = False
                         , showNewColumnUi = False
                         , idOfSessionBeingEdited = Nothing
                         , datePickerClosed = False
@@ -247,6 +254,20 @@ update msg model =
                       }
                     , command
                     )
+
+            ToggleManageLocationsUi ->
+                ( { model
+                    | showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , showNewTrackUi = False
+                    , showManageDatesUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showManageLocationsUi = not model.showManageLocationsUi
+                    , showPreviewUi = False
+                    , pickedLocations = model.locations
+                  }
+                , Cmd.none
+                )
 
             ToggleScheduleSubmissionsIndividually ->
                 let
@@ -284,6 +305,7 @@ update msg model =
                         { datesWithSessions = model.datesWithSessions
                         , tracks = model.tracks
                         , columns = newColumns
+                        , locations = model.locations
                         , published = model.published
                         }
                 in
@@ -326,6 +348,7 @@ update msg model =
                         { datesWithSessions = updateDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
+                        , locations = model.locations
                         , published = model.published
                         }
                 in
@@ -344,7 +367,7 @@ update msg model =
                         List.sortBy .id model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.columns model.published
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.columns model.published
                 in
                     ( { model
                         | tracks = newTracks
@@ -446,8 +469,13 @@ update msg model =
             UpdateNewSessionChair newChair ->
                 ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
 
-            UpdateNewSessionLocation newLocation ->
-                ( (updateNewSession model (\ns -> { ns | location = newLocation })), Cmd.none )
+            UpdateNewSessionLocation newLocationId ->
+                case newLocationId of
+                    Just locationId ->
+                        ( (updateNewSession model (\ns -> { ns | locationId = Just locationId })), Cmd.none )
+
+                    Nothing ->
+                        ( (updateNewSession model (\ns -> { ns | locationId = Nothing })), Cmd.none )
 
             UpdateNewSessionTrack newTrackId ->
                 case newTrackId of
@@ -492,6 +520,7 @@ update msg model =
                         { datesWithSessions = newDatesWithSessions
                         , tracks = model.tracks
                         , columns = model.columns
+                        , locations = model.locations
                         , published = model.published
                         }
                 in
@@ -583,6 +612,7 @@ update msg model =
                                 , tracks = model.tracks
                                 , columns = model.columns
                                 , published = model.published
+                                , locations = model.locations
                                 }
                         in
                             ( { model
@@ -638,6 +668,7 @@ update msg model =
                         , tracks = model.tracks
                         , columns = model.columns
                         , published = model.published
+                        , locations = model.locations
                         }
                 in
                     ( { model
@@ -725,6 +756,60 @@ update msg model =
                             |> List.filter (\s -> s.id /= trackId)
                 in
                     ( { model | pickedTracks = newPickedTrack :: pickedTracksWithoutUpdatedTrack }, Cmd.none )
+
+            --  not actually deleted from locations list until user clicks save changes
+            DeleteLocation locationId ->
+                let
+                    newPickedLocations =
+                        List.filter (\l -> l.id /= locationId) model.pickedLocations
+                in
+                    ( { model | pickedLocations = newPickedLocations }
+                    , Cmd.none
+                    )
+
+            AddNewLocation ->
+                ( { model
+                    | pickedLocations =
+                        appendNewElementToList model.pickedLocations (Location 0 "")
+                  }
+                , Cmd.none
+                )
+
+            UpdatePickedLocation locationId newPickedLocationInput ->
+                let
+                    -- TODO: remove trackfield
+                    pickedLocation =
+                        model.pickedLocations
+                            |> List.filter (\l -> l.id == locationId)
+                            |> List.head
+                            |> Maybe.withDefault (Location 0 "")
+
+                    newPickedLocation =
+                        { pickedLocation
+                            | name = newPickedLocationInput
+                        }
+
+                    pickedLocationsWithoutUpdatedLocation =
+                        model.pickedLocations
+                            |> List.filter (\s -> s.id /= locationId)
+                in
+                    ( { model | pickedLocations = newPickedLocation :: pickedLocationsWithoutUpdatedLocation }, Cmd.none )
+
+            UpdateLocations ->
+                let
+                    newLocations =
+                        List.sortBy .id model.pickedLocations
+
+                    apiUpdatePost =
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.columns model.published
+                in
+                    ( { model
+                        | locations = newLocations
+                        , newLocation = blankLocation 1
+                        , showValidation = False
+                      }
+                    , Api.postModelToDb apiUpdatePost model.eventId
+                    )
 
             -- this deletes columns from pickedcolumns list - deletion isn't saved the user clicks 'save changes'
             DeleteColumn columnId ->

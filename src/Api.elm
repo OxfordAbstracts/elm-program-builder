@@ -13,6 +13,7 @@ apiUpdateGetDecoder =
     decode ApiUpdateGet
         |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
+        |> required "locations" (Json.Decode.list locationDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "submissions" (Json.Decode.list submissionDecoder)
         |> required "published" (Json.Decode.bool)
@@ -23,6 +24,7 @@ apiUpdatePostDecoder =
     decode ApiUpdatePost
         |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
+        |> required "locations" (Json.Decode.list locationDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "published" (Json.Decode.bool)
 
@@ -32,6 +34,7 @@ encodeApiUpdatePost record =
     Encode.object
         [ ( "datesWithSessions", Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
         , ( "tracks", Encode.list <| List.map trackEncoder record.tracks )
+        , ( "locations", Encode.list <| List.map locationEncoder record.locations )
         , ( "columns", Encode.list <| List.map columnEncoder record.columns )
         , ( "published", Encode.bool record.published )
         ]
@@ -47,7 +50,7 @@ sessionEncoder session =
         , ( "endTime", timeEncoder session.endTime )
         , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
         , ( "trackId", sessionTrackIdEncoder session.trackId )
-        , ( "location", Encode.string session.location )
+        , ( "locationId", sessionLocationIdEncoder session.locationId )
         , ( "submissions", Encode.list <| List.map sessionSubmissionEncoder session.submissions )
         , ( "chair", Encode.string session.chair )
         ]
@@ -64,6 +67,16 @@ sessionSubmissionEncoder submission =
 
 sessionTrackIdEncoder : Maybe TrackId -> Encode.Value
 sessionTrackIdEncoder record =
+    case record of
+        Just int ->
+            Encode.int int
+
+        Nothing ->
+            Encode.null
+
+
+sessionLocationIdEncoder : Maybe LocationId -> Encode.Value
+sessionLocationIdEncoder record =
     case record of
         Just int ->
             Encode.int int
@@ -110,7 +123,7 @@ sessionDecoder =
         |> required "endTime" timeDecoder
         |> required "sessionColumn" sessionColumnDecoder
         |> required "trackId" sessionTrackIdDecoder
-        |> required "location" Json.Decode.string
+        |> required "locationId" sessionLocationIdDecoder
         |> required "submissions" (Json.Decode.list sessionSubmissionDecoder)
         |> required "chair" Json.Decode.string
 
@@ -125,6 +138,14 @@ sessionSubmissionDecoder =
 
 sessionTrackIdDecoder : Json.Decode.Decoder (Maybe TrackId)
 sessionTrackIdDecoder =
+    Json.Decode.oneOf
+        [ Json.Decode.map Just Json.Decode.int
+        , Json.Decode.null Nothing
+        ]
+
+
+sessionLocationIdDecoder : Json.Decode.Decoder (Maybe LocationId)
+sessionLocationIdDecoder =
     Json.Decode.oneOf
         [ Json.Decode.map Just Json.Decode.int
         , Json.Decode.null Nothing
@@ -158,12 +179,27 @@ trackEncoder record =
         ]
 
 
+locationEncoder : Location -> Encode.Value
+locationEncoder record =
+    Encode.object
+        [ ( "id", Encode.int record.id )
+        , ( "name", Encode.string record.name )
+        ]
+
+
 trackDecoder : Json.Decode.Decoder Track
 trackDecoder =
     decode Track
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
         |> required "description" Json.Decode.string
+
+
+locationDecoder : Json.Decode.Decoder Location
+locationDecoder =
+    decode Location
+        |> required "id" Json.Decode.int
+        |> required "name" Json.Decode.string
 
 
 columnEncoder : Column -> Encode.Value
