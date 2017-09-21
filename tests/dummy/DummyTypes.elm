@@ -18,10 +18,12 @@ makeDummyModel : List Session -> MainModel.Model
 makeDummyModel sessions =
     { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+    , locations = [ Location 1 "London", Location 2 "Portugal" ]
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
+    , showManageLocationsUi = False
     , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
@@ -30,6 +32,7 @@ makeDummyModel sessions =
     , editSessionDate = DateWithoutTime 2017 1 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
+    , newLocation = blankLocation 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInputs =
@@ -44,6 +47,7 @@ makeDummyModel sessions =
     , pickedDates = initialDates
     , pickedTracks = []
     , pickedColumns = []
+    , pickedLocations = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = sessions } ]
     , host = ""
     , showPublishPage = False
@@ -58,6 +62,7 @@ dummyApiUpdateGet : MainModel.ApiUpdateGet
 dummyApiUpdateGet =
     { datesWithSessions = dummyDatesWithSessions
     , tracks = dummyTracks
+    , locations = dummyLocations
     , columns = dummyColumn
     , submissions = []
     , published = False
@@ -95,6 +100,14 @@ dummyTracks =
     ]
 
 
+dummyLocations : List MainModel.Location
+dummyLocations =
+    [ { id = 1
+      , name = "London"
+      }
+    ]
+
+
 dummyDatesWithSessions : List MainModel.DateWithSessions
 dummyDatesWithSessions =
     [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = dummySessions } ]
@@ -110,7 +123,7 @@ dummySessions =
         (MainModel.TimeOfDay 9 1)
         (MainModel.ColumnId 1)
         (Just 1)
-        "The aquariam"
+        (Just 1)
         [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
         , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         , { id = 3, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
@@ -125,7 +138,7 @@ dummySessions =
         (MainModel.TimeOfDay 11 0)
         (MainModel.ColumnId 1)
         (Just 1)
-        "The observatory"
+        (Just 1)
         [ { id = 5, startTime = Nothing, endTime = Nothing }
         , { id = 2, startTime = Nothing, endTime = Nothing }
         ]

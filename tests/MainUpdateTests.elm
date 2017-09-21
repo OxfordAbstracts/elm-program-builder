@@ -85,7 +85,7 @@ all =
                         , endTime = { hour = 12, minute = 0 }
                         , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
-                        , location = "test location"
+                        , locationId = (Just 1)
                         , trackId = (Just 1)
                         , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }
@@ -136,7 +136,7 @@ all =
                                         }
                                   , sessionColumn = MainModel.ColumnId 1
                                   , trackId = Just 1
-                                  , location = "test location"
+                                  , locationId = (Just 1)
                                   , submissions =
                                         [ { id = 1
                                           , startTime = Nothing
@@ -172,7 +172,7 @@ all =
                                   , endTime = { hour = 11, minute = 0 }
                                   , sessionColumn = MainModel.ColumnId 1
                                   , trackId = Just 1
-                                  , location = "The observatory"
+                                  , locationId = (Just 1)
                                   , submissions = [ { id = 5, startTime = Nothing, endTime = Nothing }, { id = 2, startTime = Nothing, endTime = Nothing } ]
                                   , chair = "Chairwoman Sue"
                                   }
@@ -193,7 +193,7 @@ all =
                         , endTime = { hour = 9, minute = 0 }
                         , sessionColumn = MainModel.ColumnId 1
                         , chair = "test chair"
-                        , location = "test location"
+                        , locationId = (Just 1)
                         , trackId = (Just 1)
                         , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }

@@ -49,13 +49,14 @@ all =
                                 , endTime = { hour = 9, minute = 0 }
                                 , sessionColumn = MainModel.ColumnId 1
                                 , chair = "test chair"
-                                , location = "test location"
+                                , locationId = (Just 1)
                                 , trackId = (Just 1)
                                 , submissions = []
                                 }
                             , editSessionDate = { year = 2017, month = 1, day = 1 }
                             , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
                             , datesWithSessions = [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = initialSessions } ]
+                            , locations = [ Location 1 "London", Location 2 "Portugal" ]
                         }
 
                     context =
@@ -74,7 +75,7 @@ all =
                             (TimeOfDay 9 1)
                             (ColumnId 1)
                             (Just 1)
-                            "The aquariam"
+                            (Just 1)
                             []
                             "Chairman Dave"
                         , Session
@@ -85,7 +86,7 @@ all =
                             (TimeOfDay 11 0)
                             (ColumnId 1)
                             (Just 1)
-                            "The observatory"
+                            (Just 1)
                             []
                             "Chairwoman Sue"
                         , Session
@@ -96,7 +97,7 @@ all =
                             (TimeOfDay 15 0)
                             (ColumnId 1)
                             (Just 1)
-                            "The games room"
+                            (Just 1)
                             []
                             ""
                         , Session
@@ -107,7 +108,7 @@ all =
                             (TimeOfDay 13 30)
                             (ColumnId 1)
                             (Just 1)
-                            "The mystery room"
+                            (Just 1)
                             []
                             ""
                         , Session
@@ -118,7 +119,7 @@ all =
                             (TimeOfDay 11 30)
                             AllColumns
                             (Just 1)
-                            "The mystery room 4"
+                            (Just 1)
                             []
                             ""
                         ]
@@ -135,7 +136,7 @@ all =
                                 , endTime = { hour = 14, minute = 0 }
                                 , sessionColumn = MainModel.ColumnId 1
                                 , chair = "test chair"
-                                , location = "test location"
+                                , locationId = (Just 1)
                                 , trackId = (Just 1)
                                 , submissions = []
                                 }
@@ -143,6 +144,7 @@ all =
                             , newSessionDate = { year = 2017, month = 1, day = 1 }
                             , tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
                             , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
+                            , locations = [ Location 1 "London", Location 2 "Portugal" ]
                         }
 
                     context =
