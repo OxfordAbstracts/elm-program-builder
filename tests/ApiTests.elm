@@ -57,9 +57,9 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
             },
             "sessionColumn": 1,
             "trackId": 1,
-            "location": "This is the location",
+            "chairId": 1,
+            "locationId": 1,
             "submissions": [],
-            "chair": "This is the chair"
           }
         ]
       }
@@ -116,4 +116,3 @@ createSession sessionName sessionDescription sessionYear sessionMonth =
         (Just 1)
         (Just 1)
         []
-        "This is the chair"

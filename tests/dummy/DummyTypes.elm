@@ -19,6 +19,7 @@ makeDummyModel sessions =
     { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , locations = [ Location 1 "London", Location 2 "Portugal" ]
+    , chairs = [ Chair 1 "Ines Teles" ]
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
