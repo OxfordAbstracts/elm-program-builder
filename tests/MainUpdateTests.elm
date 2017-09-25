@@ -84,8 +84,8 @@ all =
                         , startTime = { hour = 9, minute = 0 }
                         , endTime = { hour = 12, minute = 0 }
                         , sessionColumn = MainModel.ColumnId 1
-                        , chair = "test chair"
                         , locationId = (Just 1)
+                        , chairId = (Just 1)
                         , trackId = (Just 1)
                         , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }
@@ -137,6 +137,7 @@ all =
                                   , sessionColumn = MainModel.ColumnId 1
                                   , trackId = Just 1
                                   , locationId = (Just 1)
+                                  , chairId = (Just 1)
                                   , submissions =
                                         [ { id = 1
                                           , startTime = Nothing
@@ -160,7 +161,6 @@ all =
                                           }
                                           -- no submission 5 as not in model.submissions
                                         ]
-                                  , chair = "test chair"
                                   }
                                 , { id = 2
                                   , name = "Computers n stuff sesh 2"
@@ -173,8 +173,8 @@ all =
                                   , sessionColumn = MainModel.ColumnId 1
                                   , trackId = Just 1
                                   , locationId = (Just 1)
+                                  , chairId = (Just 1)
                                   , submissions = [ { id = 5, startTime = Nothing, endTime = Nothing }, { id = 2, startTime = Nothing, endTime = Nothing } ]
-                                  , chair = "Chairwoman Sue"
                                   }
                                 ]
                           }
@@ -192,8 +192,8 @@ all =
                         , startTime = { hour = 12, minute = 0 }
                         , endTime = { hour = 9, minute = 0 }
                         , sessionColumn = MainModel.ColumnId 1
-                        , chair = "test chair"
                         , locationId = (Just 1)
+                        , chairId = (Just 1)
                         , trackId = (Just 1)
                         , submissions = [ { id = 1, startTime = Nothing, endTime = Nothing } ]
                         }

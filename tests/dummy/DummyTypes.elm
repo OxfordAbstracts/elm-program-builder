@@ -124,12 +124,12 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         (Just 1)
+        (Just 1)
         [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
         , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         , { id = 3, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         , { id = 4, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         ]
-        "Chairman Dave"
     , MainModel.Session
         2
         "Computers n stuff sesh 2"
@@ -139,8 +139,8 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         (Just 1)
+        (Just 1)
         [ { id = 5, startTime = Nothing, endTime = Nothing }
         , { id = 2, startTime = Nothing, endTime = Nothing }
         ]
-        "Chairwoman Sue"
     ]

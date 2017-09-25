@@ -4,7 +4,7 @@ import Test exposing (..)
 import Expect
 import Api
 import Json.Decode
-import MainModel exposing (ApiUpdateGet, Session, Submission, Track, Column, DateWithoutTime, Location)
+import MainModel exposing (ApiUpdateGet, Session, Submission, Track, Column, DateWithoutTime, Location, Chair)
 import Fuzz exposing (int, intRange, string)
 
 
@@ -93,6 +93,7 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         ]
         [ Track 1 "track 1" "track 1 description" ]
         [ Location 1 "london" ]
+        [ Chair 1 "Ines Teles" ]
         [ Column 1 "column 1" ]
         [ Submission 1 ]
         False
@@ -111,6 +112,7 @@ createSession sessionName sessionDescription sessionYear sessionMonth =
         , minute = 30
         }
         (MainModel.ColumnId 1)
+        (Just 1)
         (Just 1)
         (Just 1)
         []

@@ -72,6 +72,17 @@ getLocationId sessionStarting =
             0
 
 
+getChairId : Maybe Session -> ChairId
+getChairId sessionStarting =
+    case (Maybe.map .chairId sessionStarting) of
+        Just chairId ->
+            chairId
+                |> Maybe.withDefault 0
+
+        Nothing ->
+            0
+
+
 getNameFromId list id =
     list
         |> List.filter (\t -> t.id == id)
@@ -224,6 +235,12 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         locationId =
             getLocationId sessionStarting
 
+        chairName =
+            getNameFromId model.chairs chairId
+
+        chairId =
+            getChairId sessionStarting
+
         hideTrackName =
             if String.isEmpty trackName then
                 "none"
@@ -285,7 +302,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                         , span [ class "prog-session__data prog-session__location" ]
                             [ text locationName ]
                         , span [ class "prog-session__data prog-session__chair" ]
-                            [ text (sessionStarting.chair) ]
+                            [ text chairName ]
                         , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
                             [ text trackName ]
                         ]
@@ -404,6 +421,12 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
         locationName =
             getNameFromId model.locations locationId
 
+        chairName =
+            getNameFromId model.chairs chairId
+
+        chairId =
+            getChairId sessionStarting
+
         hideTrackName =
             if String.isEmpty trackName then
                 "none"
@@ -464,7 +487,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                         , span [ class "prog-session__data prog-session__location" ]
                             [ text locationName ]
                         , span [ class "prog-session__data prog-session__chair" ]
-                            [ text (sessionStarting.chair) ]
+                            [ text chairName ]
                         , span
                             [ class "prog-session__data prog-session__track"
                             , style [ ( "display", hideTrackName ) ]
