@@ -7,10 +7,12 @@ module MainModel exposing (..)
 type alias Model =
     { tracks : List Track
     , columns : List Column
+    , locations : List Location
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
+    , showManageLocationsUi : Bool
     , published : Bool
     , showPreviewUi : Bool
     , newSession : Session
@@ -19,6 +21,7 @@ type alias Model =
     , editSessionDate : DateWithoutTime
     , newColumn : Column
     , newTrack : Track
+    , newLocation : Location
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInputs : List SubmissionIdInput
@@ -27,6 +30,7 @@ type alias Model =
     , pickedDates : List DateWithoutTime
     , pickedTracks : List Track
     , pickedColumns : List Column
+    , pickedLocations : List Location
     , datesWithSessions : List DateWithSessions
     , host : String
     , showPublishPage : Bool
@@ -69,10 +73,12 @@ initialModel : Model
 initialModel =
     { tracks = []
     , columns = []
+    , locations = []
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
+    , showManageLocationsUi = False
     , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
@@ -81,6 +87,7 @@ initialModel =
     , editSessionDate = DateWithoutTime 2017 1 1
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
+    , newLocation = blankLocation 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
@@ -89,6 +96,7 @@ initialModel =
     , pickedDates = initialDates
     , pickedTracks = []
     , pickedColumns = []
+    , pickedLocations = []
     , datesWithSessions = []
     , host = ""
     , showPublishPage = False
@@ -112,7 +120,7 @@ type alias Session =
     , endTime : TimeOfDay
     , sessionColumn : SessionColumn
     , trackId : Maybe TrackId
-    , location : String
+    , locationId : Maybe LocationId
     , submissions : List SessionSubmission
     , chair : String
     }
@@ -163,7 +171,7 @@ blankSession id =
         (TimeOfDay 12 0)
         AllColumns
         Nothing
-        ""
+        (Just 1)
         []
         ""
 
@@ -178,6 +186,12 @@ blankTrack : Int -> Track
 blankTrack id =
     Track id
         ""
+        ""
+
+
+blankLocation : Int -> Location
+blankLocation id =
+    Location id
         ""
 
 
@@ -202,9 +216,20 @@ type alias TrackId =
     Int
 
 
+type alias Location =
+    { id : LocationId
+    , name : String
+    }
+
+
+type alias LocationId =
+    Int
+
+
 type alias ApiUpdatePost =
     { datesWithSessions : List DateWithSessions
     , tracks : List Track
+    , locations : List Location
     , columns : List Column
     , published : Bool
     }
@@ -213,6 +238,7 @@ type alias ApiUpdatePost =
 type alias ApiUpdateGet =
     { datesWithSessions : List DateWithSessions
     , tracks : List Track
+    , locations : List Location
     , columns : List Column
     , submissions : List Submission
     , published : Bool

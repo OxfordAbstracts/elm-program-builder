@@ -9,6 +9,7 @@ import NewSessionView exposing (NewSessionContext, view)
 import NewColumnView
 import NewTrackView
 import ManageDatesView
+import ManageLocationView
 import PublishedUrlView exposing (view)
 import Helpers exposing (onChange)
 
@@ -37,6 +38,7 @@ view model =
             , NewSessionView.view context model
             , NewColumnView.view model
             , NewTrackView.view model
+            , ManageLocationView.view model
             , ManageDatesView.view model
             ]
 
@@ -62,6 +64,12 @@ viewUiButtons model =
             else
                 "programme-controls__button-dropdown"
 
+        toggleManageLocationsClass =
+            if model.showManageLocationsUi then
+                "programme-controls__button-dropdown programme-controls__button-dropdown--active"
+            else
+                "programme-controls__button-dropdown"
+
         publishButtonText =
             if model.published then
                 "Unpublish"
@@ -72,6 +80,8 @@ viewUiButtons model =
             [ div [ class "programme-controls" ]
                 [ button [ class toggleManageDatesClass, type_ "button", onClick ToggleManageDatesUi ]
                     [ text "Manage Dates" ]
+                , button [ class toggleManageLocationsClass, type_ "button", onClick ToggleManageLocationsUi ]
+                    [ text "Manage Locations" ]
                 , button [ class toggleNewColumnClass, type_ "button", onClick ToggleNewColumnUi ]
                     [ text "Manage Columns" ]
                 , button [ class toggleNewTrackClass, type_ "button", onClick ToggleNewTrackUi ]

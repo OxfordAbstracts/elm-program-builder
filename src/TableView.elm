@@ -61,9 +61,20 @@ getTrackId sessionStarting =
             0
 
 
-getTrackName tracks trackId =
-    tracks
-        |> List.filter (\t -> t.id == trackId)
+getLocationId : Maybe Session -> LocationId
+getLocationId sessionStarting =
+    case (Maybe.map .locationId sessionStarting) of
+        Just locationId ->
+            locationId
+                |> Maybe.withDefault 0
+
+        Nothing ->
+            0
+
+
+getNameFromId list id =
+    list
+        |> List.filter (\t -> t.id == id)
         |> List.map .name
         |> List.head
         |> Maybe.withDefault ""
@@ -205,7 +216,13 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
             getTrackId sessionStarting
 
         trackName =
-            getTrackName model.tracks trackId
+            getNameFromId model.tracks trackId
+
+        locationName =
+            getNameFromId model.locations locationId
+
+        locationId =
+            getLocationId sessionStarting
 
         hideTrackName =
             if String.isEmpty trackName then
@@ -266,8 +283,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
-                            [ text (sessionStarting.location)
-                            ]
+                            [ text locationName ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
                         , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
@@ -380,7 +396,13 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
             getTrackId sessionStarting
 
         trackName =
-            getTrackName model.tracks trackId
+            getNameFromId model.tracks trackId
+
+        locationId =
+            getLocationId sessionStarting
+
+        locationName =
+            getNameFromId model.locations locationId
 
         hideTrackName =
             if String.isEmpty trackName then
@@ -440,8 +462,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                                 ]
                             ]
                         , span [ class "prog-session__data prog-session__location" ]
-                            [ text (sessionStarting.location)
-                            ]
+                            [ text locationName ]
                         , span [ class "prog-session__data prog-session__chair" ]
                             [ text (sessionStarting.chair) ]
                         , span
