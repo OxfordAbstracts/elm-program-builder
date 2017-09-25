@@ -113,6 +113,14 @@ dummyLocations =
     ]
 
 
+dummyChairs : List MainModel.Chair
+dummyChairs =
+    [ { id = 1
+      , name = "Ines Teles"
+      }
+    ]
+
+
 dummyDatesWithSessions : List MainModel.DateWithSessions
 dummyDatesWithSessions =
     [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = dummySessions } ]
