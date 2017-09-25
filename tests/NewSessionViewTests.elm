@@ -48,7 +48,6 @@ all =
                                 , startTime = { hour = 12, minute = 0 }
                                 , endTime = { hour = 9, minute = 0 }
                                 , sessionColumn = MainModel.ColumnId 1
-                                , chair = "test chair"
                                 , locationId = (Just 1)
                                 , trackId = (Just 1)
                                 , submissions = []
