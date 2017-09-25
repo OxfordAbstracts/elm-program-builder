@@ -777,7 +777,6 @@ update msg model =
 
             UpdatePickedLocation locationId newPickedLocationInput ->
                 let
-                    -- TODO: remove trackfield
                     pickedLocation =
                         model.pickedLocations
                             |> List.filter (\l -> l.id == locationId)

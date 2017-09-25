@@ -76,13 +76,8 @@ sessionTrackIdEncoder record =
 
 
 sessionLocationIdEncoder : Maybe LocationId -> Encode.Value
-sessionLocationIdEncoder record =
-    case record of
-        Just int ->
-            Encode.int int
-
-        Nothing ->
-            Encode.null
+sessionLocationIdEncoder =
+    Maybe.map Encode.int >> Maybe.withDefault Encode.null
 
 
 sessionColumnEncoder : SessionColumn -> Encode.Value
@@ -146,10 +141,7 @@ sessionTrackIdDecoder =
 
 sessionLocationIdDecoder : Json.Decode.Decoder (Maybe LocationId)
 sessionLocationIdDecoder =
-    Json.Decode.oneOf
-        [ Json.Decode.map Just Json.Decode.int
-        , Json.Decode.null Nothing
-        ]
+    Json.Decode.maybe Json.Decode.int
 
 
 sessionColumnDecoder : Json.Decode.Decoder SessionColumn
