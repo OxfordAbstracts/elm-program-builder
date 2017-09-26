@@ -8,11 +8,13 @@ type alias Model =
     { tracks : List Track
     , columns : List Column
     , locations : List Location
+    , chairs : List Chair
     , showNewSessionUi : Bool
     , showNewTrackUi : Bool
     , showNewColumnUi : Bool
     , showManageDatesUi : Bool
     , showManageLocationsUi : Bool
+    , showManageChairsUi : Bool
     , published : Bool
     , showPreviewUi : Bool
     , newSession : Session
@@ -22,6 +24,7 @@ type alias Model =
     , newColumn : Column
     , newTrack : Track
     , newLocation : Location
+    , newChair : Chair
     , idOfSessionBeingEdited : Maybe Int
     , eventId : String
     , submissionIdsInputs : List SubmissionIdInput
@@ -31,6 +34,7 @@ type alias Model =
     , pickedTracks : List Track
     , pickedColumns : List Column
     , pickedLocations : List Location
+    , pickedChairs : List Chair
     , datesWithSessions : List DateWithSessions
     , host : String
     , showPublishPage : Bool
@@ -74,11 +78,13 @@ initialModel =
     { tracks = []
     , columns = []
     , locations = []
+    , chairs = []
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
     , showManageLocationsUi = False
+    , showManageChairsUi = False
     , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
@@ -88,6 +94,7 @@ initialModel =
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , newLocation = blankLocation 1
+    , newChair = blankChair 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
@@ -97,6 +104,7 @@ initialModel =
     , pickedTracks = []
     , pickedColumns = []
     , pickedLocations = []
+    , pickedChairs = []
     , datesWithSessions = []
     , host = ""
     , showPublishPage = False
@@ -121,8 +129,8 @@ type alias Session =
     , sessionColumn : SessionColumn
     , trackId : Maybe TrackId
     , locationId : Maybe LocationId
+    , chairId : Maybe ChairId
     , submissions : List SessionSubmission
-    , chair : String
     }
 
 
@@ -172,8 +180,8 @@ blankSession id =
         AllColumns
         Nothing
         (Just 1)
+        (Just 1)
         []
-        ""
 
 
 blankColumn : Int -> Column
@@ -192,6 +200,12 @@ blankTrack id =
 blankLocation : Int -> Location
 blankLocation id =
     Location id
+        ""
+
+
+blankChair : Int -> Chair
+blankChair id =
+    Chair id
         ""
 
 
@@ -222,7 +236,17 @@ type alias Location =
     }
 
 
+type alias Chair =
+    { id : ChairId
+    , name : String
+    }
+
+
 type alias LocationId =
+    Int
+
+
+type alias ChairId =
     Int
 
 
@@ -230,6 +254,7 @@ type alias ApiUpdatePost =
     { datesWithSessions : List DateWithSessions
     , tracks : List Track
     , locations : List Location
+    , chairs : List Chair
     , columns : List Column
     , published : Bool
     }
@@ -239,6 +264,7 @@ type alias ApiUpdateGet =
     { datesWithSessions : List DateWithSessions
     , tracks : List Track
     , locations : List Location
+    , chairs : List Chair
     , columns : List Column
     , submissions : List Submission
     , published : Bool

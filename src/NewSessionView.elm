@@ -76,6 +76,9 @@ view context model =
         noLocationDropdownOption =
             option [ value "", selected (context.session.locationId == Nothing) ] [ text "No location" ]
 
+        noChairDropdownOption =
+            option [ value "", selected (context.session.chairId == Nothing) ] [ text "No chair" ]
+
         column1 =
             div []
                 [ label [ class "form__label", for "session-name-input" ]
@@ -127,6 +130,16 @@ view context model =
                         |> Result.withDefault 0
                     )
 
+        toChairId chairIdString =
+            if chairIdString == "" then
+                Nothing
+            else
+                Just
+                    (chairIdString
+                        |> String.toInt
+                        |> Result.withDefault 0
+                    )
+
         column2 =
             div []
                 [ div []
@@ -140,14 +153,8 @@ view context model =
                         , span [ class "form__label form__label--sub" ]
                             [ text "This will be the person in charge of this session" ]
                         ]
-                    , input
-                        [ class "form__input"
-                        , id "chair-input"
-                        , type_ "text"
-                        , value context.session.chair
-                        , onInput UpdateNewSessionChair
-                        ]
-                        [ text model.newSession.chair ]
+                    , select [ id "chair-input", onChange (UpdateNewSessionChair << toChairId), class "form__input form__input--dropdown" ]
+                        (noChairDropdownOption :: List.map (\c -> option [ value (toString c.id), selected (context.session.chairId == Just c.id) ] [ text c.name ]) model.chairs)
                     ]
                 , div []
                     [ label [ class "form__label", for "location-input" ]

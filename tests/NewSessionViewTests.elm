@@ -48,8 +48,8 @@ all =
                                 , startTime = { hour = 12, minute = 0 }
                                 , endTime = { hour = 9, minute = 0 }
                                 , sessionColumn = MainModel.ColumnId 1
-                                , chair = "test chair"
                                 , locationId = (Just 1)
+                                , chairId = (Just 1)
                                 , trackId = (Just 1)
                                 , submissions = []
                                 }
@@ -76,8 +76,8 @@ all =
                             (ColumnId 1)
                             (Just 1)
                             (Just 1)
+                            (Just 1)
                             []
-                            "Chairman Dave"
                         , Session
                             2
                             "Computers n stuff sesh 2"
@@ -87,8 +87,8 @@ all =
                             (ColumnId 1)
                             (Just 1)
                             (Just 1)
+                            (Just 1)
                             []
-                            "Chairwoman Sue"
                         , Session
                             3
                             "Sessioning hard 3"
@@ -98,8 +98,8 @@ all =
                             (ColumnId 1)
                             (Just 1)
                             (Just 1)
+                            (Just 1)
                             []
-                            ""
                         , Session
                             4
                             "Other column sesh 4"
@@ -109,8 +109,8 @@ all =
                             (ColumnId 1)
                             (Just 1)
                             (Just 1)
+                            (Just 1)
                             []
-                            ""
                         , Session
                             5
                             "first column 1 day 2 sesh 5"
@@ -120,8 +120,8 @@ all =
                             AllColumns
                             (Just 1)
                             (Just 1)
+                            (Just 1)
                             []
-                            ""
                         ]
 
                     newModel =
@@ -135,8 +135,8 @@ all =
                                 , startTime = { hour = 12, minute = 0 }
                                 , endTime = { hour = 14, minute = 0 }
                                 , sessionColumn = MainModel.ColumnId 1
-                                , chair = "test chair"
                                 , locationId = (Just 1)
+                                , chairId = (Just 1)
                                 , trackId = (Just 1)
                                 , submissions = []
                                 }

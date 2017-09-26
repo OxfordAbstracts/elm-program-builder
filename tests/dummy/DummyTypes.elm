@@ -19,11 +19,13 @@ makeDummyModel sessions =
     { tracks = [ Track 1 "track 1" "track 1 description", Track 2 "track 2" "track 2 description" ]
     , columns = [ Column 1 "Pediatric Sessions", Column 2 "Other Sessions" ]
     , locations = [ Location 1 "London", Location 2 "Portugal" ]
+    , chairs = [ Chair 1 "Ines Teles" ]
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
     , showManageLocationsUi = False
+    , showManageChairsUi = False
     , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
@@ -33,6 +35,7 @@ makeDummyModel sessions =
     , newColumn = blankColumn 1
     , newTrack = blankTrack 1
     , newLocation = blankLocation 1
+    , newChair = blankChair 1
     , idOfSessionBeingEdited = Nothing
     , eventId = ""
     , submissionIdsInputs =
@@ -48,6 +51,7 @@ makeDummyModel sessions =
     , pickedTracks = []
     , pickedColumns = []
     , pickedLocations = []
+    , pickedChairs = []
     , datesWithSessions = [ { date = DateWithoutTime 2017 1 1, sessions = sessions } ]
     , host = ""
     , showPublishPage = False
@@ -63,6 +67,7 @@ dummyApiUpdateGet =
     { datesWithSessions = dummyDatesWithSessions
     , tracks = dummyTracks
     , locations = dummyLocations
+    , chairs = dummyChairs
     , columns = dummyColumn
     , submissions = []
     , published = False
@@ -108,6 +113,14 @@ dummyLocations =
     ]
 
 
+dummyChairs : List MainModel.Chair
+dummyChairs =
+    [ { id = 1
+      , name = "Ines Teles"
+      }
+    ]
+
+
 dummyDatesWithSessions : List MainModel.DateWithSessions
 dummyDatesWithSessions =
     [ { date = MainModel.DateWithoutTime 2017 1 1, sessions = dummySessions } ]
@@ -124,12 +137,12 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         (Just 1)
+        (Just 1)
         [ { id = 1, startTime = Just { hour = 11, minute = 0 }, endTime = Just { hour = 11, minute = 45 } }
         , { id = 2, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         , { id = 3, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         , { id = 4, startTime = Just { hour = 12, minute = 0 }, endTime = Just { hour = 12, minute = 30 } }
         ]
-        "Chairman Dave"
     , MainModel.Session
         2
         "Computers n stuff sesh 2"
@@ -139,8 +152,8 @@ dummySessions =
         (MainModel.ColumnId 1)
         (Just 1)
         (Just 1)
+        (Just 1)
         [ { id = 5, startTime = Nothing, endTime = Nothing }
         , { id = 2, startTime = Nothing, endTime = Nothing }
         ]
-        "Chairwoman Sue"
     ]

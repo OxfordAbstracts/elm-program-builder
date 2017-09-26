@@ -10,6 +10,7 @@ type Msg
     | AddNewDate String Date
     | AddNewTrack
     | AddNewLocation
+    | AddNewChair
     | CancelAction
     | UpdateColumns
     | CreateNewSession
@@ -20,7 +21,8 @@ type Msg
     | DeleteDate Int
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
-    | DeleteLocation MainModel.TrackId
+    | DeleteLocation MainModel.LocationId
+    | DeleteChair MainModel.ChairId
     | EditSession
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
@@ -37,13 +39,14 @@ type Msg
     | ShowValidationMessage
     | ToggleManageDatesUi
     | ToggleManageLocationsUi
+    | ToggleManageChairsUi
     | ToggleNewColumnUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
     | ToggleScheduleSubmissionsIndividually
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
-    | UpdateNewSessionChair String
+    | UpdateNewSessionChair (Maybe MainModel.ChairId)
     | UpdateNewSessionColumn String
     | UpdateNewSessionDate String
     | UpdateNewSessionDescription String
@@ -61,3 +64,5 @@ type Msg
     | UpdatePickedTrack Int MainModel.TrackFields String
     | UpdatePickedLocation Int String
     | UpdateLocations
+    | UpdatePickedChair Int String
+    | UpdateChairs

@@ -14,6 +14,7 @@ apiUpdateGetDecoder =
         |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "locations" (Json.Decode.list locationDecoder)
+        |> required "chairs" (Json.Decode.list chairDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "submissions" (Json.Decode.list submissionDecoder)
         |> required "published" (Json.Decode.bool)
@@ -25,6 +26,7 @@ apiUpdatePostDecoder =
         |> required "datesWithSessions" (Json.Decode.list dateWithSessionsDecoder)
         |> required "tracks" (Json.Decode.list trackDecoder)
         |> required "locations" (Json.Decode.list locationDecoder)
+        |> required "chairs" (Json.Decode.list chairDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "published" (Json.Decode.bool)
 
@@ -35,6 +37,7 @@ encodeApiUpdatePost record =
         [ ( "datesWithSessions", Encode.list <| List.map dateWithSessionsEncoder record.datesWithSessions )
         , ( "tracks", Encode.list <| List.map trackEncoder record.tracks )
         , ( "locations", Encode.list <| List.map locationEncoder record.locations )
+        , ( "chairs", Encode.list <| List.map locationEncoder record.chairs )
         , ( "columns", Encode.list <| List.map columnEncoder record.columns )
         , ( "published", Encode.bool record.published )
         ]
@@ -51,8 +54,8 @@ sessionEncoder session =
         , ( "sessionColumn", sessionColumnEncoder session.sessionColumn )
         , ( "trackId", sessionTrackIdEncoder session.trackId )
         , ( "locationId", sessionLocationIdEncoder session.locationId )
+        , ( "chairId", sessionChairIdEncoder session.chairId )
         , ( "submissions", Encode.list <| List.map sessionSubmissionEncoder session.submissions )
-        , ( "chair", Encode.string session.chair )
         ]
 
 
@@ -77,6 +80,11 @@ sessionTrackIdEncoder record =
 
 sessionLocationIdEncoder : Maybe LocationId -> Encode.Value
 sessionLocationIdEncoder =
+    Maybe.map Encode.int >> Maybe.withDefault Encode.null
+
+
+sessionChairIdEncoder : Maybe ChairId -> Encode.Value
+sessionChairIdEncoder =
     Maybe.map Encode.int >> Maybe.withDefault Encode.null
 
 
@@ -119,8 +127,8 @@ sessionDecoder =
         |> required "sessionColumn" sessionColumnDecoder
         |> required "trackId" sessionTrackIdDecoder
         |> required "locationId" sessionLocationIdDecoder
+        |> required "chairId" sessionChairIdDecoder
         |> required "submissions" (Json.Decode.list sessionSubmissionDecoder)
-        |> required "chair" Json.Decode.string
 
 
 sessionSubmissionDecoder : Json.Decode.Decoder SessionSubmission
@@ -141,6 +149,11 @@ sessionTrackIdDecoder =
 
 sessionLocationIdDecoder : Json.Decode.Decoder (Maybe LocationId)
 sessionLocationIdDecoder =
+    Json.Decode.maybe Json.Decode.int
+
+
+sessionChairIdDecoder : Json.Decode.Decoder (Maybe ChairId)
+sessionChairIdDecoder =
     Json.Decode.maybe Json.Decode.int
 
 
@@ -179,6 +192,14 @@ locationEncoder record =
         ]
 
 
+chairEncoder : Chair -> Encode.Value
+chairEncoder record =
+    Encode.object
+        [ ( "id", Encode.int record.id )
+        , ( "name", Encode.string record.name )
+        ]
+
+
 trackDecoder : Json.Decode.Decoder Track
 trackDecoder =
     decode Track
@@ -190,6 +211,13 @@ trackDecoder =
 locationDecoder : Json.Decode.Decoder Location
 locationDecoder =
     decode Location
+        |> required "id" Json.Decode.int
+        |> required "name" Json.Decode.string
+
+
+chairDecoder : Json.Decode.Decoder Chair
+chairDecoder =
+    decode Chair
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
 

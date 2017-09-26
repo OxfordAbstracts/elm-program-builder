@@ -121,6 +121,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
         , tracks = apiUpdateGet.tracks
         , columns = apiUpdateGet.columns
         , locations = apiUpdateGet.locations
+        , chairs = apiUpdateGet.chairs
         , submissions = apiUpdateGet.submissions
         , published = apiUpdateGet.published
      }
@@ -167,6 +168,7 @@ update msg model =
                         , showNewTrackUi = False
                         , showManageDatesUi = False
                         , showManageLocationsUi = False
+                        , showManageChairsUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
                         , showPreviewUi = False
@@ -183,6 +185,7 @@ update msg model =
                         , tracks = model.tracks
                         , columns = model.columns
                         , locations = model.locations
+                        , chairs = model.chairs
                         , published = not model.published
                         }
                 in
@@ -199,6 +202,7 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , showManageLocationsUi = False
+                    , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                     , pickedTracks = model.tracks
@@ -213,6 +217,7 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , showManageLocationsUi = False
+                    , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                   }
@@ -227,6 +232,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = False
+                    , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedColumns = model.columns
                   }
@@ -246,6 +252,7 @@ update msg model =
                         , showNewSessionUi = False
                         , showNewTrackUi = False
                         , showManageLocationsUi = False
+                        , showManageChairsUi = False
                         , showNewColumnUi = False
                         , idOfSessionBeingEdited = Nothing
                         , datePickerClosed = False
@@ -263,8 +270,24 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = not model.showManageLocationsUi
+                    , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedLocations = model.locations
+                  }
+                , Cmd.none
+                )
+
+            ToggleManageChairsUi ->
+                ( { model
+                    | showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , showNewTrackUi = False
+                    , showManageDatesUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showManageLocationsUi = False
+                    , showManageChairsUi = not model.showManageChairsUi
+                    , showPreviewUi = False
+                    , pickedChairs = model.chairs
                   }
                 , Cmd.none
                 )
@@ -306,6 +329,7 @@ update msg model =
                         , tracks = model.tracks
                         , columns = newColumns
                         , locations = model.locations
+                        , chairs = model.chairs
                         , published = model.published
                         }
                 in
@@ -349,6 +373,7 @@ update msg model =
                         , tracks = model.tracks
                         , columns = model.columns
                         , locations = model.locations
+                        , chairs = model.chairs
                         , published = model.published
                         }
                 in
@@ -367,7 +392,7 @@ update msg model =
                         List.sortBy .id model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.columns model.published
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published
                 in
                     ( { model
                         | tracks = newTracks
@@ -466,8 +491,13 @@ update msg model =
                         Err _ ->
                             ( model, Cmd.none )
 
-            UpdateNewSessionChair newChair ->
-                ( (updateNewSession model (\ns -> { ns | chair = newChair })), Cmd.none )
+            UpdateNewSessionChair newChairId ->
+                case newChairId of
+                    Just chairId ->
+                        ( (updateNewSession model (\ns -> { ns | chairId = Just chairId })), Cmd.none )
+
+                    Nothing ->
+                        ( (updateNewSession model (\ns -> { ns | chairId = Nothing })), Cmd.none )
 
             UpdateNewSessionLocation newLocationId ->
                 case newLocationId of
@@ -521,6 +551,7 @@ update msg model =
                         , tracks = model.tracks
                         , columns = model.columns
                         , locations = model.locations
+                        , chairs = model.chairs
                         , published = model.published
                         }
                 in
@@ -571,6 +602,8 @@ update msg model =
                         , showNewTrackUi = False
                         , showNewColumnUi = False
                         , showManageDatesUi = False
+                        , showManageChairsUi = False
+                        , showManageLocationsUi = False
                         , editSession = session
                         , submissionIdsInputs = submissionIdsInputs
                         , editSessionDate = sessionDate
@@ -613,6 +646,7 @@ update msg model =
                                 , columns = model.columns
                                 , published = model.published
                                 , locations = model.locations
+                                , chairs = model.chairs
                                 }
                         in
                             ( { model
@@ -669,6 +703,7 @@ update msg model =
                         , columns = model.columns
                         , published = model.published
                         , locations = model.locations
+                        , chairs = model.chairs
                         }
                 in
                     ( { model
@@ -800,11 +835,64 @@ update msg model =
                         List.sortBy .id model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.columns model.published
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published
                 in
                     ( { model
                         | locations = newLocations
                         , newLocation = blankLocation 1
+                        , showValidation = False
+                      }
+                    , Api.postModelToDb apiUpdatePost model.eventId
+                    )
+
+            --  not actually deleted from chairs list until user clicks save changes
+            DeleteChair chairId ->
+                let
+                    newPickedChairs =
+                        List.filter (\l -> l.id /= chairId) model.pickedChairs
+                in
+                    ( { model | pickedChairs = newPickedChairs }
+                    , Cmd.none
+                    )
+
+            AddNewChair ->
+                ( { model
+                    | pickedChairs =
+                        appendNewElementToList model.pickedChairs (Chair 0 "")
+                  }
+                , Cmd.none
+                )
+
+            UpdatePickedChair chairId newPickedChairInput ->
+                let
+                    pickedChair =
+                        model.pickedChairs
+                            |> List.filter (\l -> l.id == chairId)
+                            |> List.head
+                            |> Maybe.withDefault (Chair 0 "")
+
+                    newPickedChair =
+                        { pickedChair
+                            | name = newPickedChairInput
+                        }
+
+                    pickedChairsWithoutUpdatedChair =
+                        model.pickedChairs
+                            |> List.filter (\s -> s.id /= chairId)
+                in
+                    ( { model | pickedChairs = newPickedChair :: pickedChairsWithoutUpdatedChair }, Cmd.none )
+
+            UpdateChairs ->
+                let
+                    newChairs =
+                        List.sortBy .id model.pickedChairs
+
+                    apiUpdatePost =
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published
+                in
+                    ( { model
+                        | chairs = newChairs
+                        , newChair = blankChair 1
                         , showValidation = False
                       }
                     , Api.postModelToDb apiUpdatePost model.eventId
