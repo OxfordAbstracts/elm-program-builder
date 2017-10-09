@@ -284,7 +284,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                                             || model.showBasicPage
                                         )
                                     , class "prog-session__action"
-                                    , onClick (DeleteSession sessionStarting.id)
+                                    , onClick (ConfirmDeleteSession sessionStarting.id)
                                     ]
                                     [ text "delete" ]
                                 , button
@@ -469,7 +469,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                                             || model.showBasicPage
                                         )
                                     , class "prog-session__action"
-                                    , onClick (DeleteSession sessionStarting.id)
+                                    , onClick (ConfirmDeleteSession sessionStarting.id)
                                     ]
                                     [ text "delete" ]
                                 , button

@@ -59,6 +59,7 @@ subscriptions model =
     Sub.batch
         [ changeDates UpdateDates
         , changePickedDates UpdatePickedDates
+        , deleteSession DeleteSession
         ]
 
 
