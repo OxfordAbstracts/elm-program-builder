@@ -63,7 +63,6 @@ view model =
 
         listTracks =
             model.pickedTracks
-                |> List.sortBy .id
                 |> List.indexedMap
                     (\i t ->
                         div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
