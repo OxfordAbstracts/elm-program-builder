@@ -205,7 +205,7 @@ update msg model =
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
-                    , pickedTracks = model.tracks
+                    , pickedTracks = List.sortBy .name model.tracks
                   }
                 , Cmd.none
                 )
@@ -272,7 +272,7 @@ update msg model =
                     , showManageLocationsUi = not model.showManageLocationsUi
                     , showManageChairsUi = False
                     , showPreviewUi = False
-                    , pickedLocations = model.locations
+                    , pickedLocations = List.sortBy .name model.locations
                   }
                 , Cmd.none
                 )
@@ -287,7 +287,7 @@ update msg model =
                     , showManageLocationsUi = False
                     , showManageChairsUi = not model.showManageChairsUi
                     , showPreviewUi = False
-                    , pickedChairs = model.chairs
+                    , pickedChairs = List.sortBy .name model.chairs
                   }
                 , Cmd.none
                 )
@@ -389,13 +389,14 @@ update msg model =
             UpdateTracks ->
                 let
                     newTracks =
-                        List.sortBy .id model.pickedTracks
+                        List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published
                 in
                     ( { model
                         | tracks = newTracks
+                        , pickedTracks = newTracks
                         , newTrack = blankTrack 1
                         , showValidation = False
                       }
@@ -786,11 +787,12 @@ update msg model =
                         else
                             pickedTrack
 
-                    pickedTracksWithoutUpdatedTrack =
+                    --replace track with edited one if already exists
+                    newPickedTracks =
                         model.pickedTracks
-                            |> List.filter (\s -> s.id /= trackId)
+                            |> List.Extra.replaceIf ((\t -> t.id == trackId)) (newPickedTrack)
                 in
-                    ( { model | pickedTracks = newPickedTrack :: pickedTracksWithoutUpdatedTrack }, Cmd.none )
+                    ( { model | pickedTracks = newPickedTracks }, Cmd.none )
 
             --  not actually deleted from locations list until user clicks save changes
             DeleteLocation locationId ->
@@ -823,22 +825,23 @@ update msg model =
                             | name = newPickedLocationInput
                         }
 
-                    pickedLocationsWithoutUpdatedLocation =
+                    newPickedLocations =
                         model.pickedLocations
-                            |> List.filter (\s -> s.id /= locationId)
+                            |> List.Extra.replaceIf (\s -> s.id == locationId) (newPickedLocation)
                 in
-                    ( { model | pickedLocations = newPickedLocation :: pickedLocationsWithoutUpdatedLocation }, Cmd.none )
+                    ( { model | pickedLocations = newPickedLocations }, Cmd.none )
 
             UpdateLocations ->
                 let
                     newLocations =
-                        List.sortBy .id model.pickedLocations
+                        List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published
                 in
                     ( { model
                         | locations = newLocations
+                        , pickedLocations = newLocations
                         , newLocation = blankLocation 1
                         , showValidation = False
                       }
@@ -876,22 +879,23 @@ update msg model =
                             | name = newPickedChairInput
                         }
 
-                    pickedChairsWithoutUpdatedChair =
+                    newPickedChairs =
                         model.pickedChairs
-                            |> List.filter (\s -> s.id /= chairId)
+                            |> List.Extra.replaceIf (\s -> s.id == chairId) (newPickedChair)
                 in
-                    ( { model | pickedChairs = newPickedChair :: pickedChairsWithoutUpdatedChair }, Cmd.none )
+                    ( { model | pickedChairs = newPickedChairs }, Cmd.none )
 
             UpdateChairs ->
                 let
                     newChairs =
-                        List.sortBy .id model.pickedChairs
+                        List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published
                 in
                     ( { model
                         | chairs = newChairs
+                        , pickedChairs = newChairs
                         , newChair = blankChair 1
                         , showValidation = False
                       }

@@ -58,7 +58,6 @@ view model =
 
         listChairs =
             model.pickedChairs
-                |> List.sortBy .id
                 |> List.indexedMap
                     (\i l ->
                         div [ class "form__question-section form__question-section--table form__question-section--table-auto" ]
