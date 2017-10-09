@@ -55,5 +55,12 @@ function init(options, dev) {
       app.ports[port].send(pikadayDateArray);
     }
   });
+
+  app.ports.showDeleteConfirmation.subscribe(function(sessionId) {
+    var confirmed = confirm('Are you sure? This will permanently delete the session');
+    if(confirmed){
+      app.ports['deleteSession'].send(sessionId);
+    }
+  });
 }
 module.exports.init = init;

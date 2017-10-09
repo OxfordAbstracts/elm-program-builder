@@ -536,6 +536,11 @@ update msg model =
             UpdateNewSessionEndMinute new ->
                 ( updateNewSessionEndTime model (\et -> { et | minute = clamp 0 59 (toInt model new) }), Cmd.none )
 
+            ConfirmDeleteSession sessionId ->
+                ( model
+                , Cmd.batch [ Ports.showDeleteConfirmation sessionId ]
+                )
+
             DeleteSession sessionId ->
                 let
                     newDatesWithSessions =
