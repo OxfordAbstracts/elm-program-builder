@@ -4,36 +4,53 @@ import Date
 import DateUtils
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, on)
 import MainMessages exposing (..)
 import MainModel exposing (..)
 import Time
 import Utils
+import Json.Decode
 
 
 view : Model -> Html Msg
 view model =
     let
         numColumns =
-            List.length model.columns
+            List.length model.displayedColumns
 
         columnElements =
-            model.columns |> List.map (\c -> col [] [])
+            model.displayedColumns |> List.map (\c -> col [] [])
+
+        columnOptions =
+            (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
     in
-        div [ class "prog-table__wrapper" ]
-            [ table [ class "prog-table" ]
-                [ col [ attribute "span" "2" ] []
-                , div [] columnElements
-                , thead []
-                    [ tr []
-                        (defaultHeaders
-                            ++ (model.columns |> List.map viewColumnHeader)
-                        )
+        div []
+            [ if model.showMobileView then
+                select [ onChange UpdateDisplayedColumn ]
+                    columnOptions
+              else
+                span [] []
+            , div
+                [ class "prog-table__wrapper" ]
+                [ table [ class "prog-table" ]
+                    [ col [ attribute "span" "2" ] []
+                    , div [] columnElements
+                    , thead []
+                        [ tr []
+                            (defaultHeaders
+                                ++ (model.displayedColumns |> List.map viewColumnHeader)
+                            )
+                        ]
+                    , tbody []
+                        (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                     ]
-                , tbody []
-                    (List.concatMap (viewDate model numColumns) model.datesWithSessions)
                 ]
             ]
+
+
+onChange : (String -> msg) -> Attribute msg
+onChange handler =
+    on "change" <| Json.Decode.map handler <| Json.Decode.at [ "target", "value" ] Json.Decode.string
 
 
 sessionIsAcrossAllColumns sessionsInColumn sessionStarting index =
@@ -131,7 +148,7 @@ viewDate model numColumns dateWithSessions =
             (viewDateCell dateWithSessions timeDelimiters firstTime
                 ++ (List.indexedMap
                         (appendFirstRowCell dateWithSessions timeDelimiters model numColumns)
-                        model.columns
+                        model.displayedColumns
                    )
             )
         ]
@@ -364,7 +381,7 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
 
 viewCells : DateWithSessions -> Model -> List Float -> Int -> Float -> List (Html Msg)
 viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter =
-    model.columns
+    model.displayedColumns
         |> List.indexedMap (viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter)
 
 

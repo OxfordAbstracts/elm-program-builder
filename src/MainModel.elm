@@ -7,6 +7,7 @@ module MainModel exposing (..)
 type alias Model =
     { tracks : List Track
     , columns : List Column
+    , displayedColumns : List Column
     , locations : List Location
     , chairs : List Chair
     , showNewSessionUi : Bool
@@ -42,6 +43,7 @@ type alias Model =
     , invalidSubmissionIdsInput : String
     , showValidation : Bool
     , scheduleSubmissionsIndividually : Bool
+    , showMobileView : Bool
     }
 
 
@@ -77,6 +79,10 @@ initialModel : Model
 initialModel =
     { tracks = []
     , columns =
+        [ { id = 1, name = "Columnus Maximus" }
+        , { id = 2, name = "Columnus Minimus" }
+        ]
+    , displayedColumns =
         [ { id = 1, name = "Columnus Maximus" }
         , { id = 2, name = "Columnus Minimus" }
         ]
@@ -153,6 +159,7 @@ initialModel =
     , invalidSubmissionIdsInput = ""
     , showValidation = False
     , scheduleSubmissionsIndividually = False
+    , showMobileView = False
     }
 
 
