@@ -76,16 +76,26 @@ type SessionColumn
 initialModel : Model
 initialModel =
     { tracks = []
-    , columns = []
-    , locations = []
-    , chairs = []
+    , columns =
+        [ { id = 1, name = "Columnus Maximus" }
+        , { id = 2, name = "Columnus Minimus" }
+        ]
+    , locations =
+        [ { id = 3, name = "Focus Hub" }
+        , { id = 2, name = "Harry's House" }
+        , { id = 1, name = "Naaz's House" }
+        ]
+    , chairs =
+        [ { id = 2, name = "Harry's Mum" }
+        , { id = 1, name = "Inês Teles-Correia" }
+        ]
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
     , showManageLocationsUi = False
     , showManageChairsUi = False
-    , published = False
+    , published = True
     , showPreviewUi = False
     , newSession = blankSession 1
     , newSessionDate = DateWithoutTime 2017 1 1
@@ -105,7 +115,38 @@ initialModel =
     , pickedColumns = []
     , pickedLocations = []
     , pickedChairs = []
-    , datesWithSessions = []
+    , datesWithSessions =
+        [ { date =
+                { day = 17
+                , month = 10
+                , year = 2017
+                }
+          , sessions =
+                [ { chairId = Just 2
+                  , description = ""
+                  , endTime = { hour = 15, minute = 0 }
+                  , id = 2
+                  , locationId = Just 2
+                  , name = "Resting off the bevs"
+                  , sessionColumn = ColumnId 2
+                  , startTime = { hour = 11, minute = 30 }
+                  , submissions = []
+                  , trackId = Nothing
+                  }
+                , { chairId = Just 1
+                  , description = ""
+                  , endTime = { hour = 12, minute = 0 }
+                  , id = 1
+                  , locationId = Just 3
+                  , name = "Bevs at The Drunken Pirate"
+                  , sessionColumn = ColumnId 1
+                  , startTime = { hour = 9, minute = 0 }
+                  , submissions = []
+                  , trackId = Nothing
+                  }
+                ]
+          }
+        ]
     , host = ""
     , showPublishPage = False
     , showBasicPage = False
