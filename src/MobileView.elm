@@ -32,9 +32,12 @@ view model =
         dateDivs =
             (List.map
                 (\d ->
-                    div []
-                        [ span []
-                            [ text ((DateUtils.dateWithoutTimeToDay d.date) ++ " " ++ toString d.date.day ++ " " ++ (DateUtils.intToMonthString d.date.month))
+                    div [ class "prog-mob__oneday" ]
+                        [ div [ class "prog-mob__datecontainer" ]
+                            [ span [ class "prog-mob__day" ]
+                                [ text ((DateUtils.dateWithoutTimeToDay d.date))
+                                ]
+                            , span [ class "prog-mob__date" ] [ text (toString d.date.day ++ " " ++ (DateUtils.intToMonthString d.date.month)) ]
                             ]
                         , div []
                             (List.map
@@ -65,21 +68,29 @@ view model =
                                                     0
                                     in
                                         if s.sessionColumn == ColumnId displayedColumnId then
-                                            div []
-                                                [ text s.name
-                                                , span [] [ text (getNameFromId model.locations locationId) ]
-                                                , span [] [ text (getNameFromId model.tracks trackId) ]
-                                                , span [] [ text (getNameFromId model.chairs chairId) ]
-                                                , span []
-                                                    [ text
-                                                        (toString s.startTime.hour
-                                                            ++ ":"
-                                                            ++ DateUtils.add0Padding (toString s.startTime.minute)
-                                                            ++ "-"
-                                                            ++ toString s.endTime.hour
-                                                            ++ ":"
-                                                            ++ DateUtils.add0Padding (toString s.endTime.minute)
-                                                        )
+                                            div [ class "prog-mob__session" ]
+                                                [ div
+                                                    [ class "prog-mob__sesh-times" ]
+                                                    [ span [ class "prog-mob__sesh-time prog-mob__sesh-time--start" ]
+                                                        [ text
+                                                            (toString s.startTime.hour
+                                                                ++ "."
+                                                                ++ DateUtils.add0Padding (toString s.startTime.minute)
+                                                            )
+                                                        ]
+                                                    , span [ class "prog-mob__sesh-time prog-mob__sesh-time--end" ]
+                                                        [ text
+                                                            (toString s.endTime.hour
+                                                                ++ "."
+                                                                ++ DateUtils.add0Padding (toString s.endTime.minute)
+                                                            )
+                                                        ]
+                                                    ]
+                                                , div [ class "prog-mob__sesh-info" ]
+                                                    [ span [ class "prog-mob__sesh-name" ] [ text s.name ]
+                                                    , span [ class "prog-mob__sesh-chair" ] [ text (getNameFromId model.chairs chairId) ]
+                                                    , span [ class "prog-mob__sesh-location" ] [ text (getNameFromId model.locations locationId) ]
+                                                    , span [ class "prog-mob__sesh-track" ] [ text (getNameFromId model.tracks trackId) ]
                                                     ]
                                                 ]
                                         else
@@ -92,12 +103,12 @@ view model =
                 model.datesWithSessions
             )
     in
-        div []
-            [ div []
+        div [ class "prog-mob__container" ]
+            [ div [ class "prog-mob__colselect" ]
                 [ select [ onChange UpdateDisplayedColumn ]
                     columnOptions
                 ]
-            , div [] dateDivs
+            , div [ class "prog-mob__feed" ] dateDivs
             ]
 
 

@@ -130,23 +130,23 @@ initialModel =
           , sessions =
                 [ { chairId = Just 2
                   , description = ""
-                  , endTime = { hour = 15, minute = 0 }
+                  , endTime = { hour = 16, minute = 0 }
                   , id = 2
                   , locationId = Just 2
                   , name = "Resting off the bevs"
                   , sessionColumn = ColumnId 2
-                  , startTime = { hour = 11, minute = 30 }
+                  , startTime = { hour = 9, minute = 15 }
                   , submissions = []
                   , trackId = Nothing
                   }
                 , { chairId = Just 1
                   , description = ""
-                  , endTime = { hour = 12, minute = 0 }
+                  , endTime = { hour = 10, minute = 0 }
                   , id = 1
                   , locationId = Just 3
                   , name = "Bevs at The Drunken Pirate"
                   , sessionColumn = ColumnId 1
-                  , startTime = { hour = 9, minute = 0 }
+                  , startTime = { hour = 8, minute = 0 }
                   , submissions = []
                   , trackId = Nothing
                   }
