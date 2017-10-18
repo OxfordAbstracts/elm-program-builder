@@ -152,6 +152,36 @@ initialModel =
                   }
                 ]
           }
+        , { date =
+                { day = 18
+                , month = 10
+                , year = 2017
+                }
+          , sessions =
+                [ { chairId = Just 2
+                  , description = ""
+                  , endTime = { hour = 15, minute = 0 }
+                  , id = 2
+                  , locationId = Just 2
+                  , name = "Conor's bday"
+                  , sessionColumn = ColumnId 2
+                  , startTime = { hour = 11, minute = 30 }
+                  , submissions = []
+                  , trackId = Nothing
+                  }
+                , { chairId = Just 1
+                  , description = ""
+                  , endTime = { hour = 12, minute = 0 }
+                  , id = 1
+                  , locationId = Just 3
+                  , name = "Rory's wax"
+                  , sessionColumn = ColumnId 1
+                  , startTime = { hour = 9, minute = 0 }
+                  , submissions = []
+                  , trackId = Nothing
+                  }
+                ]
+          }
         ]
     , host = ""
     , showPublishPage = False

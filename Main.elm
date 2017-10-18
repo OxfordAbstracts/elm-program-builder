@@ -8,6 +8,7 @@ import MainMessages exposing (..)
 import MainUpdate exposing (update)
 import Stylesheet exposing (view)
 import TableView exposing (view)
+import MobileView exposing (view)
 import Api
 import Ports exposing (..)
 
@@ -39,13 +40,19 @@ view model =
     if model.showPreviewUi || model.showPublishPage || model.showBasicPage then
         div [ class "container" ]
             [ Stylesheet.view
-            , TableView.view model
+            , if model.showMobileView then
+                MobileView.view model
+              else
+                TableView.view model
             ]
     else
         div [ class "container" ]
             [ Stylesheet.view
             , ControlsView.view model
-            , TableView.view model
+            , if model.showMobileView then
+                MobileView.view model
+              else
+                TableView.view model
             ]
 
 
