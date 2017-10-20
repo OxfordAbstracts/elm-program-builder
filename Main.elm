@@ -11,6 +11,7 @@ import TableView exposing (view)
 import MobileView exposing (view)
 import Api
 import Ports exposing (..)
+import Window
 
 
 -- import Json.Decode as Json exposing (int, string, float, Decoder)
@@ -67,6 +68,7 @@ subscriptions model =
         [ changeDates UpdateDates
         , changePickedDates UpdatePickedDates
         , deleteSession DeleteSession
+        , Window.resizes UpdateShowMobileView
         ]
 
 
