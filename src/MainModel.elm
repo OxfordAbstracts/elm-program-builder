@@ -7,7 +7,6 @@ module MainModel exposing (..)
 type alias Model =
     { tracks : List Track
     , columns : List Column
-    , displayedColumns : List Column
     , locations : List Location
     , chairs : List Chair
     , showNewSessionUi : Bool
@@ -44,6 +43,7 @@ type alias Model =
     , showValidation : Bool
     , scheduleSubmissionsIndividually : Bool
     , showMobileView : Bool
+    , displayedColumns : List Column
     }
 
 

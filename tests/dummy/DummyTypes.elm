@@ -59,6 +59,8 @@ makeDummyModel sessions =
     , invalidSubmissionIdsInput = ""
     , showValidation = True
     , scheduleSubmissionsIndividually = False
+    , showMobileView = False
+    , displayedColumns = []
     }
 
 
