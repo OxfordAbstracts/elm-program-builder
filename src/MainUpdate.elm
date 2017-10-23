@@ -417,10 +417,6 @@ update msg model =
 
             UpdateShowMobileView windowSize ->
                 let
-                    -- TODO: subscribe to any window resizes via the elm package
-                    x =
-                        Debug.log "windowSize" (windowSize)
-
                     showMobileView =
                         windowSize.width < 768
                 in

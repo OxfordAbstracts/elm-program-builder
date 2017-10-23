@@ -14,8 +14,6 @@ import Json.Decode
 
 view : Model -> Html Msg
 view model =
-    -- TODO: SORT BY TIME. abstract some of the functions
-    -- - TODO : PROGRAMME TABS AT THE TOP
     let
         numColumns =
             List.length model.displayedColumns
@@ -32,73 +30,80 @@ view model =
         dateDivs =
             (List.map
                 (\d ->
-                    div [ class "prog-mob__oneday" ]
-                        [ div [ class "prog-mob__datecontainer" ]
-                            [ span [ class "prog-mob__day" ]
-                                [ text ((DateUtils.dateWithoutTimeToDay d.date))
+                    let
+                        sortedSessions =
+                            d.sessions
+                                |> List.sortBy (\s -> DateUtils.timeOfDayToTime d.date s.startTime)
+                    in
+                        div [ class "prog-mob__oneday" ]
+                            [ div [ class "prog-mob__datecontainer" ]
+                                [ span [ class "prog-mob__day" ]
+                                    [ text ((DateUtils.dateWithoutTimeToDay d.date))
+                                    ]
+                                , span [ class "prog-mob__date" ] [ text (toString d.date.day ++ " " ++ (DateUtils.intToMonthString d.date.month)) ]
                                 ]
-                            , span [ class "prog-mob__date" ] [ text (toString d.date.day ++ " " ++ (DateUtils.intToMonthString d.date.month)) ]
-                            ]
-                        , div []
-                            (List.map
-                                (\s ->
-                                    let
-                                        locationId =
-                                            case s.locationId of
-                                                Just locationId ->
-                                                    locationId
+                            , div []
+                                (List.map
+                                    (\s ->
+                                        let
+                                            locationId =
+                                                case s.locationId of
+                                                    Just locationId ->
+                                                        locationId
 
-                                                Nothing ->
-                                                    0
+                                                    Nothing ->
+                                                        0
 
-                                        trackId =
-                                            case s.trackId of
-                                                Just trackId ->
-                                                    trackId
+                                            trackId =
+                                                case s.trackId of
+                                                    Just trackId ->
+                                                        trackId
 
-                                                Nothing ->
-                                                    0
+                                                    Nothing ->
+                                                        0
 
-                                        chairId =
-                                            case s.chairId of
-                                                Just chairId ->
-                                                    chairId
+                                            chairId =
+                                                case s.chairId of
+                                                    Just chairId ->
+                                                        chairId
 
-                                                Nothing ->
-                                                    0
-                                    in
-                                        if s.sessionColumn == ColumnId displayedColumnId then
-                                            div [ class "prog-mob__session" ]
-                                                [ div
-                                                    [ class "prog-mob__sesh-times" ]
-                                                    [ span [ class "prog-mob__sesh-time prog-mob__sesh-time--start" ]
-                                                        [ text
-                                                            (toString s.startTime.hour
-                                                                ++ "."
-                                                                ++ DateUtils.add0Padding (toString s.startTime.minute)
-                                                            )
+                                                    Nothing ->
+                                                        0
+
+                                            -- DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
+                                        in
+                                            if s.sessionColumn == ColumnId displayedColumnId then
+                                                div [ class "prog-mob__session" ]
+                                                    [ div
+                                                        [ class "prog-mob__sesh-times" ]
+                                                        [ span [ class "prog-mob__sesh-time prog-mob__sesh-time--start" ]
+                                                            [ text
+                                                                (toString s.startTime.hour
+                                                                    ++ "."
+                                                                    ++ DateUtils.add0Padding (toString s.startTime.minute)
+                                                                )
+                                                            ]
+                                                        , span [ class "prog-mob__sesh-time prog-mob__sesh-time--end" ]
+                                                            [ text
+                                                                (toString s.endTime.hour
+                                                                    ++ "."
+                                                                    ++ DateUtils.add0Padding (toString s.endTime.minute)
+                                                                )
+                                                            ]
                                                         ]
-                                                    , span [ class "prog-mob__sesh-time prog-mob__sesh-time--end" ]
-                                                        [ text
-                                                            (toString s.endTime.hour
-                                                                ++ "."
-                                                                ++ DateUtils.add0Padding (toString s.endTime.minute)
-                                                            )
+                                                    , div [ class "prog-mob__sesh-info" ]
+                                                        [ span [ class "prog-mob__sesh-name" ] [ text s.name ]
+                                                        , span [ class "prog-mob__sesh-chair" ] [ text (getNameFromId model.chairs chairId) ]
+                                                        , span [ class "prog-mob__sesh-location" ] [ text (getNameFromId model.locations locationId) ]
+                                                        , span [ class "prog-mob__sesh-track" ] [ text (getNameFromId model.tracks trackId) ]
                                                         ]
                                                     ]
-                                                , div [ class "prog-mob__sesh-info" ]
-                                                    [ span [ class "prog-mob__sesh-name" ] [ text s.name ]
-                                                    , span [ class "prog-mob__sesh-chair" ] [ text (getNameFromId model.chairs chairId) ]
-                                                    , span [ class "prog-mob__sesh-location" ] [ text (getNameFromId model.locations locationId) ]
-                                                    , span [ class "prog-mob__sesh-track" ] [ text (getNameFromId model.tracks trackId) ]
-                                                    ]
-                                                ]
-                                        else
-                                            div [] []
+                                            else
+                                                div [] []
+                                    )
+                                    sortedSessions
                                 )
-                                d.sessions
-                            )
-                        ]
+                            ]
                 )
                 model.datesWithSessions
             )
