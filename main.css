@@ -3076,23 +3076,26 @@ height: 1.4375rem;
       padding: 0 1.375rem;
     }
     .prog-mob__colselect {
-      border: 1px solid #ccc;
+      border: 1px solid #888888;
       width: 100%;
       border-radius: 3px;
       overflow: hidden;
       background-repeat: no-repeat;
       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAgCAYAAAB+ZAqzAAAAAXNSR0IArs4c6QAAAVhJREFUWAnNkK8vRWEch49hNpsgCIoiSZIm+hNEURQEURRFURTF20RNkiRFUWyCzYYZnod7bcxx7jnvr/Nsn3vfe877/Xyf3aqqqgF571l0qpbJU4/EdNHpkwM++/Kv6fLNLKcbUlpOB11+sMmv0mI6/MkZT0vJubuWFd68kNxy7nT3vxzyNreYOxuZ48YtySXnLneOxRa3com5qxXn3E4t547WrDLxSlLJ2e2OThwxlUrM7s7MM3lHYsvZaXcQ20zHFrMzmAkaLkgsObvsjMIaLW8kVM4Ou6JyTFuomB3RWaDxnnSVc9aOJOzQ2lXM2WRM0nxJ2so542xS1mlvK+ZMFk7YMq6cd7OxyKYH0iTnHe9mZY9tTWLeyc40G69InZzvvFOEDbbWifmuKKds/y3ns+IsYfBIRnKefdYL9rEYiXnuDTOYXA/jOZip4Iavgme+doddnoP5AEOdX53zUZ1XAAAAAElFTkSuQmCC);
-      background-position: 90% 50%;
-      background-size: 1rem;
+      background-position: 95% 50%;
+      background-size: 0.75rem;
+      background-color: #ffffff;
     }
     .prog-mob__colselect > select {
-      padding: 5px 8px;
+      font-size: 1rem;
+      padding: 0.5rem;
       width: 100%;
       border: none;
       box-shadow: none;
       background: transparent;
       background-image: none;
       -webkit-appearance: none;
+      color: rgb(0, 48, 102);
     }
     .prog-mob__colselect > select:focus {
       outline: none;
@@ -3122,34 +3125,68 @@ height: 1.4375rem;
         line-height: 1.25;
       }
       .prog-mob__session {
-        padding: 0.5rem 1rem 0.5rem 0.625rem;
-        background: rgba(0, 48, 102, 0.25);
-        border-radius: 3px;
         display: table;
         table-layout: fixed;
         width: 100%;
+        margin: 0.5rem auto;
+        padding: 0.5rem 1rem 0.5rem 0rem;
+        background-color: #ffffff;
+        border: solid 1px rgb(0, 48, 102);
+        border-radius: 0.375rem;
+        box-shadow: 0px 5px 13px -8px rgba(0,0,0,0.6);
       }
         .prog-mob__sesh-times {
           display: table-cell;
-          width: 20%
+          width: 20%;
+          vertical-align: text-top;
         }
             .prog-mob__sesh-time {
               display: block;
               text-align: center;
+              font-size: 0.75rem;
+              padding: 0rem 0.25rem;
             }
+                .prog-mob__sesh-time--start {
+                  margin-bottom: 0.5rem;
+                  position: relative;
+                }
+                .prog-mob__sesh-time--start:after {
+                  content: "";
+                  display: block;
+                  position: absolute;
+                  width: 3px;
+                  height: 2px;
+                  background-color: rgb(14, 11, 15);
+                  left: 50%;
+                  -webkit-transform: translateX(-50%);
+                  -ms-transform: translateX(-50%);
+                  transform: translateX(-50%);
+                  bottom: -5px;
+                }
         .prog-mob__sesh-info {
           width: 80%;
           display: table-cell;
+          padding: 0.125rem;
+          font-size: 0.875rem;
         }
-              .prog-mob__sesh-name {
+              .prog-mob__sesh-name, .prog-mob__sesh-chair, .prog-mob__sesh-location {
                 display: block;
+                margin: 0.5rem auto;
               }
-              .prog-mob__sesh-chair {
-                display: block;
+              .prog-mob__sesh-name {
+                margin: 0.25rem auto;
+                font-weight: bold;
               }
               .prog-mob__sesh-location {
+                font-size: 0.75rem;
               }
               .prog-mob__sesh-track {
+                font-size: 0.75rem;
+                padding: 0.25rem;
+                margin: 0;
+                background-color: rgb(2, 49, 102);
+                color: rgb(255, 255, 255);
+                display: inline-block;
               }
 
 
