@@ -3,6 +3,7 @@ module MainMessages exposing (..)
 import Http
 import MainModel
 import Date exposing (Date)
+import Window
 
 
 type Msg
@@ -45,6 +46,7 @@ type Msg
     | ToggleNewSessionUi
     | ToggleNewTrackUi
     | ToggleScheduleSubmissionsIndividually
+    | UpdateDisplayedColumn String
     | UpdateModel (Result Http.Error MainModel.ApiUpdateGet)
     | UpdateNewColumnName String
     | UpdateNewSessionChair (Maybe MainModel.ChairId)
@@ -67,3 +69,4 @@ type Msg
     | UpdateLocations
     | UpdatePickedChair Int String
     | UpdateChairs
+    | UpdateShowMobileView Window.Size

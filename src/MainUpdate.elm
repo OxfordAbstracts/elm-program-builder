@@ -10,6 +10,7 @@ import Task
 import Set
 import Date exposing (Date)
 import List.Extra
+import Window exposing (Size)
 
 
 addSubmissionIdsInputToSession : List SubmissionIdInput -> Session -> List Submission -> Session
@@ -116,16 +117,26 @@ toInt model string =
 
 updateModelWithApiUpdateGet : Model -> ApiUpdateGet -> Model
 updateModelWithApiUpdateGet model apiUpdateGet =
-    ({ model
-        | datesWithSessions = apiUpdateGet.datesWithSessions
-        , tracks = apiUpdateGet.tracks
-        , columns = apiUpdateGet.columns
-        , locations = apiUpdateGet.locations
-        , chairs = apiUpdateGet.chairs
-        , submissions = apiUpdateGet.submissions
-        , published = apiUpdateGet.published
-     }
-    )
+    let
+        displayedColumn =
+            case List.head apiUpdateGet.columns of
+                Just column ->
+                    Just column.id
+
+                Nothing ->
+                    Just 0
+    in
+        ({ model
+            | datesWithSessions = apiUpdateGet.datesWithSessions
+            , tracks = apiUpdateGet.tracks
+            , columns = apiUpdateGet.columns
+            , displayedColumn = displayedColumn
+            , locations = apiUpdateGet.locations
+            , chairs = apiUpdateGet.chairs
+            , submissions = apiUpdateGet.submissions
+            , published = apiUpdateGet.published
+         }
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -408,10 +419,17 @@ update msg model =
                     updatedModel =
                         updateModelWithApiUpdateGet model apiUpdateGet
                 in
-                    ( updatedModel, Cmd.none )
+                    updatedModel ! [ Task.perform (UpdateShowMobileView) Window.size ]
 
             UpdateModel (Err str) ->
-                ( model, Cmd.none )
+                model ! [ Task.perform (UpdateShowMobileView) Window.size ]
+
+            UpdateShowMobileView windowSize ->
+                let
+                    showMobileView =
+                        windowSize.width < 768
+                in
+                    ( { model | showMobileView = showMobileView }, Cmd.none )
 
             SaveModel _ ->
                 ( model, Cmd.none )
@@ -1025,6 +1043,15 @@ update msg model =
                             |> Maybe.withDefault []
                 in
                     ( { model | pickedColumns = newPickedColumns }, Cmd.none )
+
+            UpdateDisplayedColumn columnIdToDisplay ->
+                let
+                    intColumnIdToDisplay =
+                        columnIdToDisplay
+                            |> String.toInt
+                            |> Result.withDefault 0
+                in
+                    ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
