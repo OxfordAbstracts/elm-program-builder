@@ -60,7 +60,7 @@ makeDummyModel sessions =
     , showValidation = True
     , scheduleSubmissionsIndividually = False
     , showMobileView = False
-    , displayedColumn = []
+    , displayedColumn = Nothing
     }
 
 
