@@ -15,14 +15,8 @@ import Json.Decode
 view : Model -> Html Msg
 view model =
     let
-        numColumns =
-            List.length model.displayedColumns
-
         displayedColumnId =
-            model.displayedColumns
-                |> List.map .id
-                |> List.head
-                |> Maybe.withDefault 1
+            Maybe.withDefault 0 model.displayedColumn
 
         columnOptions =
             (List.map (\c -> option [ value (toString c.id) ] [ text c.name ]) model.columns)
@@ -38,7 +32,7 @@ view model =
                         div [ class "prog-mob__oneday" ]
                             [ div [ class "prog-mob__datecontainer" ]
                                 [ span [ class "prog-mob__day" ]
-                                    [ text ((DateUtils.dateWithoutTimeToDay d.date))
+                                    [ text (DateUtils.dateWithoutTimeToDay d.date)
                                     ]
                                 , span [ class "prog-mob__date" ] [ text (toString d.date.day ++ " " ++ (DateUtils.intToMonthString d.date.month)) ]
                                 ]
@@ -47,30 +41,13 @@ view model =
                                     (\s ->
                                         let
                                             locationId =
-                                                case s.locationId of
-                                                    Just locationId ->
-                                                        locationId
-
-                                                    Nothing ->
-                                                        0
+                                                Maybe.withDefault 0 s.locationId
 
                                             trackId =
-                                                case s.trackId of
-                                                    Just trackId ->
-                                                        trackId
-
-                                                    Nothing ->
-                                                        0
+                                                Maybe.withDefault 0 s.trackId
 
                                             chairId =
-                                                case s.chairId of
-                                                    Just chairId ->
-                                                        chairId
-
-                                                    Nothing ->
-                                                        0
-
-                                            -- DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
+                                                Maybe.withDefault 0 s.chairId
                                         in
                                             if s.sessionColumn == ColumnId displayedColumnId then
                                                 div [ class "prog-mob__session" ]

@@ -43,7 +43,7 @@ type alias Model =
     , showValidation : Bool
     , scheduleSubmissionsIndividually : Bool
     , showMobileView : Bool
-    , displayedColumns : List Column
+    , displayedColumn : Maybe ColumnId
     }
 
 
@@ -78,30 +78,16 @@ type SessionColumn
 initialModel : Model
 initialModel =
     { tracks = []
-    , columns =
-        [ { id = 1, name = "Columnus Maximus" }
-        , { id = 2, name = "Columnus Minimus" }
-        ]
-    , displayedColumns =
-        [ { id = 1, name = "Columnus Maximus" }
-        , { id = 2, name = "Columnus Minimus" }
-        ]
-    , locations =
-        [ { id = 3, name = "Focus Hub" }
-        , { id = 2, name = "Harry's House" }
-        , { id = 1, name = "Naaz's House" }
-        ]
-    , chairs =
-        [ { id = 2, name = "Harry's Mum" }
-        , { id = 1, name = "Inês Teles-Correia" }
-        ]
+    , columns = []
+    , locations = []
+    , chairs = []
     , showNewSessionUi = False
     , showNewTrackUi = False
     , showNewColumnUi = False
     , showManageDatesUi = False
     , showManageLocationsUi = False
     , showManageChairsUi = False
-    , published = True
+    , published = False
     , showPreviewUi = False
     , newSession = blankSession 1
     , newSessionDate = DateWithoutTime 2017 1 1
@@ -121,79 +107,7 @@ initialModel =
     , pickedColumns = []
     , pickedLocations = []
     , pickedChairs = []
-    , datesWithSessions =
-        [ { date =
-                { day = 17
-                , month = 10
-                , year = 2017
-                }
-          , sessions =
-                [ { chairId = Just 2
-                  , description = ""
-                  , endTime = { hour = 16, minute = 0 }
-                  , id = 2
-                  , locationId = Just 2
-                  , name = "Resting off the bevs"
-                  , sessionColumn = ColumnId 2
-                  , startTime = { hour = 9, minute = 15 }
-                  , submissions = []
-                  , trackId = Nothing
-                  }
-                , { chairId = Just 1
-                  , description = ""
-                  , endTime = { hour = 10, minute = 0 }
-                  , id = 1
-                  , locationId = Just 3
-                  , name = "Bevs at The Drunken Pirate"
-                  , sessionColumn = ColumnId 1
-                  , startTime = { hour = 9, minute = 30 }
-                  , submissions = []
-                  , trackId = Nothing
-                  }
-                , { chairId = Just 1
-                  , description = ""
-                  , endTime = { hour = 12, minute = 0 }
-                  , id = 1
-                  , locationId = Just 3
-                  , name = "Tristan's house"
-                  , sessionColumn = ColumnId 1
-                  , startTime = { hour = 9, minute = 0 }
-                  , submissions = []
-                  , trackId = Nothing
-                  }
-                ]
-          }
-        , { date =
-                { day = 18
-                , month = 10
-                , year = 2017
-                }
-          , sessions =
-                [ { chairId = Just 2
-                  , description = ""
-                  , endTime = { hour = 15, minute = 0 }
-                  , id = 2
-                  , locationId = Just 2
-                  , name = "Conor's bday"
-                  , sessionColumn = ColumnId 2
-                  , startTime = { hour = 11, minute = 30 }
-                  , submissions = []
-                  , trackId = Nothing
-                  }
-                , { chairId = Just 1
-                  , description = ""
-                  , endTime = { hour = 12, minute = 0 }
-                  , id = 1
-                  , locationId = Just 3
-                  , name = "Rory's wax"
-                  , sessionColumn = ColumnId 1
-                  , startTime = { hour = 9, minute = 0 }
-                  , submissions = []
-                  , trackId = Nothing
-                  }
-                ]
-          }
-        ]
+    , datesWithSessions = []
     , host = ""
     , showPublishPage = False
     , showBasicPage = False
@@ -201,7 +115,135 @@ initialModel =
     , showValidation = False
     , scheduleSubmissionsIndividually = False
     , showMobileView = False
+    , displayedColumn = Nothing
     }
+
+
+
+-- { tracks = []
+-- , columns =
+--     [ { id = 1, name = "Columnus Maximus" }
+--     , { id = 2, name = "Columnus Minimus" }
+--     ]
+-- , displayedColumn =
+--     Just 1
+--
+-- , locations =
+--     [ { id = 3, name = "Focus Hub" }
+--     , { id = 2, name = "Harry's House" }
+--     , { id = 1, name = "Naaz's House" }
+--     ]
+-- , chairs =
+--     [ { id = 2, name = "Harry's Mum" }
+--     , { id = 1, name = "Inês Teles-Correia" }
+--     ]
+-- , showNewSessionUi = False
+-- , showNewTrackUi = False
+-- , showNewColumnUi = False
+-- , showManageDatesUi = False
+-- , showManageLocationsUi = False
+-- , showManageChairsUi = False
+-- , published = True
+-- , showPreviewUi = False
+-- , newSession = blankSession 1
+-- , newSessionDate = DateWithoutTime 2017 1 1
+-- , editSession = blankSession 1
+-- , editSessionDate = DateWithoutTime 2017 1 1
+-- , newColumn = blankColumn 1
+-- , newTrack = blankTrack 1
+-- , newLocation = blankLocation 1
+-- , newChair = blankChair 1
+-- , idOfSessionBeingEdited = Nothing
+-- , eventId = ""
+-- , submissionIdsInputs = [ { submissionIds = "", startTime = Nothing, endTime = Nothing, id = 1 } ]
+-- , submissions = [ Submission 1 ]
+-- , datePickerClosed = True
+-- , pickedDates = initialDates
+-- , pickedTracks = []
+-- , pickedColumns = []
+-- , pickedLocations = []
+-- , pickedChairs = []
+-- , datesWithSessions =
+--     [ { date =
+--             { day = 17
+--             , month = 10
+--             , year = 2017
+--             }
+--       , sessions =
+--             [ { chairId = Just 2
+--               , description = ""
+--               , endTime = { hour = 16, minute = 0 }
+--               , id = 2
+--               , locationId = Just 2
+--               , name = "Resting off the bevs"
+--               , sessionColumn = ColumnId 2
+--               , startTime = { hour = 9, minute = 15 }
+--               , submissions = []
+--               , trackId = Nothing
+--               }
+--             , { chairId = Just 1
+--               , description = ""
+--               , endTime = { hour = 10, minute = 0 }
+--               , id = 1
+--               , locationId = Just 3
+--               , name = "Bevs at The Drunken Pirate"
+--               , sessionColumn = ColumnId 1
+--               , startTime = { hour = 9, minute = 30 }
+--               , submissions = []
+--               , trackId = Nothing
+--               }
+--             , { chairId = Just 1
+--               , description = ""
+--               , endTime = { hour = 12, minute = 0 }
+--               , id = 1
+--               , locationId = Just 3
+--               , name = "Tristan's house"
+--               , sessionColumn = ColumnId 1
+--               , startTime = { hour = 9, minute = 0 }
+--               , submissions = []
+--               , trackId = Nothing
+--               }
+--             ]
+--       }
+--     , { date =
+--             { day = 18
+--             , month = 10
+--             , year = 2017
+--             }
+--       , sessions =
+--             [ { chairId = Just 2
+--               , description = ""
+--               , endTime = { hour = 15, minute = 0 }
+--               , id = 2
+--               , locationId = Just 2
+--               , name = "Conor's bday"
+--               , sessionColumn = ColumnId 2
+--               , startTime = { hour = 11, minute = 30 }
+--               , submissions = []
+--               , trackId = Nothing
+--               }
+--             , { chairId = Just 1
+--               , description = ""
+--               , endTime = { hour = 12, minute = 0 }
+--               , id = 1
+--               , locationId = Just 3
+--               , name = "Rory's wax"
+--               , sessionColumn = ColumnId 1
+--               , startTime = { hour = 9, minute = 0 }
+--               , submissions = []
+--               , trackId = Nothing
+--               }
+--             ]
+--       }
+--     ]
+-- , host = ""
+-- , showPublishPage = False
+-- , showBasicPage = False
+-- , invalidSubmissionIdsInput = ""
+-- , showValidation = False
+-- , scheduleSubmissionsIndividually = False
+-- , showMobileView = False
+-- }
 
 
 initialDates : List DateWithoutTime

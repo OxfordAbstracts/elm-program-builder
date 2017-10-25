@@ -117,17 +117,26 @@ toInt model string =
 
 updateModelWithApiUpdateGet : Model -> ApiUpdateGet -> Model
 updateModelWithApiUpdateGet model apiUpdateGet =
-    ({ model
-        | datesWithSessions = apiUpdateGet.datesWithSessions
-        , tracks = apiUpdateGet.tracks
-        , columns = apiUpdateGet.columns
-        , displayedColumns = apiUpdateGet.columns
-        , locations = apiUpdateGet.locations
-        , chairs = apiUpdateGet.chairs
-        , submissions = apiUpdateGet.submissions
-        , published = apiUpdateGet.published
-     }
-    )
+    let
+        displayedColumn =
+            case List.head apiUpdateGet.columns of
+                Just column ->
+                    Just column.id
+
+                Nothing ->
+                    Just 0
+    in
+        ({ model
+            | datesWithSessions = apiUpdateGet.datesWithSessions
+            , tracks = apiUpdateGet.tracks
+            , columns = apiUpdateGet.columns
+            , displayedColumn = displayedColumn
+            , locations = apiUpdateGet.locations
+            , chairs = apiUpdateGet.chairs
+            , submissions = apiUpdateGet.submissions
+            , published = apiUpdateGet.published
+         }
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -1042,7 +1051,7 @@ update msg model =
                             |> String.toInt
                             |> Result.withDefault 0
                 in
-                    ( { model | displayedColumns = List.filter (\c -> c.id == intColumnIdToDisplay) model.columns }, Cmd.none )
+                    ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
