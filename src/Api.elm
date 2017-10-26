@@ -29,6 +29,7 @@ apiUpdatePostDecoder =
         |> required "chairs" (Json.Decode.list chairDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "published" (Json.Decode.bool)
+        |> required "filesToSave" (Json.Decode.list fileDecoder)
 
 
 encodeApiUpdatePost : ApiUpdatePost -> Encode.Value
@@ -40,6 +41,7 @@ encodeApiUpdatePost record =
         , ( "chairs", Encode.list <| List.map locationEncoder record.chairs )
         , ( "columns", Encode.list <| List.map columnEncoder record.columns )
         , ( "published", Encode.bool record.published )
+        , ( "filesToSave", Encode.list <| List.map fileEncoder record.filesToSave )
         ]
 
 
@@ -230,11 +232,26 @@ columnEncoder record =
         ]
 
 
+fileEncoder : File -> Encode.Value
+fileEncoder record =
+    Encode.object
+        [ ( "contents", Encode.string record.contents )
+        , ( "filename", Encode.string record.filename )
+        ]
+
+
 columnDecoder : Json.Decode.Decoder Column
 columnDecoder =
     decode Column
         |> required "id" Json.Decode.int
         |> required "name" Json.Decode.string
+
+
+fileDecoder : Json.Decode.Decoder File
+fileDecoder =
+    decode File
+        |> required "contents" Json.Decode.string
+        |> required "filename" Json.Decode.string
 
 
 dateDecoder : Json.Decode.Decoder DateWithoutTime

@@ -179,6 +179,7 @@ update msg model =
                         , showNewTrackUi = False
                         , showManageDatesUi = False
                         , showManageLocationsUi = False
+                        , showManageInformationUi = False
                         , showManageChairsUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
@@ -198,6 +199,7 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = not model.published
+                        , filesToSave = model.filesToSave
                         }
                 in
                     ( { model
@@ -213,10 +215,27 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                     , pickedTracks = List.sortBy .name model.tracks
+                  }
+                , Cmd.none
+                )
+
+            ToggleManageInformationUi ->
+                ( { model
+                    | showNewTrackUi = False
+                    , showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , showManageDatesUi = False
+                    , showManageLocationsUi = False
+                    , showManageInformationUi = not model.showManageInformationUi
+                    , showManageChairsUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showPreviewUi = False
+                    , pickedInformation = List.sortBy .name model.information
                   }
                 , Cmd.none
                 )
@@ -243,6 +262,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedColumns = model.columns
@@ -263,6 +283,7 @@ update msg model =
                         , showNewSessionUi = False
                         , showNewTrackUi = False
                         , showManageLocationsUi = False
+                        , showManageInformationUi = False
                         , showManageChairsUi = False
                         , showNewColumnUi = False
                         , idOfSessionBeingEdited = Nothing
@@ -281,6 +302,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = not model.showManageLocationsUi
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedLocations = List.sortBy .name model.locations
@@ -296,6 +318,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = not model.showManageChairsUi
                     , showPreviewUi = False
                     , pickedChairs = List.sortBy .name model.chairs
@@ -342,6 +365,7 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
                         }
                 in
                     ( { model
@@ -386,6 +410,7 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
                         }
                 in
                     ( { model
@@ -403,7 +428,7 @@ update msg model =
                         List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.filesToSave
                 in
                     ( { model
                         | tracks = newTracks
@@ -577,6 +602,7 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -671,6 +697,7 @@ update msg model =
                                 , published = model.published
                                 , locations = model.locations
                                 , chairs = model.chairs
+                                , filesToSave = model.filesToSave
                                 }
                         in
                             ( { model
@@ -728,6 +755,7 @@ update msg model =
                         , published = model.published
                         , locations = model.locations
                         , chairs = model.chairs
+                        , filesToSave = model.filesToSave
                         }
                 in
                     ( { model
@@ -860,7 +888,7 @@ update msg model =
                         List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.filesToSave
                 in
                     ( { model
                         | locations = newLocations
@@ -914,7 +942,7 @@ update msg model =
                         List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.filesToSave
                 in
                     ( { model
                         | chairs = newChairs
@@ -1052,6 +1080,39 @@ update msg model =
                             |> Result.withDefault 0
                 in
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
+
+            UpdatePickedInformation info ->
+                let
+                    x =
+                        Debug.log "info" info
+                in
+                    ( model, Cmd.none )
+
+            FileRead data ->
+                let
+                    newFile =
+                        { contents = data.contents
+                        , filename = data.filename
+                        }
+
+                    x =
+                        Debug.log "newFile" newFile
+                in
+                    ( { model | filesToSave = List.append model.filesToSave [ newFile ] }
+                    , Cmd.none
+                    )
+
+            FileSelected ->
+                ( model
+                , fileSelected "1"
+                )
+
+            SaveFiles ->
+                let
+                    apiUpdatePost =
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave
+                in
+                    ( model, Api.postModelToDb apiUpdatePost model.eventId )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model

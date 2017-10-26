@@ -4,6 +4,7 @@ import Http
 import MainModel
 import Date exposing (Date)
 import Window
+import Ports exposing (FilePortData, fileSelected, fileContentRead)
 
 
 type Msg
@@ -26,6 +27,8 @@ type Msg
     | DeleteLocation MainModel.LocationId
     | DeleteChair MainModel.ChairId
     | EditSession
+    | FileSelected
+    | FileRead FilePortData
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
     | MoveColumnDown Int
@@ -34,6 +37,7 @@ type Msg
     | PublishProgrammeBuilder
     | UpdatePickedDates (List String)
     | UpdateDates (List String)
+    | SaveFiles
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
     | SetSessionSubmissionStartTimes Int String
@@ -43,6 +47,7 @@ type Msg
     | ToggleManageLocationsUi
     | ToggleManageChairsUi
     | ToggleNewColumnUi
+    | ToggleManageInformationUi
     | ToggleNewSessionUi
     | ToggleNewTrackUi
     | ToggleScheduleSubmissionsIndividually
@@ -64,6 +69,7 @@ type Msg
     | UpdateNewTrackDescription String
     | UpdateNewTrackName String
     | UpdatePickedColumn Int String
+    | UpdatePickedInformation String
     | UpdatePickedTrack Int MainModel.TrackFields String
     | UpdatePickedLocation Int String
     | UpdateLocations

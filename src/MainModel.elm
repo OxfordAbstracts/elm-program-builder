@@ -44,6 +44,10 @@ type alias Model =
     , scheduleSubmissionsIndividually : Bool
     , showMobileView : Bool
     , displayedColumn : Maybe ColumnId
+    , showManageInformationUi : Bool
+    , pickedInformation : List Information
+    , information : List Information
+    , filesToSave : List File
     }
 
 
@@ -116,6 +120,17 @@ initialModel =
     , scheduleSubmissionsIndividually = False
     , showMobileView = False
     , displayedColumn = Nothing
+    , showManageInformationUi = False
+    , pickedInformation = []
+    , information =
+        []
+    , filesToSave = []
+    }
+
+
+type alias File =
+    { contents : String
+    , filename : String
     }
 
 
@@ -243,6 +258,7 @@ initialModel =
 -- , showValidation = False
 -- , scheduleSubmissionsIndividually = False
 -- , showMobileView = False
+-- , showManageInformationUi = False
 -- }
 
 
@@ -357,6 +373,13 @@ type alias Track =
     }
 
 
+type alias Information =
+    { id : InformationId
+    , name : String
+    , file : String
+    }
+
+
 type alias TrackId =
     Int
 
@@ -381,6 +404,10 @@ type alias ChairId =
     Int
 
 
+type alias InformationId =
+    Int
+
+
 type alias ApiUpdatePost =
     { datesWithSessions : List DateWithSessions
     , tracks : List Track
@@ -388,6 +415,7 @@ type alias ApiUpdatePost =
     , chairs : List Chair
     , columns : List Column
     , published : Bool
+    , filesToSave : List File
     }
 
 
