@@ -200,6 +200,7 @@ update msg model =
                         , chairs = model.chairs
                         , published = not model.published
                         , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -366,6 +367,7 @@ update msg model =
                         , chairs = model.chairs
                         , published = model.published
                         , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -411,6 +413,7 @@ update msg model =
                         , chairs = model.chairs
                         , published = model.published
                         , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -428,7 +431,7 @@ update msg model =
                         List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.filesToSave
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | tracks = newTracks
@@ -603,6 +606,7 @@ update msg model =
                         , chairs = model.chairs
                         , published = model.published
                         , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -698,6 +702,7 @@ update msg model =
                                 , locations = model.locations
                                 , chairs = model.chairs
                                 , filesToSave = model.filesToSave
+                                , savedFiles = model.savedFiles
                                 }
                         in
                             ( { model
@@ -756,6 +761,7 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -888,7 +894,7 @@ update msg model =
                         List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.filesToSave
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | locations = newLocations
@@ -942,7 +948,7 @@ update msg model =
                         List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.filesToSave
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | chairs = newChairs
@@ -1082,11 +1088,7 @@ update msg model =
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
             UpdatePickedInformation info ->
-                let
-                    x =
-                        Debug.log "info" info
-                in
-                    ( model, Cmd.none )
+                ( model, Cmd.none )
 
             FileRead data ->
                 let
@@ -1094,9 +1096,6 @@ update msg model =
                         { contents = data.contents
                         , filename = data.filename
                         }
-
-                    x =
-                        Debug.log "newFile" newFile
                 in
                     ( { model | filesToSave = List.append model.filesToSave [ newFile ] }
                     , Cmd.none
@@ -1110,7 +1109,7 @@ update msg model =
             SaveFiles ->
                 let
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( model, Api.postModelToDb apiUpdatePost model.eventId )
 

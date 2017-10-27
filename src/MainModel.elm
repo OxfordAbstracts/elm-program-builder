@@ -47,7 +47,8 @@ type alias Model =
     , showManageInformationUi : Bool
     , pickedInformation : List Information
     , information : List Information
-    , filesToSave : List File
+    , filesToSave : List FileToSave
+    , savedFiles : List SavedFile
     }
 
 
@@ -125,11 +126,18 @@ initialModel =
     , information =
         []
     , filesToSave = []
+    , savedFiles = []
     }
 
 
-type alias File =
+type alias FileToSave =
     { contents : String
+    , filename : String
+    }
+
+
+type alias SavedFile =
+    { filelink : String
     , filename : String
     }
 
@@ -415,7 +423,8 @@ type alias ApiUpdatePost =
     , chairs : List Chair
     , columns : List Column
     , published : Bool
-    , filesToSave : List File
+    , filesToSave : List FileToSave
+    , savedFiles : List SavedFile
     }
 
 
@@ -427,6 +436,8 @@ type alias ApiUpdateGet =
     , columns : List Column
     , submissions : List Submission
     , published : Bool
+    , filesToSave : List FileToSave
+    , savedFiles : List SavedFile
     }
 
 
