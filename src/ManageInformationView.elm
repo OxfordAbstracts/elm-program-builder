@@ -24,14 +24,20 @@ view model =
                 "none"
             else
                 "block"
+
+        savedInformationDivs =
+            List.map (\f -> div [] [ a [ href f.filelink ] [ text f.filetitle ] ]) model.savedFiles
     in
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
-            [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+            [ div [] savedInformationDivs
+            , div [ class "form__question-sub-section form__question-sub-section--table" ]
                 [ input
-                    [ class "form__input "
+                    [ class "form__input"
                     , type_ "text"
                     , placeholder "File title"
-                    , onInput (UpdatePickedInformation)
+                    , id "file-title-1"
+                      -- TODO: 1 SHOULD BE INDEX INPUT
+                      -- , onInput (UpdateFileTitles 0)
                     ]
                     []
                 ]

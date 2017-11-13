@@ -45,8 +45,6 @@ type alias Model =
     , showMobileView : Bool
     , displayedColumn : Maybe ColumnId
     , showManageInformationUi : Bool
-    , pickedInformation : List Information
-    , information : List Information
     , filesToSave : List FileToSave
     , savedFiles : List SavedFile
     }
@@ -122,9 +120,6 @@ initialModel =
     , showMobileView = False
     , displayedColumn = Nothing
     , showManageInformationUi = False
-    , pickedInformation = []
-    , information =
-        []
     , filesToSave = []
     , savedFiles = []
     }
@@ -133,12 +128,14 @@ initialModel =
 type alias FileToSave =
     { contents : String
     , filename : String
+    , filetitle : String
     }
 
 
 type alias SavedFile =
     { filelink : String
     , filename : String
+    , filetitle : String
     }
 
 
@@ -381,13 +378,6 @@ type alias Track =
     }
 
 
-type alias Information =
-    { id : InformationId
-    , name : String
-    , file : String
-    }
-
-
 type alias TrackId =
     Int
 
@@ -409,10 +399,6 @@ type alias LocationId =
 
 
 type alias ChairId =
-    Int
-
-
-type alias InformationId =
     Int
 
 

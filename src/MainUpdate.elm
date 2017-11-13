@@ -235,8 +235,8 @@ update msg model =
                     , showManageInformationUi = not model.showManageInformationUi
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
-                    , showPreviewUi = False
-                    , pickedInformation = List.sortBy .name model.information
+                    , showPreviewUi =
+                        False
                   }
                 , Cmd.none
                 )
@@ -459,8 +459,13 @@ update msg model =
                 in
                     ( { model | showMobileView = showMobileView }, Cmd.none )
 
-            SaveModel _ ->
-                ( model, Cmd.none )
+            SaveModel result ->
+                case result of
+                    Ok savedModel ->
+                        ( { model | savedFiles = savedModel.savedFiles }, Cmd.none )
+
+                    Err _ ->
+                        ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
                 ( (updateNewColumn model (\nc -> { nc | name = newName })), Cmd.none )
@@ -1087,14 +1092,12 @@ update msg model =
                 in
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
-            UpdatePickedInformation info ->
-                ( model, Cmd.none )
-
             FileRead data ->
                 let
                     newFile =
                         { contents = data.contents
                         , filename = data.filename
+                        , filetitle = data.filetitle
                         }
                 in
                     ( { model | filesToSave = List.append model.filesToSave [ newFile ] }

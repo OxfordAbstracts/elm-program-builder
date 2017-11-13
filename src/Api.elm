@@ -241,6 +241,7 @@ filesToSaveEncoder record =
     Encode.object
         [ ( "contents", Encode.string record.contents )
         , ( "filename", Encode.string record.filename )
+        , ( "filetitle", Encode.string record.filetitle )
         ]
 
 
@@ -249,6 +250,7 @@ savedFileEncoder record =
     Encode.object
         [ ( "filelink", Encode.string record.filelink )
         , ( "filename", Encode.string record.filename )
+        , ( "filetitle", Encode.string record.filetitle )
         ]
 
 
@@ -264,6 +266,7 @@ fileToSaveDecoder =
     decode FileToSave
         |> required "contents" Json.Decode.string
         |> required "filename" Json.Decode.string
+        |> required "filetitle" Json.Decode.string
 
 
 dateDecoder : Json.Decode.Decoder DateWithoutTime
@@ -307,8 +310,9 @@ submissionDecoder =
 savedFileDecoder : Json.Decode.Decoder SavedFile
 savedFileDecoder =
     decode SavedFile
-        |> required "filename" Json.Decode.string
         |> required "filelink" Json.Decode.string
+        |> required "filename" Json.Decode.string
+        |> required "filetitle" Json.Decode.string
 
 
 getModelFromDb : String -> Cmd Msg
