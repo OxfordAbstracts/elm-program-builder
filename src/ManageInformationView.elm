@@ -25,8 +25,32 @@ view model =
             else
                 "block"
 
-        savedInformationDivs =
-            List.map (\f -> div [] [ a [ href f.filelink ] [ text f.filetitle ] ]) model.savedFiles
+        savedFilesDivs =
+            List.map
+                (\f ->
+                    div []
+                        [ div [ class "form__question-sub-section form__question-sub-section--table" ]
+                            [ input
+                                [ class "form__input"
+                                , type_ "text"
+                                , placeholder "File title"
+                                , value f.filetitle
+                                , onInput (ChangeSavedFileTitle f.id)
+                                ]
+                                [ text f.filetitle ]
+                            ]
+                        , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                            [ a [ href f.filelink ] [ text f.filename ] ]
+                        , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
+                            [ button
+                                [ onClick (DeleteSavedFile f.id)
+                                , class "button button--secondary icon icon--bin"
+                                ]
+                                []
+                            ]
+                        ]
+                )
+                model.savedFiles
 
         filesToSaveDivs =
             model.filesToSave
@@ -42,8 +66,7 @@ view model =
                                     ]
                                     []
                                 ]
-                            , div
-                                [ class "form__question-sub-section form__question-sub-section--table" ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ input
                                     [ id (toString f.id)
                                     , type_ "file"
@@ -56,7 +79,7 @@ view model =
                     )
     in
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
-            [ div [] savedInformationDivs
+            [ div [] savedFilesDivs
             , div [] filesToSaveDivs
             , div [ class "bar bar--button" ]
                 [ button

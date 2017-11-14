@@ -462,7 +462,7 @@ update msg model =
             SaveModel result ->
                 case result of
                     Ok savedModel ->
-                        ( { model | savedFiles = savedModel.savedFiles }, Cmd.none )
+                        ( { model | savedFiles = savedModel.savedFiles, filesToSave = [] }, Cmd.none )
 
                     Err _ ->
                         ( model, Cmd.none )
@@ -1130,6 +1130,26 @@ update msg model =
                         ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( model, Api.postModelToDb apiUpdatePost model.eventId )
+
+            ChangeSavedFileTitle savedFileId fileTitle ->
+                let
+                    fileToChange =
+                        model.savedFiles
+                            |> List.filter (\f -> f.id == savedFileId)
+                            |> List.head
+                            |> Maybe.withDefault (SavedFile 0 "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filetitle = fileTitle }
+
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            DeleteSavedFile savedFileId ->
+                ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
