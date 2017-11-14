@@ -28,6 +28,7 @@ type Msg
     | DeleteTrack MainModel.TrackId
     | DeleteLocation MainModel.LocationId
     | DeleteChair MainModel.ChairId
+    | DeleteFileToSave Int
     | DeleteSavedFile Int
     | EditSession
     | FileSelected Int

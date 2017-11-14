@@ -1151,6 +1151,9 @@ update msg model =
             DeleteSavedFile savedFileId ->
                 ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
 
+            DeleteFileToSave fileToSaveId ->
+                ( { model | filesToSave = List.filter (\f -> f.id /= fileToSaveId) model.filesToSave }, Cmd.none )
+
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
 updateSessionSubmissions model sessionId submissionIds update =

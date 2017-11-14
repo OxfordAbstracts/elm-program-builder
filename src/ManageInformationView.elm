@@ -75,6 +75,13 @@ view model =
                                     ]
                                     []
                                 ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
+                                [ button
+                                    [ onClick (DeleteFileToSave f.id)
+                                    , class "button button--secondary icon icon--bin"
+                                    ]
+                                    []
+                                ]
                             ]
                     )
     in
