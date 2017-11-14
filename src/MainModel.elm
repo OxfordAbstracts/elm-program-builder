@@ -120,20 +120,22 @@ initialModel =
     , showMobileView = False
     , displayedColumn = Nothing
     , showManageInformationUi = False
-    , filesToSave = []
+    , filesToSave = [ (FileToSave 0 "" "" "") ]
     , savedFiles = []
     }
 
 
 type alias FileToSave =
-    { contents : String
+    { id : Int
+    , contents : String
     , filename : String
     , filetitle : String
     }
 
 
 type alias SavedFile =
-    { filelink : String
+    { id : Int
+    , filelink : String
     , filename : String
     , filetitle : String
     }

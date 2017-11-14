@@ -81,6 +81,7 @@ function init(options, dev) {
      // We build up the `ImagePortData` object here that will be passed to our Elm
      // runtime through the `fileContentRead` subscription.
       var portData = {
+        id: id,
         contents: base64encoded,
         filename: file.name,
         filetitle: document.getElementById('file-title-' + id).value

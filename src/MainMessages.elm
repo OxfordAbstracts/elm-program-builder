@@ -12,6 +12,7 @@ type Msg
     | AddNewDate String Date
     | AddNewTrack
     | AddNewLocation
+    | AddNewInformation
     | AddNewChair
     | CancelAction
     | UpdateColumns
@@ -27,7 +28,7 @@ type Msg
     | DeleteLocation MainModel.LocationId
     | DeleteChair MainModel.ChairId
     | EditSession
-    | FileSelected
+    | FileSelected Int
     | FileRead FilePortData
     | GetDateAndThenAddDate String
     | MoveColumnUp Int

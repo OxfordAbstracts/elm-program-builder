@@ -239,7 +239,8 @@ columnEncoder record =
 filesToSaveEncoder : FileToSave -> Encode.Value
 filesToSaveEncoder record =
     Encode.object
-        [ ( "contents", Encode.string record.contents )
+        [ ( "id", Encode.int record.id )
+        , ( "contents", Encode.string record.contents )
         , ( "filename", Encode.string record.filename )
         , ( "filetitle", Encode.string record.filetitle )
         ]
@@ -248,7 +249,8 @@ filesToSaveEncoder record =
 savedFileEncoder : SavedFile -> Encode.Value
 savedFileEncoder record =
     Encode.object
-        [ ( "filelink", Encode.string record.filelink )
+        [ ( "id", Encode.int record.id )
+        , ( "filelink", Encode.string record.filelink )
         , ( "filename", Encode.string record.filename )
         , ( "filetitle", Encode.string record.filetitle )
         ]
@@ -264,6 +266,7 @@ columnDecoder =
 fileToSaveDecoder : Json.Decode.Decoder FileToSave
 fileToSaveDecoder =
     decode FileToSave
+        |> required "id" Json.Decode.int
         |> required "contents" Json.Decode.string
         |> required "filename" Json.Decode.string
         |> required "filetitle" Json.Decode.string
@@ -310,6 +313,7 @@ submissionDecoder =
 savedFileDecoder : Json.Decode.Decoder SavedFile
 savedFileDecoder =
     decode SavedFile
+        |> required "id" Json.Decode.int
         |> required "filelink" Json.Decode.string
         |> required "filename" Json.Decode.string
         |> required "filetitle" Json.Decode.string

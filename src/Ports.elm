@@ -17,7 +17,8 @@ port changePickedDates : (List String -> msg) -> Sub msg
 
 
 type alias FilePortData =
-    { contents : String
+    { id : String
+    , contents : String
     , filename : String
     , filetitle : String
     }

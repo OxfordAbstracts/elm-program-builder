@@ -235,8 +235,8 @@ update msg model =
                     , showManageInformationUi = not model.showManageInformationUi
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
-                    , showPreviewUi =
-                        False
+                    , showPreviewUi = False
+                    , filesToSave = []
                   }
                 , Cmd.none
                 )
@@ -874,6 +874,14 @@ update msg model =
                 , Cmd.none
                 )
 
+            AddNewInformation ->
+                ( { model
+                    | filesToSave =
+                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "")
+                  }
+                , Cmd.none
+                )
+
             UpdatePickedLocation locationId newPickedLocationInput ->
                 let
                     pickedLocation =
@@ -1094,19 +1102,26 @@ update msg model =
 
             FileRead data ->
                 let
+                    newFileId =
+                        Result.withDefault 0 (String.toInt data.id)
+
                     newFile =
-                        { contents = data.contents
+                        { id = newFileId
+                        , contents = data.contents
                         , filename = data.filename
                         , filetitle = data.filetitle
                         }
+
+                    newFilesToSave =
+                        List.filter (\f -> f.id /= newFileId) model.filesToSave
                 in
-                    ( { model | filesToSave = List.append model.filesToSave [ newFile ] }
+                    ( { model | filesToSave = List.append newFilesToSave [ newFile ] }
                     , Cmd.none
                     )
 
-            FileSelected ->
+            FileSelected id ->
                 ( model
-                , fileSelected "1"
+                , fileSelected (toString id)
                 )
 
             SaveFiles ->

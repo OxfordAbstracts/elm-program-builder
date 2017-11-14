@@ -88,7 +88,6 @@ view model =
                     listLocations
                 , button
                     [ class "button button--tertiary button--wider"
-                    , id "add-new-date-btn"
                     , type_ "button"
                     , onClick AddNewLocation
                     ]
