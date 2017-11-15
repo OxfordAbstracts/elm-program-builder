@@ -426,7 +426,6 @@ type alias ApiUpdateGet =
     , columns : List Column
     , submissions : List Submission
     , published : Bool
-    , filesToSave : List FileToSave
     , savedFiles : List SavedFile
     }
 

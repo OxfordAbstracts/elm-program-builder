@@ -37,6 +37,8 @@ type Msg
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
     | MoveColumnDown Int
+    | MoveFileUp Int
+    | MoveFileDown Int
     | NewColumn
     | NewTrack
     | PublishProgrammeBuilder

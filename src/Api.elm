@@ -18,7 +18,6 @@ apiUpdateGetDecoder =
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "submissions" (Json.Decode.list submissionDecoder)
         |> required "published" (Json.Decode.bool)
-        |> required "fileToSave" (Json.Decode.list fileToSaveDecoder)
         |> required "savedFiles" (Json.Decode.list savedFileDecoder)
 
 

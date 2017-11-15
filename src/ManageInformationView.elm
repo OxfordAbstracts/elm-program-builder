@@ -42,8 +42,8 @@ view model =
                 "block"
 
         savedFilesDivs =
-            List.map
-                (\f ->
+            List.indexedMap
+                (\i f ->
                     div []
                         [ div [ class "form__question-sub-section form__question-sub-section--table" ]
                             [ input
@@ -61,6 +61,20 @@ view model =
                             [ button
                                 [ onClick (DeleteSavedFile f.id)
                                 , class "button button--secondary icon icon--bin"
+                                ]
+                                []
+                            ]
+                        , div [ class "constructor__question-controls" ]
+                            [ button
+                                [ class "button button--glass icon icon--up-open"
+                                , onClick (MoveFileUp i)
+                                , disabled (i == 0)
+                                ]
+                                []
+                            , button
+                                [ class "button button--glass icon icon--down-open"
+                                , onClick (MoveFileDown i)
+                                , disabled (i == ((List.length model.savedFiles) - 1))
                                 ]
                                 []
                             ]

@@ -135,6 +135,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
             , chairs = apiUpdateGet.chairs
             , submissions = apiUpdateGet.submissions
             , published = apiUpdateGet.published
+            , savedFiles = apiUpdateGet.savedFiles
          }
         )
 
@@ -1170,6 +1171,24 @@ update msg model =
 
             DeleteFileToSave fileToSaveId ->
                 ( { model | filesToSave = List.filter (\f -> f.id /= fileToSaveId) model.filesToSave }, Cmd.none )
+
+            MoveFileUp fileIndex ->
+                let
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.swapAt fileIndex (fileIndex - 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            MoveFileDown fileIndex ->
+                let
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.swapAt fileIndex (fileIndex + 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model
