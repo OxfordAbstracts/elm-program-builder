@@ -65,6 +65,7 @@ makeDummyModel sessions =
     , savedFiles = []
     , showManageInformationUi = False
     , showSavingFilesSpinner = False
+    , hasSecureProgrammeBuilder = Bool
     }
 
 

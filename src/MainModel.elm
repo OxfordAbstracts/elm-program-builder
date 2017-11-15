@@ -48,6 +48,7 @@ type alias Model =
     , filesToSave : List FileToSave
     , savedFiles : List SavedFile
     , showSavingFilesSpinner : Bool
+    , hasSecureProgrammeBuilder : Bool
     }
 
 
@@ -124,6 +125,7 @@ initialModel =
     , filesToSave = [ (FileToSave 0 "" "" "") ]
     , savedFiles = []
     , showSavingFilesSpinner = False
+    , hasSecureProgrammeBuilder = False
     }
 
 
@@ -427,6 +429,7 @@ type alias ApiUpdateGet =
     , submissions : List Submission
     , published : Bool
     , savedFiles : List SavedFile
+    , hasSecureProgrammeBuilder : Bool
     }
 
 

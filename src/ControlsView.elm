@@ -104,8 +104,11 @@ viewUiButtons model =
                     [ text "Manage Columns" ]
                 , button [ class toggleNewTrackClass, type_ "button", onClick ToggleNewTrackUi ]
                     [ text "Manage Tracks" ]
-                , button [ class toggleNewInformationClass, type_ "button", onClick ToggleManageInformationUi ]
-                    [ text "Manage Information" ]
+                , if model.hasSecureProgrammeBuilder then
+                    button [ class toggleNewInformationClass, type_ "button", onClick ToggleManageInformationUi ]
+                        [ text "Manage Information" ]
+                  else
+                    div [] []
                 , button [ class "button button--new", type_ "button", onClick ToggleNewSessionUi ]
                     [ text "+ New Session" ]
                 , div [ class "prog-controls__dividing-section" ]

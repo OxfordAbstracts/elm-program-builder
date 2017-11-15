@@ -19,6 +19,7 @@ apiUpdateGetDecoder =
         |> required "submissions" (Json.Decode.list submissionDecoder)
         |> required "published" (Json.Decode.bool)
         |> required "savedFiles" (Json.Decode.list savedFileDecoder)
+        |> required "hasSecureProgrammeBuilder" (Json.Decode.bool)
 
 
 apiUpdatePostDecoder : Json.Decode.Decoder ApiUpdatePost

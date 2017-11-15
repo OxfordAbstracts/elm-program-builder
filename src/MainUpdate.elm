@@ -136,6 +136,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
             , submissions = apiUpdateGet.submissions
             , published = apiUpdateGet.published
             , savedFiles = apiUpdateGet.savedFiles
+            , hasSecureProgrammeBuilder = apiUpdateGet.hasSecureProgrammeBuilder
          }
         )
 

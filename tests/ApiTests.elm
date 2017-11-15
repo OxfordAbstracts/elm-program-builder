@@ -25,11 +25,7 @@ all =
                     decodedApiJson =
                         case Json.Decode.decodeString Api.apiUpdateGetDecoder apiJson of
                             Err str ->
-                                let
-                                    x =
-                                        Debug.log "str" str
-                                in
-                                    Debug.crash str
+                                Debug.crash str
 
                             Ok decodedUpdate ->
                                 decodedUpdate
@@ -89,7 +85,8 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
   {"id":1,
   "filelink":"",
   "filename": "",
-  "filetitle":""}
+  "filetitle":""},
+"hasSecureProgrammeBuilder":false
 }"""
 
 
@@ -107,6 +104,7 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         [ Submission 1 ]
         False
         [ SavedFile 0 "" "" "" ]
+        False
 
 
 createSession : String -> String -> Int -> Int -> Session
