@@ -89,13 +89,18 @@ view model =
             [ div [] savedFilesDivs
             , div [] filesToSaveDivs
             , div [ class "bar bar--button" ]
-                [ button
-                    [ class "button button--tertiary button--wider"
-                    , type_ "button"
-                    , onClick AddNewInformation
-                    ]
-                    [ text "Add New Information" ]
-                , button [ class "button button--primary button--wider", type_ "button", onClick SaveFiles ]
-                    [ text "Save" ]
+                [ if model.showSavingFilesSpinner then
+                    div [ class "loader" ] []
+                  else
+                    div []
+                        [ button
+                            [ class "button button--tertiary button--wider"
+                            , type_ "button"
+                            , onClick AddNewInformation
+                            ]
+                            [ text "Add New Information" ]
+                        , button [ class "button button--primary button--wider", type_ "button", onClick SaveFiles ]
+                            [ text "Save" ]
+                        ]
                 ]
             ]

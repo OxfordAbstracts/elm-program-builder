@@ -47,6 +47,7 @@ type alias Model =
     , showManageInformationUi : Bool
     , filesToSave : List FileToSave
     , savedFiles : List SavedFile
+    , showSavingFilesSpinner : Bool
     }
 
 
@@ -122,6 +123,7 @@ initialModel =
     , showManageInformationUi = False
     , filesToSave = [ (FileToSave 0 "" "" "") ]
     , savedFiles = []
+    , showSavingFilesSpinner = False
     }
 
 

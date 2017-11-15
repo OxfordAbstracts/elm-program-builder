@@ -462,7 +462,7 @@ update msg model =
             SaveModel result ->
                 case result of
                     Ok savedModel ->
-                        ( { model | savedFiles = savedModel.savedFiles, filesToSave = [] }, Cmd.none )
+                        ( { model | savedFiles = savedModel.savedFiles, filesToSave = [], showSavingFilesSpinner = False }, Cmd.none )
 
                     Err _ ->
                         ( model, Cmd.none )
@@ -1115,12 +1115,12 @@ update msg model =
                     newFilesToSave =
                         List.filter (\f -> f.id /= newFileId) model.filesToSave
                 in
-                    ( { model | filesToSave = List.append newFilesToSave [ newFile ] }
+                    ( { model | filesToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
                     , Cmd.none
                     )
 
             FileSelected id ->
-                ( model
+                ( { model | showSavingFilesSpinner = True }
                 , fileSelected (toString id)
                 )
 
@@ -1129,7 +1129,7 @@ update msg model =
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
-                    ( model, Api.postModelToDb apiUpdatePost model.eventId )
+                    ( { model | showSavingFilesSpinner = True }, Api.postModelToDb apiUpdatePost model.eventId )
 
             ChangeSavedFileTitle savedFileId fileTitle ->
                 let
