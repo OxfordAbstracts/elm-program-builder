@@ -9,11 +9,27 @@ import MainMessages exposing (..)
 import GetWarning exposing (..)
 import Json.Decode
 import Json.Decode.Pipeline exposing (required, optional, decode)
-
-
--- import Ports exposing (FilePortData, fileSelected, fileContentRead)
-
 import Html.Events exposing (on)
+
+
+manageInformationWarning model =
+    let
+        blankFileTitleInput =
+            model.filesToSave
+                |> List.map .filetitle
+                |> List.any (\n -> n == "")
+
+        blankFileContents =
+            model.filesToSave
+                |> List.map .contents
+                |> List.any (\c -> c == "")
+    in
+        if model.showManageInformationUi && blankFileTitleInput then
+            getWarning "File title field cannot be empty" model
+        else if model.showManageInformationUi && blankFileContents then
+            getWarning "Please upload a file with all information" model
+        else
+            ""
 
 
 view : Model -> Html Msg
@@ -63,6 +79,7 @@ view model =
                                     , type_ "text"
                                     , placeholder "File title"
                                     , id ("file-title-" ++ (toString f.id))
+                                    , onInput (ChangeFileToSaveTitle f.id)
                                     ]
                                     []
                                 ]
@@ -84,6 +101,18 @@ view model =
                                 ]
                             ]
                     )
+
+        displayWarning =
+            if not (String.isEmpty (manageInformationWarning model)) then
+                True
+            else
+                False
+
+        onClickUpdate =
+            if String.isEmpty (manageInformationWarning model) then
+                SaveFiles
+            else
+                ShowValidationMessage
     in
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
             [ div [] savedFilesDivs
@@ -91,6 +120,9 @@ view model =
             , div [ class "bar bar--button" ]
                 [ if model.showSavingFilesSpinner then
                     div [ class "loader" ] []
+                  else if displayWarning && model.showValidation then
+                    div [ class "form__hint form__hint--warning" ]
+                        [ text (manageInformationWarning model) ]
                   else
                     div []
                         [ button
@@ -99,7 +131,7 @@ view model =
                             , onClick AddNewInformation
                             ]
                             [ text "Add New Information" ]
-                        , button [ class "button button--primary button--wider", type_ "button", onClick SaveFiles ]
+                        , button [ class "button button--primary button--wider", type_ "button", onClick onClickUpdate ]
                             [ text "Save" ]
                         ]
                 ]

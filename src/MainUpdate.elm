@@ -1148,6 +1148,23 @@ update msg model =
                 in
                     ( { model | savedFiles = newSavedFiles }, Cmd.none )
 
+            ChangeFileToSaveTitle fileToSaveId fileTitle ->
+                let
+                    fileToChange =
+                        model.filesToSave
+                            |> List.filter (\f -> f.id == fileToSaveId)
+                            |> List.head
+                            |> Maybe.withDefault (FileToSave 0 "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filetitle = fileTitle }
+
+                    newFilesToSave =
+                        model.filesToSave
+                            |> List.Extra.replaceIf (\f -> f.id == fileToSaveId) (updatedFile)
+                in
+                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+
             DeleteSavedFile savedFileId ->
                 ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
 
