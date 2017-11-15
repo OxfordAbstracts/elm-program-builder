@@ -61,6 +61,10 @@ makeDummyModel sessions =
     , scheduleSubmissionsIndividually = False
     , showMobileView = False
     , displayedColumn = Nothing
+    , filesToSave = [ (FileToSave 0 "" "" "") ]
+    , savedFiles = []
+    , showManageInformationUi = False
+    , showSavingFilesSpinner = False
     }
 
 
@@ -72,6 +76,7 @@ dummyApiUpdateGet =
     , chairs = dummyChairs
     , columns = dummyColumn
     , submissions = []
+    , savedFiles = []
     , published = False
     }
 
