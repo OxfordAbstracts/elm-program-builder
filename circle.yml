@@ -9,10 +9,9 @@ general:
 
 test:
   pre:
-    - rm elm.js
     - sh circle-dependencies.sh
     - npm i -g elm
-    - npm run build
+    - npm run build --yes
 
 
 # using sysconfcpus to speed up elm compiler # See: https://github.com/elm-lang/elm-compiler/issues/1473#issuecomment-245704142
