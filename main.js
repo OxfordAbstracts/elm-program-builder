@@ -64,7 +64,7 @@ function init(options, dev) {
   });
 // thanks to https://github.com/phylor/elm-image-upload/blob/master/index.html
   app.ports.fileSelected.subscribe(function (id) {
-    var node = document.getElementById(id);
+    var node = document.getElementById('file-to-save-' + id);
     if (node === null) {
       return;
     }

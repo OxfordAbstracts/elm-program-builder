@@ -99,7 +99,7 @@ view model =
                                 ]
                             , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ input
-                                    [ id (toString f.id)
+                                    [ id "file-to-save-" ++ (toString f.id)
                                     , type_ "file"
                                     , on "change"
                                         (Json.Decode.succeed (FileSelected f.id))
@@ -117,10 +117,7 @@ view model =
                     )
 
         displayWarning =
-            if not (String.isEmpty (manageInformationWarning model)) then
-                True
-            else
-                False
+            not (String.isEmpty (manageInformationWarning model))
 
         onClickUpdate =
             if String.isEmpty (manageInformationWarning model) then
