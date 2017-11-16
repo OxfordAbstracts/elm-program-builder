@@ -9,8 +9,11 @@ general:
 
 test:
   pre:
+    - rm elm.js
     - sh circle-dependencies.sh
     - npm i -g elm
+    - npm run build
+
 
 # using sysconfcpus to speed up elm compiler # See: https://github.com/elm-lang/elm-compiler/issues/1473#issuecomment-245704142
   override:
