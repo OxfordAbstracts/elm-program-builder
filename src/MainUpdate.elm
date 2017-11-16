@@ -135,6 +135,8 @@ updateModelWithApiUpdateGet model apiUpdateGet =
             , chairs = apiUpdateGet.chairs
             , submissions = apiUpdateGet.submissions
             , published = apiUpdateGet.published
+            , savedFiles = apiUpdateGet.savedFiles
+            , hasSecureProgrammeBuilder = apiUpdateGet.hasSecureProgrammeBuilder
          }
         )
 
@@ -179,6 +181,7 @@ update msg model =
                         , showNewTrackUi = False
                         , showManageDatesUi = False
                         , showManageLocationsUi = False
+                        , showManageInformationUi = False
                         , showManageChairsUi = False
                         , idOfSessionBeingEdited = Nothing
                         , newSessionDate = firstDate
@@ -198,6 +201,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = not model.published
+                        , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -213,10 +218,27 @@ update msg model =
                     , showNewSessionUi = False
                     , showManageDatesUi = False
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
                     , pickedTracks = List.sortBy .name model.tracks
+                  }
+                , Cmd.none
+                )
+
+            ToggleManageInformationUi ->
+                ( { model
+                    | showNewTrackUi = False
+                    , showNewColumnUi = False
+                    , showNewSessionUi = False
+                    , showManageDatesUi = False
+                    , showManageLocationsUi = False
+                    , showManageInformationUi = not model.showManageInformationUi
+                    , showManageChairsUi = False
+                    , idOfSessionBeingEdited = Nothing
+                    , showPreviewUi = False
+                    , filesToSave = []
                   }
                 , Cmd.none
                 )
@@ -243,6 +265,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedColumns = model.columns
@@ -263,6 +286,7 @@ update msg model =
                         , showNewSessionUi = False
                         , showNewTrackUi = False
                         , showManageLocationsUi = False
+                        , showManageInformationUi = False
                         , showManageChairsUi = False
                         , showNewColumnUi = False
                         , idOfSessionBeingEdited = Nothing
@@ -281,6 +305,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = not model.showManageLocationsUi
+                    , showManageInformationUi = False
                     , showManageChairsUi = False
                     , showPreviewUi = False
                     , pickedLocations = List.sortBy .name model.locations
@@ -296,6 +321,7 @@ update msg model =
                     , showManageDatesUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showManageLocationsUi = False
+                    , showManageInformationUi = False
                     , showManageChairsUi = not model.showManageChairsUi
                     , showPreviewUi = False
                     , pickedChairs = List.sortBy .name model.chairs
@@ -342,6 +368,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -386,6 +414,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -403,7 +433,7 @@ update msg model =
                         List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | tracks = newTracks
@@ -431,8 +461,13 @@ update msg model =
                 in
                     ( { model | showMobileView = showMobileView }, Cmd.none )
 
-            SaveModel _ ->
-                ( model, Cmd.none )
+            SaveModel result ->
+                case result of
+                    Ok savedModel ->
+                        ( { model | savedFiles = savedModel.savedFiles, filesToSave = [], showSavingFilesSpinner = False }, Cmd.none )
+
+                    Err _ ->
+                        ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
                 ( (updateNewColumn model (\nc -> { nc | name = newName })), Cmd.none )
@@ -577,6 +612,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
+                        , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -671,6 +708,8 @@ update msg model =
                                 , published = model.published
                                 , locations = model.locations
                                 , chairs = model.chairs
+                                , filesToSave = model.filesToSave
+                                , savedFiles = model.savedFiles
                                 }
                         in
                             ( { model
@@ -728,6 +767,8 @@ update msg model =
                         , published = model.published
                         , locations = model.locations
                         , chairs = model.chairs
+                        , filesToSave = model.filesToSave
+                        , savedFiles = model.savedFiles
                         }
                 in
                     ( { model
@@ -835,6 +876,14 @@ update msg model =
                 , Cmd.none
                 )
 
+            AddNewInformation ->
+                ( { model
+                    | filesToSave =
+                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "")
+                  }
+                , Cmd.none
+                )
+
             UpdatePickedLocation locationId newPickedLocationInput ->
                 let
                     pickedLocation =
@@ -860,7 +909,7 @@ update msg model =
                         List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | locations = newLocations
@@ -914,7 +963,7 @@ update msg model =
                         List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.filesToSave model.savedFiles
                 in
                     ( { model
                         | chairs = newChairs
@@ -1052,6 +1101,95 @@ update msg model =
                             |> Result.withDefault 0
                 in
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
+
+            FileRead data ->
+                let
+                    newFileId =
+                        Result.withDefault 0 (String.toInt data.id)
+
+                    newFile =
+                        { id = newFileId
+                        , contents = data.contents
+                        , filename = data.filename
+                        , filetitle = data.filetitle
+                        }
+
+                    newFilesToSave =
+                        List.filter (\f -> f.id /= newFileId) model.filesToSave
+                in
+                    ( { model | filesToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
+                    , Cmd.none
+                    )
+
+            FileSelected id ->
+                ( { model | showSavingFilesSpinner = True }
+                , fileSelected (toString id)
+                )
+
+            SaveFiles ->
+                let
+                    apiUpdatePost =
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
+                in
+                    ( { model | showSavingFilesSpinner = True }, Api.postModelToDb apiUpdatePost model.eventId )
+
+            ChangeSavedFileTitle savedFileId fileTitle ->
+                let
+                    fileToChange =
+                        model.savedFiles
+                            |> List.filter (\f -> f.id == savedFileId)
+                            |> List.head
+                            |> Maybe.withDefault (SavedFile 0 "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filetitle = fileTitle }
+
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            ChangeFileToSaveTitle fileToSaveId fileTitle ->
+                let
+                    fileToChange =
+                        model.filesToSave
+                            |> List.filter (\f -> f.id == fileToSaveId)
+                            |> List.head
+                            |> Maybe.withDefault (FileToSave 0 "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filetitle = fileTitle }
+
+                    newFilesToSave =
+                        model.filesToSave
+                            |> List.Extra.replaceIf (\f -> f.id == fileToSaveId) (updatedFile)
+                in
+                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+
+            DeleteSavedFile savedFileId ->
+                ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
+
+            DeleteFileToSave fileToSaveId ->
+                ( { model | filesToSave = List.filter (\f -> f.id /= fileToSaveId) model.filesToSave }, Cmd.none )
+
+            MoveFileUp fileIndex ->
+                let
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.swapAt fileIndex (fileIndex - 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            MoveFileDown fileIndex ->
+                let
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.swapAt fileIndex (fileIndex + 1)
+                            |> Maybe.withDefault []
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model

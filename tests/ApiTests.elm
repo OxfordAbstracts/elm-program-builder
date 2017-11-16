@@ -4,7 +4,7 @@ import Test exposing (..)
 import Expect
 import Api
 import Json.Decode
-import MainModel exposing (ApiUpdateGet, Session, Submission, Track, Column, DateWithoutTime, Location, Chair)
+import MainModel exposing (ApiUpdateGet, Session, Submission, Track, Column, DateWithoutTime, Location, Chair, SavedFile)
 import Fuzz exposing (int, intRange, string)
 
 
@@ -80,7 +80,13 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
 "submissions": [
   {"id": 1}
 ],
-"published": false
+"published": false,
+"savedFiles":
+  {"id":1,
+  "filelink":"",
+  "filename": "",
+  "filetitle":""},
+"hasSecureProgrammeBuilder":false
 }"""
 
 
@@ -96,6 +102,8 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         [ Chair 1 "Ines Teles" ]
         [ Column 1 "column 1" ]
         [ Submission 1 ]
+        False
+        [ SavedFile 0 "" "" "" ]
         False
 
 

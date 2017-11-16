@@ -44,6 +44,11 @@ type alias Model =
     , scheduleSubmissionsIndividually : Bool
     , showMobileView : Bool
     , displayedColumn : Maybe ColumnId
+    , showManageInformationUi : Bool
+    , filesToSave : List FileToSave
+    , savedFiles : List SavedFile
+    , showSavingFilesSpinner : Bool
+    , hasSecureProgrammeBuilder : Bool
     }
 
 
@@ -116,6 +121,27 @@ initialModel =
     , scheduleSubmissionsIndividually = False
     , showMobileView = False
     , displayedColumn = Nothing
+    , showManageInformationUi = False
+    , filesToSave = [ (FileToSave 0 "" "" "") ]
+    , savedFiles = []
+    , showSavingFilesSpinner = False
+    , hasSecureProgrammeBuilder = False
+    }
+
+
+type alias FileToSave =
+    { id : Int
+    , contents : String
+    , filename : String
+    , filetitle : String
+    }
+
+
+type alias SavedFile =
+    { id : Int
+    , filelink : String
+    , filename : String
+    , filetitle : String
     }
 
 
@@ -243,6 +269,7 @@ initialModel =
 -- , showValidation = False
 -- , scheduleSubmissionsIndividually = False
 -- , showMobileView = False
+-- , showManageInformationUi = False
 -- }
 
 
@@ -388,6 +415,8 @@ type alias ApiUpdatePost =
     , chairs : List Chair
     , columns : List Column
     , published : Bool
+    , filesToSave : List FileToSave
+    , savedFiles : List SavedFile
     }
 
 
@@ -399,6 +428,8 @@ type alias ApiUpdateGet =
     , columns : List Column
     , submissions : List Submission
     , published : Bool
+    , savedFiles : List SavedFile
+    , hasSecureProgrammeBuilder : Bool
     }
 
 
