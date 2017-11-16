@@ -65,7 +65,7 @@ makeDummyModel sessions =
     , savedFiles = []
     , showManageInformationUi = False
     , showSavingFilesSpinner = False
-    , hasSecureProgrammeBuilder = Bool
+    , hasSecureProgrammeBuilder = False
     }
 
 
@@ -79,6 +79,7 @@ dummyApiUpdateGet =
     , submissions = []
     , savedFiles = []
     , published = False
+    , hasSecureProgrammeBuilder = False
     }
 
 
