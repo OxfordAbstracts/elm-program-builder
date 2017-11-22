@@ -14,3 +14,17 @@ port changeDates : (List String -> msg) -> Sub msg
 
 
 port changePickedDates : (List String -> msg) -> Sub msg
+
+
+type alias FilePortData =
+    { id : String
+    , contents : String
+    , filename : String
+    , filetitle : String
+    }
+
+
+port fileSelected : String -> Cmd msg
+
+
+port fileContentRead : (FilePortData -> msg) -> Sub msg
