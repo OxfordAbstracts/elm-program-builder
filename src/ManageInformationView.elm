@@ -99,7 +99,7 @@ view model =
                                 ]
                             , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ input
-                                    [ id "file-to-save-" ++ (toString f.id)
+                                    [ id ("file-to-save-" ++ (toString f.id))
                                     , type_ "file"
                                     , on "change"
                                         (Json.Decode.succeed (FileSelected f.id))
