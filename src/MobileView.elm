@@ -48,8 +48,18 @@ view model =
 
                                             chairId =
                                                 Maybe.withDefault 0 s.chairId
+
+                                            query =
+                                                if model.showPreviewUi then
+                                                    "?view=preview"
+                                                else if model.showPublishPage then
+                                                    "?view=published"
+                                                else if model.showBasicPage then
+                                                    "?view=basic"
+                                                else
+                                                    ""
                                         in
-                                            if s.sessionColumn == ColumnId displayedColumnId then
+                                            if s.sessionColumn == ColumnId displayedColumnId || s.sessionColumn == AllColumns then
                                                 div [ class "prog-mob__session" ]
                                                     [ div
                                                         [ class "prog-mob__sesh-times" ]
@@ -69,7 +79,17 @@ view model =
                                                             ]
                                                         ]
                                                     , div [ class "prog-mob__sesh-info" ]
-                                                        [ span [ class "prog-mob__sesh-name" ] [ text s.name ]
+                                                        [ a
+                                                            [ class "prog-mob__sesh-name"
+                                                            , href
+                                                                ("/events/"
+                                                                    ++ model.eventId
+                                                                    ++ "/sessions/"
+                                                                    ++ (toString s.id)
+                                                                    ++ query
+                                                                )
+                                                            ]
+                                                            [ text s.name ]
                                                         , span [ class "prog-mob__sesh-chair" ] [ text (getNameFromId model.chairs chairId) ]
                                                         , span [ class "prog-mob__sesh-location" ] [ text (getNameFromId model.locations locationId) ]
                                                         , span [ class "prog-mob__sesh-track" ] [ text (getNameFromId model.tracks trackId) ]

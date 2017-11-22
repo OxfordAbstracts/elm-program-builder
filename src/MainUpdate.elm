@@ -428,8 +428,19 @@ update msg model =
                 let
                     showMobileView =
                         windowSize.width < 768
+
+                    displayedColumn =
+                        if showMobileView then
+                            case List.head model.columns of
+                                Just column ->
+                                    Just column.id
+
+                                Nothing ->
+                                    Just 0
+                        else
+                            model.displayedColumn
                 in
-                    ( { model | showMobileView = showMobileView }, Cmd.none )
+                    ( { model | showMobileView = showMobileView, displayedColumn = displayedColumn }, Cmd.none )
 
             SaveModel _ ->
                 ( model, Cmd.none )
