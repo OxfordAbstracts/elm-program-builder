@@ -105,7 +105,7 @@ view context model =
                 , label [ for "submissions-input" ]
                     [ text "Submissions"
                     , span [ class "form__label form__label--sub" ]
-                        [ text "Please separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
+                        [ text "Please put submission ids on separate lines or separate submission ids by , e.g. 1,3,14. Any invalid submission ids will not be assigned. " ]
                     ]
                 , SessionSubmissionsView.view model context.session
                 ]
