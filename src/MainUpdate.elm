@@ -28,6 +28,7 @@ addSubmissionIdsInputToSession submissionIdInputs session submissions =
             submissionIdInput
                 |> .submissionIds
                 |> split ","
+                |> List.concatMap (\s -> split "\n" s)
                 |> List.filterMap (trim >> String.toInt >> Result.toMaybe)
                 |> List.filter (\sub -> List.member sub validSubmissionIds)
                 |> List.map (addTimes submissionIdInput.startTime submissionIdInput.endTime)
@@ -505,6 +506,7 @@ update msg model =
                     invalidSubmissionIds =
                         newSubmissionIdsString
                             |> split ","
+                            |> List.concatMap (\s -> split "\n" s)
                             |> List.map String.trim
                             |> List.filter (\sub -> not (List.member sub validSubmissionIds))
                             |> join ", "
