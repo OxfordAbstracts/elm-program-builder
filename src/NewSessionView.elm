@@ -9,6 +9,7 @@ import MainModel exposing (..)
 import GetWarning exposing (..)
 import SessionSubmissionsView
 import Json.Decode
+import Helpers exposing (onChange)
 
 
 type alias NewSessionContext =
@@ -260,7 +261,7 @@ view context model =
                 [ i [ class "icon icon--warning icon--margin-right" ] [], text "At least one column and date must be added before a session can be saved" ]
             , div [ class "form__question-section form__question-section--table form__question-section--divided" ]
                 [ div
-                    [ class "form__question-sub-section form__question-sub-section--table", onInput UpdateNewSessionDate ]
+                    [ class "form__question-sub-section form__question-sub-section--table", onChange UpdateNewSessionDate ]
                     [ label [ class "form__label", for "day-input" ] [ text "Date *" ]
                     , select [ id "day-input", class "form__input" ]
                         dayOptions
