@@ -128,7 +128,7 @@ view model =
         div [ class "form form--add-to-view", style [ ( "display", displayDiv ) ] ]
             [ div [] savedFilesDivs
             , div [] filesToSaveDivs
-            , div [ class "bar bar--button" ]
+            , div []
                 [ if model.showSavingFilesSpinner then
                     div [ class "loader" ] []
                   else if displayWarning && model.showValidation then
