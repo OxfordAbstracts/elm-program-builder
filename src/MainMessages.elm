@@ -16,7 +16,9 @@ type Msg
     | AddNewChair
     | CancelAction
     | ChangeFileToSaveTitle Int String
+    | ChangeFileToSaveDescription Int String
     | ChangeSavedFileTitle Int String
+    | ChangeSavedFileDescription Int String
     | UpdateColumns
     | CreateNewSession
     | CreateSubmissionInput

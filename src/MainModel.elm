@@ -122,7 +122,7 @@ initialModel =
     , showMobileView = False
     , displayedColumn = Nothing
     , showManageInformationUi = False
-    , filesToSave = [ (FileToSave 0 "" "" "") ]
+    , filesToSave = [ (FileToSave 0 "" "" "" "") ]
     , savedFiles = []
     , showSavingFilesSpinner = False
     , hasSecureProgrammeBuilder = False
@@ -134,6 +134,7 @@ type alias FileToSave =
     , contents : String
     , filename : String
     , filetitle : String
+    , filedescription : String
     }
 
 
@@ -142,6 +143,7 @@ type alias SavedFile =
     , filelink : String
     , filename : String
     , filetitle : String
+    , filedescription : String
     }
 
 

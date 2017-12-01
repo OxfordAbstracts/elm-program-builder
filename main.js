@@ -91,7 +91,8 @@ function init(options, dev) {
         id: id,
         contents: base64encoded,
         filename: file.name,
-        filetitle: document.getElementById('file-title-' + id).value
+        filetitle: document.getElementById('file-title-' + id).value,
+        filedescription: document.getElementById('file-description-' + id).value
       };
      // We call the `fileContentRead` port with the file data
      // which will be sent to our Elm runtime via Subscriptions.

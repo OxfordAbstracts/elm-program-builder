@@ -892,7 +892,7 @@ update msg model =
             AddNewInformation ->
                 ( { model
                     | filesToSave =
-                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "")
+                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "" "")
                   }
                 , Cmd.none
                 )
@@ -1125,6 +1125,7 @@ update msg model =
                         , contents = data.contents
                         , filename = data.filename
                         , filetitle = data.filetitle
+                        , filedescription = data.filedescription
                         }
 
                     newFilesToSave =
@@ -1152,10 +1153,27 @@ update msg model =
                         model.savedFiles
                             |> List.filter (\f -> f.id == savedFileId)
                             |> List.head
-                            |> Maybe.withDefault (SavedFile 0 "" "" "")
+                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
 
                     updatedFile =
                         { fileToChange | filetitle = fileTitle }
+
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            ChangeSavedFileDescription savedFileId fileDescription ->
+                let
+                    fileToChange =
+                        model.savedFiles
+                            |> List.filter (\f -> f.id == savedFileId)
+                            |> List.head
+                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filedescription = fileDescription }
 
                     newSavedFiles =
                         model.savedFiles
@@ -1169,10 +1187,27 @@ update msg model =
                         model.filesToSave
                             |> List.filter (\f -> f.id == fileToSaveId)
                             |> List.head
-                            |> Maybe.withDefault (FileToSave 0 "" "" "")
+                            |> Maybe.withDefault (FileToSave 0 "" "" "" "")
 
                     updatedFile =
                         { fileToChange | filetitle = fileTitle }
+
+                    newFilesToSave =
+                        model.filesToSave
+                            |> List.Extra.replaceIf (\f -> f.id == fileToSaveId) (updatedFile)
+                in
+                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+
+            ChangeFileToSaveDescription fileToSaveId fileDescription ->
+                let
+                    fileToChange =
+                        model.filesToSave
+                            |> List.filter (\f -> f.id == fileToSaveId)
+                            |> List.head
+                            |> Maybe.withDefault (FileToSave 0 "" "" "" "")
+
+                    updatedFile =
+                        { fileToChange | filedescription = fileDescription }
 
                     newFilesToSave =
                         model.filesToSave
