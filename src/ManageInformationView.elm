@@ -59,7 +59,7 @@ view model =
                             [ a [ href f.filelink ] [ text f.filename ] ]
                         , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                             [ button
-                                [ onClick (DeleteSavedFile f.id)
+                                [ onClick (ConfirmDeleteInformation f.id)
                                 , class "button button--secondary icon icon--bin"
                                 ]
                                 []

@@ -25,6 +25,7 @@ type Msg
     | DeleteColumn Int
     | DeleteDate Int
     | ConfirmDeleteSession Int
+    | ConfirmDeleteInformation Int
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
     | DeleteLocation MainModel.LocationId

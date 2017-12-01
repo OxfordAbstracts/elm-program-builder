@@ -7,7 +7,13 @@ port openDatepicker : String -> Cmd msg
 port showDeleteConfirmation : Int -> Cmd msg
 
 
+port showDeleteInformationConfirmation : Int -> Cmd msg
+
+
 port deleteSession : (Int -> msg) -> Sub msg
+
+
+port deleteInformation : (Int -> msg) -> Sub msg
 
 
 port changeDates : (List String -> msg) -> Sub msg

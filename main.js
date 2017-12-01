@@ -62,6 +62,13 @@ function init(options, dev) {
       app.ports['deleteSession'].send(sessionId);
     }
   });
+
+  app.ports.showDeleteInformationConfirmation.subscribe(function(savedFileId) {
+    var confirmed = confirm('Are you sure? This will permanently the information');
+    if(confirmed){
+      app.ports['deleteInformation'].send(savedFileId);
+    }
+  });
 // thanks to https://github.com/phylor/elm-image-upload/blob/master/index.html
   app.ports.fileSelected.subscribe(function (id) {
     var node = document.getElementById('file-to-save-' + id);

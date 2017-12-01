@@ -1180,6 +1180,11 @@ update msg model =
                 in
                     ( { model | filesToSave = newFilesToSave }, Cmd.none )
 
+            ConfirmDeleteInformation savedFileId ->
+                ( model
+                , Cmd.batch [ Ports.showDeleteInformationConfirmation savedFileId ]
+                )
+
             DeleteSavedFile savedFileId ->
                 ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
 
