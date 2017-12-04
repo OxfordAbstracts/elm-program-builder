@@ -1158,20 +1158,20 @@ update msg model =
                 , fileSelected (toString id)
                 )
 
-            SaveFiles ->
+            SaveInfo ->
                 let
                     apiUpdatePost =
                         ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo
                 in
                     ( { model | showSavingFilesSpinner = True }, Api.postModelToDb apiUpdatePost model.eventId )
 
-            ChangeSavedFileTitle savedInfoId infoTitle ->
+            ChangeSavedInfoTitle savedInfoId infoTitle ->
                 let
                     fileToChange =
                         model.savedInfo
                             |> List.filter (\f -> f.id == savedInfoId)
                             |> List.head
-                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
+                            |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
 
                     updatedFile =
                         { fileToChange | infoTitle = infoTitle }
@@ -1182,13 +1182,13 @@ update msg model =
                 in
                     ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
-            ChangeSavedFileDescription savedInfoId infoDescription ->
+            ChangeSavedInfoDescription savedInfoId infoDescription ->
                 let
                     fileToChange =
                         model.savedInfo
                             |> List.filter (\f -> f.id == savedInfoId)
                             |> List.head
-                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
+                            |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
 
                     updatedFile =
                         { fileToChange | infoDescription = infoDescription }
@@ -1226,7 +1226,7 @@ update msg model =
             DeleteInfoToSave infoToSaveId ->
                 ( { model | infoToSave = List.filter (\f -> f.id /= infoToSaveId) model.infoToSave }, Cmd.none )
 
-            MoveFileUp fileIndex ->
+            MoveInfoUp fileIndex ->
                 let
                     newSavedFiles =
                         model.savedInfo
@@ -1235,7 +1235,7 @@ update msg model =
                 in
                     ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
-            MoveFileDown fileIndex ->
+            MoveInfoDown fileIndex ->
                 let
                     newSavedFiles =
                         model.savedInfo

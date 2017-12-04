@@ -49,7 +49,7 @@ view model =
                                 , type_ "text"
                                 , placeholder "Title *"
                                 , value f.infoTitle
-                                , onInput (ChangeSavedFileTitle f.id)
+                                , onInput (ChangeSavedInfoTitle f.id)
                                 ]
                                 [ text f.infoTitle ]
                             ]
@@ -59,7 +59,7 @@ view model =
                                 , type_ "text"
                                 , placeholder "Description"
                                 , value f.infoDescription
-                                , onInput (ChangeSavedFileDescription f.id)
+                                , onInput (ChangeSavedInfoDescription f.id)
                                 ]
                                 [ text f.infoDescription ]
                             ]
@@ -75,13 +75,13 @@ view model =
                         , div [ class "constructor__question-controls" ]
                             [ button
                                 [ class "button button--glass icon icon--up-open"
-                                , onClick (MoveFileUp i)
+                                , onClick (MoveInfoUp i)
                                 , disabled (i == 0)
                                 ]
                                 []
                             , button
                                 [ class "button button--glass icon icon--down-open"
-                                , onClick (MoveFileDown i)
+                                , onClick (MoveInfoDown i)
                                 , disabled (i == ((List.length model.savedInfo) - 1))
                                 ]
                                 []
@@ -139,7 +139,7 @@ view model =
 
         onClickUpdate =
             if String.isEmpty (manageInformationWarning model) then
-                SaveFiles
+                SaveInfo
             else
                 ShowValidationMessage
     in

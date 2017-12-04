@@ -247,7 +247,7 @@ infoToSaveEncoder record =
         ]
 
 
-savedInfoEncoder : SavedFile -> Encode.Value
+savedInfoEncoder : SavedInfo -> Encode.Value
 savedInfoEncoder record =
     Encode.object
         [ ( "id", Encode.int record.id )
@@ -313,9 +313,9 @@ submissionDecoder =
         |> required "id" Json.Decode.int
 
 
-savedInfoDecoder : Json.Decode.Decoder SavedFile
+savedInfoDecoder : Json.Decode.Decoder SavedInfo
 savedInfoDecoder =
-    decode SavedFile
+    decode SavedInfo
         |> required "id" Json.Decode.int
         |> required "filelink" Json.Decode.string
         |> required "filename" Json.Decode.string

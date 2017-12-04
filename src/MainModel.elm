@@ -46,7 +46,7 @@ type alias Model =
     , displayedColumn : Maybe ColumnId
     , showManageInformationUi : Bool
     , infoToSave : List InfoToSave
-    , savedInfo : List SavedFile
+    , savedInfo : List SavedInfo
     , showSavingFilesSpinner : Bool
     , hasSecureProgrammeBuilder : Bool
     }
@@ -138,7 +138,7 @@ type alias InfoToSave =
     }
 
 
-type alias SavedFile =
+type alias SavedInfo =
     { id : Int
     , filelink : String
     , filename : String
@@ -418,7 +418,7 @@ type alias ApiUpdatePost =
     , columns : List Column
     , published : Bool
     , infoToSave : List InfoToSave
-    , savedInfo : List SavedFile
+    , savedInfo : List SavedInfo
     }
 
 
@@ -430,7 +430,7 @@ type alias ApiUpdateGet =
     , columns : List Column
     , submissions : List Submission
     , published : Bool
-    , savedInfo : List SavedFile
+    , savedInfo : List SavedInfo
     , hasSecureProgrammeBuilder : Bool
     }
 
