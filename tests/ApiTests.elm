@@ -103,7 +103,7 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         [ Column 1 "column 1" ]
         [ Submission 1 ]
         False
-        [ SavedFile 0 "" "" "" ]
+        [ SavedFile 0 "" "" "" "" ]
         False
 
 
