@@ -107,14 +107,16 @@ view model =
                                     ]
                                     []
                                 ]
-                            , input
-                                [ class "form__input"
-                                , type_ "text"
-                                , placeholder "File description"
-                                , id ("file-description-" ++ (toString f.id))
-                                , onInput (ChangeFileToSaveDescription f.id)
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ input
+                                    [ class "form__input"
+                                    , type_ "text"
+                                    , placeholder "File description"
+                                    , id ("file-description-" ++ (toString f.id))
+                                    , onInput (ChangeFileToSaveDescription f.id)
+                                    ]
+                                    []
                                 ]
-                                []
                             , div [ class "form__question-sub-section form__question-sub-section--table" ]
                                 [ input
                                     [ id ("file-to-save-" ++ (toString f.id))
