@@ -890,12 +890,26 @@ update msg model =
                 )
 
             AddNewInformation ->
-                ( { model
-                    | filesToSave =
-                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "" "")
-                  }
-                , Cmd.none
-                )
+                let
+                    highestSavedFileId =
+                        model.savedFiles
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 0
+
+                    newfileToSaveWithId =
+                        FileToSave (highestSavedFileId + List.length model.filesToSave + 1)
+                            ""
+                            ""
+                            ""
+                            ""
+                in
+                    ( { model
+                        | filesToSave =
+                            model.filesToSave ++ [ newfileToSaveWithId ]
+                      }
+                    , Cmd.none
+                    )
 
             UpdatePickedLocation locationId newPickedLocationInput ->
                 let
