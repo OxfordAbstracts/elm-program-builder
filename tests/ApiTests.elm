@@ -81,11 +81,12 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
   {"id": 1}
 ],
 "published": false,
-"savedFiles":
+"savedInfo":
   {"id":1,
   "filelink":"",
   "filename": "",
-  "filetitle":""},
+  "infoTitle":"",
+  "infoDescription":""},
 "hasSecureProgrammeBuilder":false
 }"""
 

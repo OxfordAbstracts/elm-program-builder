@@ -136,7 +136,7 @@ updateModelWithApiUpdateGet model apiUpdateGet =
             , chairs = apiUpdateGet.chairs
             , submissions = apiUpdateGet.submissions
             , published = apiUpdateGet.published
-            , savedFiles = apiUpdateGet.savedFiles
+            , savedInfo = apiUpdateGet.savedInfo
             , hasSecureProgrammeBuilder = apiUpdateGet.hasSecureProgrammeBuilder
          }
         )
@@ -202,8 +202,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = not model.published
-                        , filesToSave = model.filesToSave
-                        , savedFiles = model.savedFiles
+                        , infoToSave = model.infoToSave
+                        , savedInfo = model.savedInfo
                         }
                 in
                     ( { model
@@ -239,7 +239,7 @@ update msg model =
                     , showManageChairsUi = False
                     , idOfSessionBeingEdited = Nothing
                     , showPreviewUi = False
-                    , filesToSave = []
+                    , infoToSave = []
                   }
                 , Cmd.none
                 )
@@ -369,8 +369,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
-                        , filesToSave = model.filesToSave
-                        , savedFiles = model.savedFiles
+                        , infoToSave = model.infoToSave
+                        , savedInfo = model.savedInfo
                         }
                 in
                     ( { model
@@ -415,8 +415,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
-                        , filesToSave = model.filesToSave
-                        , savedFiles = model.savedFiles
+                        , infoToSave = model.infoToSave
+                        , savedInfo = model.savedInfo
                         }
                 in
                     ( { model
@@ -434,7 +434,7 @@ update msg model =
                         List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo
                 in
                     ( { model
                         | tracks = newTracks
@@ -476,10 +476,14 @@ update msg model =
             SaveModel result ->
                 case result of
                     Ok savedModel ->
-                        ( { model | savedFiles = savedModel.savedFiles, filesToSave = [], showSavingFilesSpinner = False }, Cmd.none )
+                        ( { model | savedInfo = savedModel.savedInfo, infoToSave = [], showSavingFilesSpinner = False }, Cmd.none )
 
-                    Err _ ->
-                        ( model, Cmd.none )
+                    Err err ->
+                        let
+                            x =
+                                Debug.log "err" err
+                        in
+                            ( model, Cmd.none )
 
             UpdateNewColumnName newName ->
                 ( (updateNewColumn model (\nc -> { nc | name = newName })), Cmd.none )
@@ -625,8 +629,8 @@ update msg model =
                         , locations = model.locations
                         , chairs = model.chairs
                         , published = model.published
-                        , filesToSave = model.filesToSave
-                        , savedFiles = model.savedFiles
+                        , infoToSave = model.infoToSave
+                        , savedInfo = model.savedInfo
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -721,8 +725,8 @@ update msg model =
                                 , published = model.published
                                 , locations = model.locations
                                 , chairs = model.chairs
-                                , filesToSave = model.filesToSave
-                                , savedFiles = model.savedFiles
+                                , infoToSave = model.infoToSave
+                                , savedInfo = model.savedInfo
                                 }
                         in
                             ( { model
@@ -780,8 +784,8 @@ update msg model =
                         , published = model.published
                         , locations = model.locations
                         , chairs = model.chairs
-                        , filesToSave = model.filesToSave
-                        , savedFiles = model.savedFiles
+                        , infoToSave = model.infoToSave
+                        , savedInfo = model.savedInfo
                         }
                 in
                     ( { model
@@ -892,21 +896,21 @@ update msg model =
             AddNewInformation ->
                 let
                     highestSavedFileId =
-                        model.savedFiles
+                        model.savedInfo
                             |> List.map .id
                             |> List.maximum
                             |> Maybe.withDefault 0
 
-                    newfileToSaveWithId =
-                        FileToSave (highestSavedFileId + List.length model.filesToSave + 1)
+                    newinfoToSaveWithId =
+                        InfoToSave (highestSavedFileId + List.length model.infoToSave + 1)
                             ""
                             ""
                             ""
                             ""
                 in
                     ( { model
-                        | filesToSave =
-                            model.filesToSave ++ [ newfileToSaveWithId ]
+                        | infoToSave =
+                            model.infoToSave ++ [ newinfoToSaveWithId ]
                       }
                     , Cmd.none
                     )
@@ -936,7 +940,7 @@ update msg model =
                         List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.filesToSave model.savedFiles
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.infoToSave model.savedInfo
                 in
                     ( { model
                         | locations = newLocations
@@ -990,7 +994,7 @@ update msg model =
                         List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.filesToSave model.savedFiles
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.infoToSave model.savedInfo
                 in
                     ( { model
                         | chairs = newChairs
@@ -1138,14 +1142,14 @@ update msg model =
                         { id = newFileId
                         , contents = data.contents
                         , filename = data.filename
-                        , filetitle = data.filetitle
-                        , filedescription = data.filedescription
+                        , infoTitle = data.infoTitle
+                        , infoDescription = data.infoDescription
                         }
 
                     newFilesToSave =
-                        List.filter (\f -> f.id /= newFileId) model.filesToSave
+                        List.filter (\f -> f.id /= newFileId) model.infoToSave
                 in
-                    ( { model | filesToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
+                    ( { model | infoToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
                     , Cmd.none
                     )
 
@@ -1157,88 +1161,88 @@ update msg model =
             SaveFiles ->
                 let
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.filesToSave model.savedFiles
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo
                 in
                     ( { model | showSavingFilesSpinner = True }, Api.postModelToDb apiUpdatePost model.eventId )
 
-            ChangeSavedFileTitle savedFileId fileTitle ->
+            ChangeSavedFileTitle savedInfoId infoTitle ->
                 let
                     fileToChange =
-                        model.savedFiles
-                            |> List.filter (\f -> f.id == savedFileId)
+                        model.savedInfo
+                            |> List.filter (\f -> f.id == savedInfoId)
                             |> List.head
                             |> Maybe.withDefault (SavedFile 0 "" "" "" "")
 
                     updatedFile =
-                        { fileToChange | filetitle = fileTitle }
+                        { fileToChange | infoTitle = infoTitle }
 
                     newSavedFiles =
-                        model.savedFiles
-                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                        model.savedInfo
+                            |> List.Extra.replaceIf (\f -> f.id == savedInfoId) (updatedFile)
                 in
-                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+                    ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
-            ChangeSavedFileDescription savedFileId fileDescription ->
+            ChangeSavedFileDescription savedInfoId infoDescription ->
                 let
                     fileToChange =
-                        model.savedFiles
-                            |> List.filter (\f -> f.id == savedFileId)
+                        model.savedInfo
+                            |> List.filter (\f -> f.id == savedInfoId)
                             |> List.head
                             |> Maybe.withDefault (SavedFile 0 "" "" "" "")
 
                     updatedFile =
-                        { fileToChange | filedescription = fileDescription }
+                        { fileToChange | infoDescription = infoDescription }
 
                     newSavedFiles =
-                        model.savedFiles
-                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                        model.savedInfo
+                            |> List.Extra.replaceIf (\f -> f.id == savedInfoId) (updatedFile)
                 in
-                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+                    ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
-            ChangeFileToSaveTitle fileToSaveId fileTitle ->
+            ChangeInfoToSaveTitle infoToSaveId infoTitle ->
                 let
                     newFilesToSave =
-                        model.filesToSave
-                            |> List.Extra.updateIf (.id >> (==) fileToSaveId) (\f -> { f | filetitle = fileTitle })
+                        model.infoToSave
+                            |> List.Extra.updateIf (.id >> (==) infoToSaveId) (\f -> { f | infoTitle = infoTitle })
                 in
-                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+                    ( { model | infoToSave = newFilesToSave }, Cmd.none )
 
-            ChangeFileToSaveDescription fileToSaveId fileDescription ->
+            ChangeInfoToSaveDescription infoToSaveId infoDescription ->
                 let
                     newFilesToSave =
-                        model.filesToSave
-                            |> List.Extra.updateIf (.id >> (==) fileToSaveId) (\f -> { f | filedescription = fileDescription })
+                        model.infoToSave
+                            |> List.Extra.updateIf (.id >> (==) infoToSaveId) (\f -> { f | infoDescription = infoDescription })
                 in
-                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+                    ( { model | infoToSave = newFilesToSave }, Cmd.none )
 
-            ConfirmDeleteInformation savedFileId ->
+            ConfirmDeleteInformation savedInfoId ->
                 ( model
-                , Cmd.batch [ Ports.showDeleteInformationConfirmation savedFileId ]
+                , Cmd.batch [ Ports.showDeleteInformationConfirmation savedInfoId ]
                 )
 
-            DeleteSavedFile savedFileId ->
-                ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )
+            DeleteSavedInfo savedInfoId ->
+                ( { model | savedInfo = List.filter (\f -> f.id /= savedInfoId) model.savedInfo }, Cmd.none )
 
-            DeleteFileToSave fileToSaveId ->
-                ( { model | filesToSave = List.filter (\f -> f.id /= fileToSaveId) model.filesToSave }, Cmd.none )
+            DeleteInfoToSave infoToSaveId ->
+                ( { model | infoToSave = List.filter (\f -> f.id /= infoToSaveId) model.infoToSave }, Cmd.none )
 
             MoveFileUp fileIndex ->
                 let
                     newSavedFiles =
-                        model.savedFiles
+                        model.savedInfo
                             |> List.Extra.swapAt fileIndex (fileIndex - 1)
                             |> Maybe.withDefault []
                 in
-                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+                    ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
             MoveFileDown fileIndex ->
                 let
                     newSavedFiles =
-                        model.savedFiles
+                        model.savedInfo
                             |> List.Extra.swapAt fileIndex (fileIndex + 1)
                             |> Maybe.withDefault []
                 in
-                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+                    ( { model | savedInfo = newSavedFiles }, Cmd.none )
 
 
 updateSessionSubmissions : Model -> Int -> List Int -> (SessionSubmission -> SessionSubmission) -> Model

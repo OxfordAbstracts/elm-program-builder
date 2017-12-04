@@ -15,8 +15,8 @@ type Msg
     | AddNewInformation
     | AddNewChair
     | CancelAction
-    | ChangeFileToSaveTitle Int String
-    | ChangeFileToSaveDescription Int String
+    | ChangeInfoToSaveTitle Int String
+    | ChangeInfoToSaveDescription Int String
     | ChangeSavedFileTitle Int String
     | ChangeSavedFileDescription Int String
     | UpdateColumns
@@ -32,8 +32,8 @@ type Msg
     | DeleteTrack MainModel.TrackId
     | DeleteLocation MainModel.LocationId
     | DeleteChair MainModel.ChairId
-    | DeleteFileToSave Int
-    | DeleteSavedFile Int
+    | DeleteInfoToSave Int
+    | DeleteSavedInfo Int
     | EditSession
     | FileSelected Int
     | FileRead FilePortData

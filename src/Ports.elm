@@ -26,8 +26,8 @@ type alias FilePortData =
     { id : String
     , contents : String
     , filename : String
-    , filetitle : String
-    , filedescription : String
+    , infoTitle : String
+    , infoDescription : String
     }
 
 

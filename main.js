@@ -63,10 +63,10 @@ function init(options, dev) {
     }
   });
 
-  app.ports.showDeleteInformationConfirmation.subscribe(function(savedFileId) {
+  app.ports.showDeleteInformationConfirmation.subscribe(function(savedInfoId) {
     var confirmed = confirm('Are you sure? This will permanently the information');
     if(confirmed){
-      app.ports['deleteInformation'].send(savedFileId);
+      app.ports['deleteInformation'].send(savedInfoId);
     }
   });
 // thanks to https://github.com/phylor/elm-image-upload/blob/master/index.html
@@ -91,8 +91,8 @@ function init(options, dev) {
         id: id,
         contents: base64encoded,
         filename: file.name,
-        filetitle: document.getElementById('file-title-' + id).value,
-        filedescription: document.getElementById('file-description-' + id).value
+        infoTitle: document.getElementById('info-title-' + id).value,
+        infoDescription: document.getElementById('info-description-' + id).value
       };
      // We call the `fileContentRead` port with the file data
      // which will be sent to our Elm runtime via Subscriptions.
