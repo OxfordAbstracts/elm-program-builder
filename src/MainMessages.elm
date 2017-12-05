@@ -15,10 +15,10 @@ type Msg
     | AddNewInformation
     | AddNewChair
     | CancelAction
-    | ChangeFileToSaveTitle Int String
-    | ChangeFileToSaveDescription Int String
-    | ChangeSavedFileTitle Int String
-    | ChangeSavedFileDescription Int String
+    | ChangeInfoToSaveTitle Int String
+    | ChangeInfoToSaveDescription Int String
+    | ChangeSavedInfoTitle Int String
+    | ChangeSavedInfoDescription Int String
     | UpdateColumns
     | CreateNewSession
     | CreateSubmissionInput
@@ -32,22 +32,22 @@ type Msg
     | DeleteTrack MainModel.TrackId
     | DeleteLocation MainModel.LocationId
     | DeleteChair MainModel.ChairId
-    | DeleteFileToSave Int
-    | DeleteSavedFile Int
+    | DeleteInfoToSave Int
+    | DeleteSavedInfo Int
     | EditSession
     | FileSelected Int
     | FileRead FilePortData
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
     | MoveColumnDown Int
-    | MoveFileUp Int
-    | MoveFileDown Int
+    | MoveInfoUp Int
+    | MoveInfoDown Int
     | NewColumn
     | NewTrack
     | PublishProgrammeBuilder
     | UpdatePickedDates (List String)
     | UpdateDates (List String)
-    | SaveFiles
+    | SaveInfo
     | SaveModel (Result Http.Error MainModel.ApiUpdatePost)
     | SelectSessionToEdit Int
     | SetSessionSubmissionStartTimes Int String

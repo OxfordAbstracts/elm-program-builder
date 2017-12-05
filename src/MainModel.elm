@@ -45,8 +45,8 @@ type alias Model =
     , showMobileView : Bool
     , displayedColumn : Maybe ColumnId
     , showManageInformationUi : Bool
-    , filesToSave : List FileToSave
-    , savedFiles : List SavedFile
+    , infoToSave : List InfoToSave
+    , savedInfo : List SavedInfo
     , showSavingFilesSpinner : Bool
     , hasSecureProgrammeBuilder : Bool
     }
@@ -122,28 +122,28 @@ initialModel =
     , showMobileView = False
     , displayedColumn = Nothing
     , showManageInformationUi = False
-    , filesToSave = [ (FileToSave 0 "" "" "" "") ]
-    , savedFiles = []
+    , infoToSave = [ (InfoToSave 0 "" "" "" "") ]
+    , savedInfo = []
     , showSavingFilesSpinner = False
-    , hasSecureProgrammeBuilder = False
+    , hasSecureProgrammeBuilder = True
     }
 
 
-type alias FileToSave =
+type alias InfoToSave =
     { id : Int
     , contents : String
     , filename : String
-    , filetitle : String
-    , filedescription : String
+    , infoTitle : String
+    , infoDescription : String
     }
 
 
-type alias SavedFile =
+type alias SavedInfo =
     { id : Int
     , filelink : String
     , filename : String
-    , filetitle : String
-    , filedescription : String
+    , infoTitle : String
+    , infoDescription : String
     }
 
 
@@ -417,8 +417,8 @@ type alias ApiUpdatePost =
     , chairs : List Chair
     , columns : List Column
     , published : Bool
-    , filesToSave : List FileToSave
-    , savedFiles : List SavedFile
+    , infoToSave : List InfoToSave
+    , savedInfo : List SavedInfo
     }
 
 
@@ -430,7 +430,7 @@ type alias ApiUpdateGet =
     , columns : List Column
     , submissions : List Submission
     , published : Bool
-    , savedFiles : List SavedFile
+    , savedInfo : List SavedInfo
     , hasSecureProgrammeBuilder : Bool
     }
 

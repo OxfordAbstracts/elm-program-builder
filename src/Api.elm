@@ -18,7 +18,7 @@ apiUpdateGetDecoder =
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "submissions" (Json.Decode.list submissionDecoder)
         |> required "published" (Json.Decode.bool)
-        |> required "savedFiles" (Json.Decode.list savedFileDecoder)
+        |> required "savedInfo" (Json.Decode.list savedInfoDecoder)
         |> required "hasSecureProgrammeBuilder" (Json.Decode.bool)
 
 
@@ -31,8 +31,8 @@ apiUpdatePostDecoder =
         |> required "chairs" (Json.Decode.list chairDecoder)
         |> required "columns" (Json.Decode.list columnDecoder)
         |> required "published" (Json.Decode.bool)
-        |> required "filesToSave" (Json.Decode.list fileToSaveDecoder)
-        |> required "savedFiles" (Json.Decode.list savedFileDecoder)
+        |> required "infoToSave" (Json.Decode.list infoToSaveDecoder)
+        |> required "savedInfo" (Json.Decode.list savedInfoDecoder)
 
 
 encodeApiUpdatePost : ApiUpdatePost -> Encode.Value
@@ -44,8 +44,8 @@ encodeApiUpdatePost record =
         , ( "chairs", Encode.list <| List.map locationEncoder record.chairs )
         , ( "columns", Encode.list <| List.map columnEncoder record.columns )
         , ( "published", Encode.bool record.published )
-        , ( "filesToSave", Encode.list <| List.map filesToSaveEncoder record.filesToSave )
-        , ( "savedFiles", Encode.list <| List.map savedFileEncoder record.savedFiles )
+        , ( "infoToSave", Encode.list <| List.map infoToSaveEncoder record.infoToSave )
+        , ( "savedInfo", Encode.list <| List.map savedInfoEncoder record.savedInfo )
         ]
 
 
@@ -236,25 +236,25 @@ columnEncoder record =
         ]
 
 
-filesToSaveEncoder : FileToSave -> Encode.Value
-filesToSaveEncoder record =
+infoToSaveEncoder : InfoToSave -> Encode.Value
+infoToSaveEncoder record =
     Encode.object
         [ ( "id", Encode.int record.id )
         , ( "contents", Encode.string record.contents )
         , ( "filename", Encode.string record.filename )
-        , ( "filetitle", Encode.string record.filetitle )
-        , ( "filedescription", Encode.string record.filedescription )
+        , ( "infoTitle", Encode.string record.infoTitle )
+        , ( "infoDescription", Encode.string record.infoDescription )
         ]
 
 
-savedFileEncoder : SavedFile -> Encode.Value
-savedFileEncoder record =
+savedInfoEncoder : SavedInfo -> Encode.Value
+savedInfoEncoder record =
     Encode.object
         [ ( "id", Encode.int record.id )
         , ( "filelink", Encode.string record.filelink )
         , ( "filename", Encode.string record.filename )
-        , ( "filetitle", Encode.string record.filetitle )
-        , ( "filedescription", Encode.string record.filedescription )
+        , ( "infoTitle", Encode.string record.infoTitle )
+        , ( "infoDescription", Encode.string record.infoDescription )
         ]
 
 
@@ -265,14 +265,14 @@ columnDecoder =
         |> required "name" Json.Decode.string
 
 
-fileToSaveDecoder : Json.Decode.Decoder FileToSave
-fileToSaveDecoder =
-    decode FileToSave
+infoToSaveDecoder : Json.Decode.Decoder InfoToSave
+infoToSaveDecoder =
+    decode InfoToSave
         |> required "id" Json.Decode.int
         |> required "contents" Json.Decode.string
         |> required "filename" Json.Decode.string
-        |> required "filetitle" Json.Decode.string
-        |> required "filedescription" Json.Decode.string
+        |> required "infoTitle" Json.Decode.string
+        |> required "infoDescription" Json.Decode.string
 
 
 dateDecoder : Json.Decode.Decoder DateWithoutTime
@@ -313,14 +313,14 @@ submissionDecoder =
         |> required "id" Json.Decode.int
 
 
-savedFileDecoder : Json.Decode.Decoder SavedFile
-savedFileDecoder =
-    decode SavedFile
+savedInfoDecoder : Json.Decode.Decoder SavedInfo
+savedInfoDecoder =
+    decode SavedInfo
         |> required "id" Json.Decode.int
         |> required "filelink" Json.Decode.string
         |> required "filename" Json.Decode.string
-        |> required "filetitle" Json.Decode.string
-        |> required "filedescription" Json.Decode.string
+        |> required "infoTitle" Json.Decode.string
+        |> required "infoDescription" Json.Decode.string
 
 
 getModelFromDb : String -> Cmd Msg
