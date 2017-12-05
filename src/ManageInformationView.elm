@@ -65,6 +65,21 @@ view model =
                             ]
                         , div [ class "form__question-sub-section form__question-sub-section--table" ]
                             [ a [ href f.filelink ] [ text f.filename ] ]
+                        , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                            [ input
+                                [ type_ "file"
+                                , id ("file-to-change-" ++ (toString f.id))
+                                , class "form__input form__input--file file-inputs"
+                                , on "change"
+                                    (Json.Decode.succeed (FileSelected f.id))
+                                ]
+                                []
+                            , label
+                                [ for "hello"
+                                , class "button button--tertiary form__label--file"
+                                ]
+                                [ text "choose file" ]
+                            ]
                         , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                             [ button
                                 [ onClick (ConfirmDeleteInformation f.id)
@@ -120,7 +135,7 @@ view model =
                                     [ id ("file-to-save-" ++ (toString f.id))
                                     , type_ "file"
                                     , on "change"
-                                        (Json.Decode.succeed (FileSelected f.id))
+                                        (Json.Decode.succeed (FileChanged f.id))
                                     ]
                                     []
                                 ]
