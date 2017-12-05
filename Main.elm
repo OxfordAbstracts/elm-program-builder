@@ -68,6 +68,7 @@ subscriptions model =
         [ changeDates UpdateDates
         , changePickedDates UpdatePickedDates
         , deleteSession DeleteSession
+        , deleteInformation DeleteSavedFile
         , Window.resizes UpdateShowMobileView
         , fileContentRead FileRead
         ]

@@ -890,12 +890,26 @@ update msg model =
                 )
 
             AddNewInformation ->
-                ( { model
-                    | filesToSave =
-                        appendNewElementToList model.filesToSave (FileToSave 0 "" "" "")
-                  }
-                , Cmd.none
-                )
+                let
+                    highestSavedFileId =
+                        model.savedFiles
+                            |> List.map .id
+                            |> List.maximum
+                            |> Maybe.withDefault 0
+
+                    newfileToSaveWithId =
+                        FileToSave (highestSavedFileId + List.length model.filesToSave + 1)
+                            ""
+                            ""
+                            ""
+                            ""
+                in
+                    ( { model
+                        | filesToSave =
+                            model.filesToSave ++ [ newfileToSaveWithId ]
+                      }
+                    , Cmd.none
+                    )
 
             UpdatePickedLocation locationId newPickedLocationInput ->
                 let
@@ -1125,6 +1139,7 @@ update msg model =
                         , contents = data.contents
                         , filename = data.filename
                         , filetitle = data.filetitle
+                        , filedescription = data.filedescription
                         }
 
                     newFilesToSave =
@@ -1152,7 +1167,7 @@ update msg model =
                         model.savedFiles
                             |> List.filter (\f -> f.id == savedFileId)
                             |> List.head
-                            |> Maybe.withDefault (SavedFile 0 "" "" "")
+                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
 
                     updatedFile =
                         { fileToChange | filetitle = fileTitle }
@@ -1163,22 +1178,43 @@ update msg model =
                 in
                     ( { model | savedFiles = newSavedFiles }, Cmd.none )
 
-            ChangeFileToSaveTitle fileToSaveId fileTitle ->
+            ChangeSavedFileDescription savedFileId fileDescription ->
                 let
                     fileToChange =
-                        model.filesToSave
-                            |> List.filter (\f -> f.id == fileToSaveId)
+                        model.savedFiles
+                            |> List.filter (\f -> f.id == savedFileId)
                             |> List.head
-                            |> Maybe.withDefault (FileToSave 0 "" "" "")
+                            |> Maybe.withDefault (SavedFile 0 "" "" "" "")
 
                     updatedFile =
-                        { fileToChange | filetitle = fileTitle }
+                        { fileToChange | filedescription = fileDescription }
 
+                    newSavedFiles =
+                        model.savedFiles
+                            |> List.Extra.replaceIf (\f -> f.id == savedFileId) (updatedFile)
+                in
+                    ( { model | savedFiles = newSavedFiles }, Cmd.none )
+
+            ChangeFileToSaveTitle fileToSaveId fileTitle ->
+                let
                     newFilesToSave =
                         model.filesToSave
-                            |> List.Extra.replaceIf (\f -> f.id == fileToSaveId) (updatedFile)
+                            |> List.Extra.updateIf (.id >> (==) fileToSaveId) (\f -> { f | filetitle = fileTitle })
                 in
                     ( { model | filesToSave = newFilesToSave }, Cmd.none )
+
+            ChangeFileToSaveDescription fileToSaveId fileDescription ->
+                let
+                    newFilesToSave =
+                        model.filesToSave
+                            |> List.Extra.updateIf (.id >> (==) fileToSaveId) (\f -> { f | filedescription = fileDescription })
+                in
+                    ( { model | filesToSave = newFilesToSave }, Cmd.none )
+
+            ConfirmDeleteInformation savedFileId ->
+                ( model
+                , Cmd.batch [ Ports.showDeleteInformationConfirmation savedFileId ]
+                )
 
             DeleteSavedFile savedFileId ->
                 ( { model | savedFiles = List.filter (\f -> f.id /= savedFileId) model.savedFiles }, Cmd.none )

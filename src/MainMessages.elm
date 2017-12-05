@@ -16,7 +16,9 @@ type Msg
     | AddNewChair
     | CancelAction
     | ChangeFileToSaveTitle Int String
+    | ChangeFileToSaveDescription Int String
     | ChangeSavedFileTitle Int String
+    | ChangeSavedFileDescription Int String
     | UpdateColumns
     | CreateNewSession
     | CreateSubmissionInput
@@ -25,6 +27,7 @@ type Msg
     | DeleteColumn Int
     | DeleteDate Int
     | ConfirmDeleteSession Int
+    | ConfirmDeleteInformation Int
     | DeleteSession Int
     | DeleteTrack MainModel.TrackId
     | DeleteLocation MainModel.LocationId

@@ -56,10 +56,20 @@ view model =
                                 [ text f.filetitle ]
                             ]
                         , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                            [ input
+                                [ class "form__input"
+                                , type_ "text"
+                                , placeholder "File description"
+                                , value f.filedescription
+                                , onInput (ChangeSavedFileDescription f.id)
+                                ]
+                                [ text f.filedescription ]
+                            ]
+                        , div [ class "form__question-sub-section form__question-sub-section--table" ]
                             [ a [ href f.filelink ] [ text f.filename ] ]
                         , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                             [ button
-                                [ onClick (DeleteSavedFile f.id)
+                                [ onClick (ConfirmDeleteInformation f.id)
                                 , class "button button--secondary icon icon--bin"
                                 ]
                                 []
@@ -94,6 +104,16 @@ view model =
                                     , placeholder "File title"
                                     , id ("file-title-" ++ (toString f.id))
                                     , onInput (ChangeFileToSaveTitle f.id)
+                                    ]
+                                    []
+                                ]
+                            , div [ class "form__question-sub-section form__question-sub-section--table" ]
+                                [ input
+                                    [ class "form__input"
+                                    , type_ "text"
+                                    , placeholder "File description"
+                                    , id ("file-description-" ++ (toString f.id))
+                                    , onInput (ChangeFileToSaveDescription f.id)
                                     ]
                                     []
                                 ]
