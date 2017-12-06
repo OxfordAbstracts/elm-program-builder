@@ -1163,12 +1163,12 @@ update msg model =
             ChangedFileRead data ->
                 let
                     savedInfoForChangedFile =
-                        List.filter (\f -> f.id == data.id) model.savedFiles
+                        List.filter (\f -> f.id == Result.withDefault 0 (String.toInt data.id)) model.savedInfo
                             |> List.head
-                            |> Maybe.withDefault (SaveInfo 0 "" "" "" "")
+                            |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
 
                     changedFile =
-                        { id = data.id
+                        { id = Result.withDefault 0 (String.toInt data.id)
                         , contents = data.contents
                         , filename = data.filename
                         , infoTitle = savedInfoForChangedFile.infoTitle
@@ -1176,7 +1176,7 @@ update msg model =
                         }
 
                     changedInfo =
-                        List.filter (\f -> f.id /= data.id) model.changedInfo
+                        List.filter (\f -> f.id /= Result.withDefault 0 (String.toInt data.id)) model.changedInfo
                 in
                     ( { model | changedInfo = List.append changedInfo [ changedFile ], showSavingFilesSpinner = False }
                     , Cmd.none

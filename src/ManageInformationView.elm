@@ -71,14 +71,14 @@ view model =
                                 , id ("file-to-change-" ++ (toString f.id))
                                 , class "form__input form__input--file file-inputs"
                                 , on "change"
-                                    (Json.Decode.succeed (FileSelected f.id))
+                                    (Json.Decode.succeed (FileChanged f.id))
                                 ]
                                 []
                             , label
-                                [ for "hello"
+                                [ for ("file-to-change-" ++ (toString f.id))
                                 , class "button button--tertiary form__label--file"
                                 ]
-                                [ text "choose file" ]
+                                [ text "change file" ]
                             ]
                         , div [ class "form__question-sub-section form__question-sub-section--table form__question-sub-section--button" ]
                             [ button

@@ -103,7 +103,7 @@ function init(options, dev) {
   });
 
   app.ports.fileChanged.subscribe(function (savedInfoId) {
-    var node = document.getElementById('file-to-save-' + savedInfoId);
+    var node = document.getElementById('file-to-change-' + savedInfoId);
     if (node === null) {
       return;
     }
@@ -124,9 +124,10 @@ function init(options, dev) {
         contents: base64encoded,
         filename: file.name
       };
+
      // We call the `fileContentRead` port with the file data
      // which will be sent to our Elm runtime via Subscriptions.
-      app.ports.fileContentRead.send(portData);
+      app.ports.changedFileContentRead.send(portData);
     });
    // Connect our FileReader with the file that was selected in our `input` node.
     reader.readAsDataURL(file);
