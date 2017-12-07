@@ -31,7 +31,20 @@ type alias FilePortData =
     }
 
 
+type alias ChangedFilePortData =
+    { id : String
+    , contents : String
+    , filename : String
+    }
+
+
 port fileSelected : String -> Cmd msg
 
 
 port fileContentRead : (FilePortData -> msg) -> Sub msg
+
+
+port changedFileContentRead : (ChangedFilePortData -> msg) -> Sub msg
+
+
+port fileChanged : String -> Cmd msg

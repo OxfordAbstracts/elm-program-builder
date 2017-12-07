@@ -47,6 +47,7 @@ type alias Model =
     , showManageInformationUi : Bool
     , infoToSave : List InfoToSave
     , savedInfo : List SavedInfo
+    , changedInfo : List InfoToSave
     , showSavingFilesSpinner : Bool
     , hasSecureProgrammeBuilder : Bool
     }
@@ -124,6 +125,7 @@ initialModel =
     , showManageInformationUi = False
     , infoToSave = [ (InfoToSave 0 "" "" "" "") ]
     , savedInfo = []
+    , changedInfo = []
     , showSavingFilesSpinner = False
     , hasSecureProgrammeBuilder = True
     }
@@ -419,6 +421,7 @@ type alias ApiUpdatePost =
     , published : Bool
     , infoToSave : List InfoToSave
     , savedInfo : List SavedInfo
+    , changedInfo : List InfoToSave
     }
 
 

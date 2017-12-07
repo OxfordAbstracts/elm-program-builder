@@ -71,6 +71,7 @@ subscriptions model =
         , deleteInformation DeleteSavedInfo
         , Window.resizes UpdateShowMobileView
         , fileContentRead FileRead
+        , changedFileContentRead ChangedFileRead
         ]
 
 

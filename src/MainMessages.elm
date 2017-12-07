@@ -4,7 +4,7 @@ import Http
 import MainModel
 import Date exposing (Date)
 import Window
-import Ports exposing (FilePortData, fileSelected, fileContentRead)
+import Ports exposing (FilePortData, ChangedFilePortData, fileSelected, fileContentRead, changedFileContentRead)
 
 
 type Msg
@@ -36,7 +36,9 @@ type Msg
     | DeleteSavedInfo Int
     | EditSession
     | FileSelected Int
+    | FileChanged Int
     | FileRead FilePortData
+    | ChangedFileRead ChangedFilePortData
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
     | MoveColumnDown Int
