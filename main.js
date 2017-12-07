@@ -72,8 +72,9 @@ function init(options, dev) {
 // thanks to https://github.com/phylor/elm-image-upload/blob/master/index.html
   app.ports.fileSelected.subscribe(function (id) {
     var node = document.getElementById('file-to-save-' + id);
-    if (node === null) {
-      return;
+    if (node === null || !node.files[0]) {
+      return app.ports.fileContentRead.send(null);
+
     }
    // If your file upload field allows multiple files, you might
    // want to consider turning this into a `for` loop.
@@ -104,8 +105,8 @@ function init(options, dev) {
 
   app.ports.fileChanged.subscribe(function (savedInfoId) {
     var node = document.getElementById('file-to-change-' + savedInfoId);
-    if (node === null) {
-      return;
+    if (node === null || !node.files[0]) {
+      return app.ports.changedFileContentRead.send(null);
     }
    // If your file upload field allows multiple files, you might
    // want to consider turning this into a `for` loop.

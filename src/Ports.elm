@@ -41,10 +41,10 @@ type alias ChangedFilePortData =
 port fileSelected : String -> Cmd msg
 
 
-port fileContentRead : (FilePortData -> msg) -> Sub msg
+port fileContentRead : (Maybe FilePortData -> msg) -> Sub msg
 
 
-port changedFileContentRead : (ChangedFilePortData -> msg) -> Sub msg
+port changedFileContentRead : (Maybe ChangedFilePortData -> msg) -> Sub msg
 
 
 port fileChanged : String -> Cmd msg

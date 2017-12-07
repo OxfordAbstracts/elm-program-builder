@@ -1139,54 +1139,64 @@ update msg model =
                 in
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
-            FileRead data ->
-                let
-                    newFileId =
-                        Result.withDefault 0 (String.toInt data.id)
+            FileRead fileData ->
+                case fileData of
+                    Just data ->
+                        let
+                            newFileId =
+                                Result.withDefault 0 (String.toInt data.id)
 
-                    newFile =
-                        { id = newFileId
-                        , contents = data.contents
-                        , filename = data.filename
-                        , infoTitle = data.infoTitle
-                        , infoDescription = data.infoDescription
-                        }
+                            newFile =
+                                { id = newFileId
+                                , contents = data.contents
+                                , filename = data.filename
+                                , infoTitle = data.infoTitle
+                                , infoDescription = data.infoDescription
+                                }
 
-                    newFilesToSave =
-                        List.filter (\f -> f.id /= newFileId) model.infoToSave
-                in
-                    ( { model | infoToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
-                    , Cmd.none
-                    )
+                            newFilesToSave =
+                                List.filter (\f -> f.id /= newFileId) model.infoToSave
+                        in
+                            ( { model | infoToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
+                            , Cmd.none
+                            )
+
+                    Nothing ->
+                        ( { model | showSavingFilesSpinner = False }, Cmd.none )
 
             -- data.id is savedInfoId here
-            ChangedFileRead data ->
-                let
-                    savedInfoForChangedFile =
-                        List.filter (\f -> f.id == Result.withDefault 0 (String.toInt data.id)) model.savedInfo
-                            |> List.head
-                            |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
+            ChangedFileRead fileData ->
+                case fileData of
+                    Just data ->
+                        let
+                            savedInfoForChangedFile =
+                                List.filter (\f -> f.id == Result.withDefault 0 (String.toInt data.id)) model.savedInfo
+                                    |> List.head
+                                    |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
 
-                    changedFile =
-                        { id = Result.withDefault 0 (String.toInt data.id)
-                        , contents = data.contents
-                        , filename = data.filename
-                        , infoTitle = savedInfoForChangedFile.infoTitle
-                        , infoDescription = savedInfoForChangedFile.infoDescription
-                        }
+                            changedFile =
+                                { id = Result.withDefault 0 (String.toInt data.id)
+                                , contents = data.contents
+                                , filename = data.filename
+                                , infoTitle = savedInfoForChangedFile.infoTitle
+                                , infoDescription = savedInfoForChangedFile.infoDescription
+                                }
 
-                    changedInfo =
-                        List.filter (\f -> f.id /= Result.withDefault 0 (String.toInt data.id)) model.changedInfo
+                            changedInfo =
+                                List.filter (\f -> f.id /= Result.withDefault 0 (String.toInt data.id)) model.changedInfo
 
-                    newChangedInfo =
-                        List.append changedInfo [ changedFile ]
+                            newChangedInfo =
+                                List.append changedInfo [ changedFile ]
 
-                    apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo newChangedInfo
-                in
-                    ( { model | changedInfo = newChangedInfo, showSavingFilesSpinner = True }
-                    , Api.postModelToDb apiUpdatePost model.eventId
-                    )
+                            apiUpdatePost =
+                                ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo newChangedInfo
+                        in
+                            ( { model | changedInfo = newChangedInfo, showSavingFilesSpinner = True }
+                            , Api.postModelToDb apiUpdatePost model.eventId
+                            )
+
+                    Nothing ->
+                        ( { model | showSavingFilesSpinner = False }, Cmd.none )
 
             FileSelected id ->
                 ( { model | showSavingFilesSpinner = True }
