@@ -135,7 +135,7 @@ view model =
                                     [ id ("file-to-save-" ++ (toString f.id))
                                     , type_ "file"
                                     , on "change"
-                                        (Json.Decode.succeed (FileChanged f.id))
+                                        (Json.Decode.succeed (FileSelected f.id))
                                     ]
                                     []
                                 ]
