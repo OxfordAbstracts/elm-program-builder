@@ -1177,9 +1177,15 @@ update msg model =
 
                     changedInfo =
                         List.filter (\f -> f.id /= Result.withDefault 0 (String.toInt data.id)) model.changedInfo
+
+                    newChangedInfo =
+                        List.append changedInfo [ changedFile ]
+
+                    apiUpdatePost =
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo newChangedInfo
                 in
-                    ( { model | changedInfo = List.append changedInfo [ changedFile ], showSavingFilesSpinner = False }
-                    , Cmd.none
+                    ( { model | changedInfo = newChangedInfo, showSavingFilesSpinner = True }
+                    , Api.postModelToDb apiUpdatePost model.eventId
                     )
 
             FileSelected id ->
