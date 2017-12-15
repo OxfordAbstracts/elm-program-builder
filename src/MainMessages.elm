@@ -37,8 +37,8 @@ type Msg
     | EditSession
     | FileSelected Int
     | FileChanged Int
-    | FileRead FilePortData
-    | ChangedFileRead ChangedFilePortData
+    | FileRead (Maybe FilePortData)
+    | ChangedFileRead (Maybe ChangedFilePortData)
     | GetDateAndThenAddDate String
     | MoveColumnUp Int
     | MoveColumnDown Int
