@@ -34,7 +34,6 @@ type alias Model =
     , pickedTracks : List Track
     , pickedColumns : List Column
     , pickedLocations : List Location
-
     , pickedChairs : List Chair
     , datesWithSessions : List DateWithSessions
     , host : String

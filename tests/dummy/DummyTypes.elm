@@ -45,7 +45,7 @@ makeDummyModel sessions =
           , id = 1
           }
         ]
-    , submissions = [ Submission 1 ]
+    , submissions = [ Submission 1 "Title" "P01" ]
     , datePickerClosed = True
     , pickedDates = initialDates
     , pickedTracks = []
