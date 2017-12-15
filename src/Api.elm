@@ -311,6 +311,8 @@ submissionDecoder : Json.Decode.Decoder Submission
 submissionDecoder =
     decode Submission
         |> required "id" Json.Decode.int
+        |> required "title" Json.Decode.string
+        |> required "programmeCode" Json.Decode.string
 
 
 savedInfoDecoder : Json.Decode.Decoder SavedInfo
