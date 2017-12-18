@@ -204,6 +204,7 @@ update msg model =
                         , published = not model.published
                         , infoToSave = model.infoToSave
                         , savedInfo = model.savedInfo
+                        , changedInfo = model.changedInfo
                         }
                 in
                     ( { model
@@ -371,6 +372,7 @@ update msg model =
                         , published = model.published
                         , infoToSave = model.infoToSave
                         , savedInfo = model.savedInfo
+                        , changedInfo = model.changedInfo
                         }
                 in
                     ( { model
@@ -417,6 +419,7 @@ update msg model =
                         , published = model.published
                         , infoToSave = model.infoToSave
                         , savedInfo = model.savedInfo
+                        , changedInfo = model.changedInfo
                         }
                 in
                     ( { model
@@ -434,7 +437,7 @@ update msg model =
                         List.sortBy .name model.pickedTracks
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo
+                        ApiUpdatePost model.datesWithSessions newTracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo model.changedInfo
                 in
                     ( { model
                         | tracks = newTracks
@@ -635,6 +638,7 @@ update msg model =
                         , published = model.published
                         , infoToSave = model.infoToSave
                         , savedInfo = model.savedInfo
+                        , changedInfo = model.changedInfo
                         }
                 in
                     ( { model | datesWithSessions = newDatesWithSessions }
@@ -731,6 +735,7 @@ update msg model =
                                 , chairs = model.chairs
                                 , infoToSave = model.infoToSave
                                 , savedInfo = model.savedInfo
+                                , changedInfo = model.changedInfo
                                 }
                         in
                             ( { model
@@ -790,6 +795,7 @@ update msg model =
                         , chairs = model.chairs
                         , infoToSave = model.infoToSave
                         , savedInfo = model.savedInfo
+                        , changedInfo = model.changedInfo
                         }
                 in
                     ( { model
@@ -944,7 +950,7 @@ update msg model =
                         List.sortBy .name model.pickedLocations
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.infoToSave model.savedInfo
+                        ApiUpdatePost model.datesWithSessions model.tracks newLocations model.chairs model.columns model.published model.infoToSave model.savedInfo model.changedInfo
                 in
                     ( { model
                         | locations = newLocations
@@ -998,7 +1004,7 @@ update msg model =
                         List.sortBy .name model.pickedChairs
 
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.infoToSave model.savedInfo
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations newChairs model.columns model.published model.infoToSave model.savedInfo model.changedInfo
                 in
                     ( { model
                         | chairs = newChairs
@@ -1137,35 +1143,79 @@ update msg model =
                 in
                     ( { model | displayedColumn = Just intColumnIdToDisplay }, Cmd.none )
 
-            FileRead data ->
-                let
-                    newFileId =
-                        Result.withDefault 0 (String.toInt data.id)
+            FileRead fileData ->
+                case fileData of
+                    Just data ->
+                        let
+                            newFileId =
+                                Result.withDefault 0 (String.toInt data.id)
 
-                    newFile =
-                        { id = newFileId
-                        , contents = data.contents
-                        , filename = data.filename
-                        , infoTitle = data.infoTitle
-                        , infoDescription = data.infoDescription
-                        }
+                            newFile =
+                                { id = newFileId
+                                , contents = data.contents
+                                , filename = data.filename
+                                , infoTitle = data.infoTitle
+                                , infoDescription = data.infoDescription
+                                }
 
-                    newFilesToSave =
-                        List.filter (\f -> f.id /= newFileId) model.infoToSave
-                in
-                    ( { model | infoToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
-                    , Cmd.none
-                    )
+                            newFilesToSave =
+                                List.filter (\f -> f.id /= newFileId) model.infoToSave
+                        in
+                            ( { model | infoToSave = List.append newFilesToSave [ newFile ], showSavingFilesSpinner = False }
+                            , Cmd.none
+                            )
+
+                    Nothing ->
+                        ( { model | showSavingFilesSpinner = False }, Cmd.none )
+
+            -- data.id is savedInfoId here
+            ChangedFileRead fileData ->
+                case fileData of
+                    Just data ->
+                        let
+                            savedInfoForChangedFile =
+                                List.filter (\f -> f.id == Result.withDefault 0 (String.toInt data.id)) model.savedInfo
+                                    |> List.head
+                                    |> Maybe.withDefault (SavedInfo 0 "" "" "" "")
+
+                            changedFile =
+                                { id = Result.withDefault 0 (String.toInt data.id)
+                                , contents = data.contents
+                                , filename = data.filename
+                                , infoTitle = savedInfoForChangedFile.infoTitle
+                                , infoDescription = savedInfoForChangedFile.infoDescription
+                                }
+
+                            changedInfo =
+                                List.filter (\f -> f.id /= Result.withDefault 0 (String.toInt data.id)) model.changedInfo
+
+                            newChangedInfo =
+                                List.append changedInfo [ changedFile ]
+
+                            apiUpdatePost =
+                                ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo newChangedInfo
+                        in
+                            ( { model | changedInfo = newChangedInfo, showSavingFilesSpinner = True }
+                            , Api.postModelToDb apiUpdatePost model.eventId
+                            )
+
+                    Nothing ->
+                        ( { model | showSavingFilesSpinner = False }, Cmd.none )
 
             FileSelected id ->
                 ( { model | showSavingFilesSpinner = True }
                 , fileSelected (toString id)
                 )
 
+            FileChanged savedInfoId ->
+                ( { model | showSavingFilesSpinner = True }
+                , fileChanged (toString savedInfoId)
+                )
+
             SaveInfo ->
                 let
                     apiUpdatePost =
-                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo
+                        ApiUpdatePost model.datesWithSessions model.tracks model.locations model.chairs model.columns model.published model.infoToSave model.savedInfo model.changedInfo
                 in
                     ( { model | showSavingFilesSpinner = True }, Api.postModelToDb apiUpdatePost model.eventId )
 
