@@ -63,6 +63,7 @@ makeDummyModel sessions =
     , displayedColumn = Nothing
     , infoToSave = [ (InfoToSave 0 "" "" "" "") ]
     , savedInfo = []
+    , changedInfo = []
     , showManageInformationUi = False
     , showSavingFilesSpinner = False
     , hasSecureProgrammeBuilder = False
