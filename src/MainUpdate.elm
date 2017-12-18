@@ -453,11 +453,7 @@ update msg model =
                     updatedModel ! [ Task.perform (UpdateShowMobileView) Window.size ]
 
             UpdateModel (Err str) ->
-                let
-                  debug = Debug.log "Err" (Err str)
-
-                in
-                  model ! [ Task.perform (UpdateShowMobileView) Window.size ]
+                model ! [ Task.perform (UpdateShowMobileView) Window.size ]
 
             UpdateShowMobileView windowSize ->
                 let

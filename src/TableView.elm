@@ -424,21 +424,10 @@ addSubmissionsHtml model submission =
             List.filter (filterFunc submission.id) model.submissions
                 |> List.head
 
-        submissionTitle =
-            case submissionInfo of
-                Just submissionInfo ->
-                    submissionInfo.title
-
-                Nothing ->
-                    ""
-
-        programmeCode =
-            case submissionInfo of
-                Just submissionInfo ->
-                    submissionInfo.programmeCode
-
-                Nothing ->
-                    ""
+        ( submissionTitle, programmeCode ) =
+            submissionInfo
+                |> Maybe.map (\s -> ( s.title, s.programmeCode ))
+                |> Maybe.withDefault ( "", "" )
     in
         span
             [ class "prog-session__data print-only" ]
