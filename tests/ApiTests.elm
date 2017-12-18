@@ -23,7 +23,7 @@ all =
                         createApiJson sessionName sessionDescription sessionYear sessionMonth
 
                     decodedApiJson =
-                        case Json.Decode.decodeString Api.apiUpdateGetDecoder apiJson of
+                        case Json.Decode.decodeString Api.apiUpdateGetDecoder (Debug.log "apiJson" apiJson) of
                             Err str ->
                                 Debug.crash str
 
@@ -59,10 +59,22 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
             "trackId": 1,
             "chairId": 1,
             "locationId": 1,
-            "submissions": [],
+            "submissions": []
           }
         ]
       }
+  ],
+  "chairs":[
+    {
+      "id" : 1,
+      "name" : "Ines Teles"
+    }
+  ],
+  "locations":[
+    {
+      "id" : 1,
+      "name" : "london"
+    }
   ],
   "tracks": [
     {
@@ -78,15 +90,17 @@ createApiJson sessionName sessionDescription sessionYear sessionMonth =
     }
   ],
 "submissions": [
-  {"id": 1}
+  {"id": 1,
+  "title": "Title",
+  "programmeCode": "P01"}
 ],
 "published": false,
-"savedInfo":
-  {"id":1,
+"savedInfo":[
+  {"id":0,
   "filelink":"",
   "filename": "",
   "infoTitle":"",
-  "infoDescription":""},
+  "infoDescription":""}],
 "hasSecureProgrammeBuilder":false
 }"""
 
@@ -102,7 +116,7 @@ createApiUpdate sessionName sessionDescription sessionYear sessionMonth =
         [ Location 1 "london" ]
         [ Chair 1 "Ines Teles" ]
         [ Column 1 "column 1" ]
-        [ Submission 1 ]
+        [ Submission 1 "Title" "P01" ]
         False
         [ SavedInfo 0 "" "" "" "" ]
         False
