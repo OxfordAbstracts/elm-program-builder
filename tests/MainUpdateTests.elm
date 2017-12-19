@@ -94,7 +94,7 @@ all =
                         { dummyModelWithSessions
                             | idOfSessionBeingEdited = Just 1
                             , editSession = editSession
-                            , submissions = [ Submission 1, Submission 2, Submission 3, Submission 4 ]
+                            , submissions = [ Submission 1 "title" "P01", Submission 2 "title" "P01", Submission 3 "title" "P01", Submission 4 "title" "P01"]
                             , submissionIdsInputs =
                                 [ { submissionIds = "1, 2"
                                   , startTime = Nothing
