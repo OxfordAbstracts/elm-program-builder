@@ -45,7 +45,7 @@ makeDummyModel sessions =
           , id = 1
           }
         ]
-    , submissions = [ Submission 1 ]
+    , submissions = [ Submission 1 "Title" "P01" ]
     , datePickerClosed = True
     , pickedDates = initialDates
     , pickedTracks = []
@@ -63,6 +63,7 @@ makeDummyModel sessions =
     , displayedColumn = Nothing
     , infoToSave = [ (InfoToSave 0 "" "" "" "") ]
     , savedInfo = []
+    , changedInfo = []
     , showManageInformationUi = False
     , showSavingFilesSpinner = False
     , hasSecureProgrammeBuilder = False

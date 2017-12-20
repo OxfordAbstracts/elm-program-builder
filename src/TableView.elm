@@ -165,7 +165,7 @@ viewDateCell dateWithSessions timeDelimiters firstTime =
         ]
 
 
-getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index =
+getSessions sessionsInColumn dateWithSessions column timeDelimiter index =
     let
         sessionInFirstOrAllColumns session =
             ((session.sessionColumn
@@ -181,7 +181,6 @@ getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index 
                         == timeDelimiter
                         && (sessionInFirstOrAllColumns s)
                 )
-            |> List.head
 
 
 appendFirstRowCell : DateWithSessions -> List Float -> Model -> Int -> Int -> Column -> Html Msg
@@ -202,7 +201,8 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                     )
 
         sessionStarting =
-            getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
+            getSessions sessionsInColumn dateWithSessions column timeDelimiter index
+                |> List.head
 
         colSpanVal =
             if sessionIsAcrossAllColumns sessionsInColumn sessionStarting index then
@@ -229,6 +229,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         trackName =
             getNameFromId model.tracks trackId
 
+        -- submission =
         locationName =
             getNameFromId model.locations locationId
 
@@ -246,6 +247,17 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                 "none"
             else
                 "inline-block"
+
+        submissions =
+            case sessionStarting of
+                Just sessionStarting ->
+                    sessionStarting.submissions
+
+                Nothing ->
+                    []
+
+        submissionsHtml =
+            span [] (List.map (addSubmissionsHtml model) submissions)
 
         query =
             if model.showPreviewUi then
@@ -305,6 +317,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                             [ text chairName ]
                         , span [ class "prog-session__data prog-session__track", style [ ( "display", hideTrackName ) ] ]
                             [ text trackName ]
+                        , submissionsHtml
                         ]
 
                 Nothing ->
@@ -368,6 +381,62 @@ viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter =
         |> List.indexedMap (viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter)
 
 
+add0ToSingleDigits number =
+    if number < 10 then
+        "0" ++ (toString number)
+    else
+        toString number
+
+
+addSubmissionsHtml model submission =
+    let
+        getTimeText startTime endTime =
+            let
+                --if the time is < 10 then append a '0' infront
+                startTimeText =
+                    case startTime of
+                        Just startTime ->
+                            (add0ToSingleDigits startTime.hour) ++ ":" ++ (add0ToSingleDigits startTime.minute)
+
+                        Nothing ->
+                            ""
+
+                endTimeText =
+                    case endTime of
+                        Just endTime ->
+                            (add0ToSingleDigits endTime.hour) ++ ":" ++ (add0ToSingleDigits endTime.minute)
+
+                        Nothing ->
+                            ""
+            in
+                startTimeText ++ " - " ++ endTimeText
+
+        timeText =
+            getTimeText submission.startTime submission.endTime
+
+        submissionIdText =
+            toString submission.id
+
+        filterFunc submissionId submission =
+            submissionId == submission.id
+
+        submissionInfo =
+            List.filter (filterFunc submission.id) model.submissions
+                |> List.head
+
+        ( submissionTitle, programmeCode ) =
+            submissionInfo
+                |> Maybe.map (\s -> ( s.title, s.programmeCode ))
+                |> Maybe.withDefault ( "", "" )
+    in
+        span
+            [ class "prog-session__data print-only" ]
+            [ div [] [ text timeText ]
+            , div [] [ text programmeCode ]
+            , div [] [ text submissionTitle ]
+            ]
+
+
 viewCell : DateWithSessions -> Model -> List Float -> Int -> Float -> Int -> Column -> Html Msg
 viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index column =
     let
@@ -377,7 +446,8 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> List.filter (\s -> (s.sessionColumn == ColumnId column.id) || (s.sessionColumn == AllColumns))
 
         sessionStarting =
-            getSessionStarting sessionsInColumn dateWithSessions column timeDelimiter index
+            getSessions sessionsInColumn dateWithSessions column timeDelimiter index
+                |> List.head
 
         colSpanVal =
             if sessionIsAcrossAllColumns sessionsInColumn sessionStarting index then
@@ -399,10 +469,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                 |> List.length
 
         hideSession =
-            if rowSpanVal == 0 then
-                True
-            else
-                False
+            rowSpanVal == 0
 
         lastTime =
             timeDelimiters
@@ -423,6 +490,17 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 
         chairName =
             getNameFromId model.chairs chairId
+
+        submissions =
+            case sessionStarting of
+                Just sessionStarting ->
+                    sessionStarting.submissions
+
+                Nothing ->
+                    []
+
+        submissionsHtml =
+            span [] (List.map (addSubmissionsHtml model) submissions)
 
         chairId =
             getChairId sessionStarting
@@ -493,6 +571,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
                             , style [ ( "display", hideTrackName ) ]
                             ]
                             [ text trackName ]
+                        , submissionsHtml
                         ]
 
                 Nothing ->

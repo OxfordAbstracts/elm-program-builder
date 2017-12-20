@@ -33,6 +33,7 @@ apiUpdatePostDecoder =
         |> required "published" (Json.Decode.bool)
         |> required "infoToSave" (Json.Decode.list infoToSaveDecoder)
         |> required "savedInfo" (Json.Decode.list savedInfoDecoder)
+        |> required "changedInfo" (Json.Decode.list infoToSaveDecoder)
 
 
 encodeApiUpdatePost : ApiUpdatePost -> Encode.Value
@@ -46,6 +47,7 @@ encodeApiUpdatePost record =
         , ( "published", Encode.bool record.published )
         , ( "infoToSave", Encode.list <| List.map infoToSaveEncoder record.infoToSave )
         , ( "savedInfo", Encode.list <| List.map savedInfoEncoder record.savedInfo )
+        , ( "changedInfo", Encode.list <| List.map infoToSaveEncoder record.changedInfo )
         ]
 
 
@@ -311,6 +313,8 @@ submissionDecoder : Json.Decode.Decoder Submission
 submissionDecoder =
     decode Submission
         |> required "id" Json.Decode.int
+        |> required "title" Json.Decode.string
+        |> required "programmeCode" Json.Decode.string
 
 
 savedInfoDecoder : Json.Decode.Decoder SavedInfo
