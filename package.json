@@ -1,6 +1,6 @@
 {
   "name": "elm-program-builder",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "description": "To watch and compile: ` elm-live Main.elm --output=elm.js --open `",
   "main": "elm.js",
   "scripts": {
