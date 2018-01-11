@@ -215,8 +215,8 @@ blankSession id =
         (TimeOfDay 12 0)
         AllColumns
         Nothing
-        (Just 1)
-        (Just 1)
+        Nothing
+        Nothing
         []
 
 
