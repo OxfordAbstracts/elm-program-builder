@@ -9,6 +9,11 @@ import MainMessages exposing (..)
 import MainModel exposing (..)
 import Time
 import Utils
+import List.Extra
+
+
+type alias TimeInfo =
+    { delimiter : Float, displayTime : TimeOfDay }
 
 
 view : Model -> Html Msg
@@ -115,17 +120,19 @@ viewDate model numColumns dateWithSessions =
             dateWithSessions.sessions
                 |> List.concatMap
                     (\s ->
-                        [ DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
-                        , DateUtils.timeOfDayToTime dateWithSessions.date s.endTime
+                        [ { delimiter = DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
+                          , displayTime = s.startTime
+                          }
+                        , { delimiter = DateUtils.timeOfDayToTime dateWithSessions.date s.endTime, displayTime = s.endTime }
                         ]
                     )
-                |> Utils.dropDuplicates
-                |> List.sort
+                |> List.Extra.uniqueBy (\t -> t.delimiter)
+                |> List.sortBy .delimiter
 
         firstTime =
             timeDelimiters
                 |> List.head
-                |> Maybe.withDefault 8
+                |> Maybe.withDefault { delimiter = 8, displayTime = { hour = 8, minute = 0 } }
     in
         [ tr [ class "prog-table__row" ]
             (viewDateCell dateWithSessions timeDelimiters firstTime
@@ -138,7 +145,7 @@ viewDate model numColumns dateWithSessions =
             ++ (viewOtherRows dateWithSessions model (List.drop 1 timeDelimiters) numColumns)
 
 
-viewDateCell : DateWithSessions -> List Float -> Float -> List (Html msg)
+viewDateCell : DateWithSessions -> List TimeInfo -> TimeInfo -> List (Html msg)
 viewDateCell dateWithSessions timeDelimiters firstTime =
     let
         timeElements =
@@ -178,18 +185,18 @@ getSessions sessionsInColumn dateWithSessions column timeDelimiter index =
             |> List.filter
                 (\s ->
                     (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                        == timeDelimiter
+                        == timeDelimiter.delimiter
                         && (sessionInFirstOrAllColumns s)
                 )
 
 
-appendFirstRowCell : DateWithSessions -> List Float -> Model -> Int -> Int -> Column -> Html Msg
+appendFirstRowCell : DateWithSessions -> List TimeInfo -> Model -> Int -> Int -> Column -> Html Msg
 appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column =
     let
         timeDelimiter =
             timeDelimiters
                 |> List.head
-                |> Maybe.withDefault 0
+                |> Maybe.withDefault { delimiter = 0, displayTime = { hour = 0, minute = 0 } }
 
         sessionsInColumn =
             dateWithSessions
@@ -221,7 +228,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
         lastTime =
             timeDelimiters
                 |> Utils.last
-                |> Maybe.withDefault 0
+                |> Maybe.withDefault { delimiter = 0, displayTime = { hour = 0, minute = 0 } }
 
         trackId =
             getTrackId sessionStarting
@@ -269,7 +276,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
             else
                 ""
     in
-        if timeDelimiter == lastTime then
+        if timeDelimiter.delimiter == lastTime.delimiter then
             text ""
         else
             case sessionStarting of
@@ -324,15 +331,15 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                     noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn
 
 
-noSessionInDateCellView : Float -> DateWithSessions -> Int -> List Session -> Html Msg
+noSessionInDateCellView : TimeInfo -> DateWithSessions -> Int -> List Session -> Html Msg
 noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn =
     if
         List.any
             (\s ->
                 (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                    <= timeDelimiter
+                    <= timeDelimiter.delimiter
                     && (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
-                    > timeDelimiter
+                    > timeDelimiter.delimiter
             )
             sessionsInColumn
     then
@@ -343,16 +350,15 @@ noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColu
             ]
 
 
-viewOtherRows : DateWithSessions -> Model -> List Float -> Int -> List (Html Msg)
+viewOtherRows : DateWithSessions -> Model -> List TimeInfo -> Int -> List (Html Msg)
 viewOtherRows dateWithSessions model timeDelimiters numColumns =
     List.map (viewOtherRow dateWithSessions model timeDelimiters numColumns) timeDelimiters
 
 
-viewOtherRow : DateWithSessions -> Model -> List Float -> Int -> Float -> Html Msg
+viewOtherRow : DateWithSessions -> Model -> List TimeInfo -> Int -> TimeInfo -> Html Msg
 viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
     let
         timeElements =
-            -- list of start and end time
             displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter
                 |> List.map
                     (\t ->
@@ -362,9 +368,9 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
         lastTime =
             timeDelimiters
                 |> Utils.last
-                |> Maybe.withDefault -1
+                |> Maybe.withDefault { delimiter = -1, displayTime = { hour = 0, minute = 0 } }
     in
-        if timeDelimiter == lastTime then
+        if timeDelimiter.delimiter == lastTime.delimiter then
             text ""
         else
             tr [ class "prog-table__row" ]
@@ -375,7 +381,7 @@ viewOtherRow dateWithSessions model timeDelimiters numColumns timeDelimiter =
                 )
 
 
-viewCells : DateWithSessions -> Model -> List Float -> Int -> Float -> List (Html Msg)
+viewCells : DateWithSessions -> Model -> List TimeInfo -> Int -> TimeInfo -> List (Html Msg)
 viewCells dateWithSessions model timeDelimiters numColumns timeDelimiter =
     model.columns
         |> List.indexedMap (viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter)
@@ -437,7 +443,7 @@ addSubmissionsHtml model submission =
             ]
 
 
-viewCell : DateWithSessions -> Model -> List Float -> Int -> Float -> Int -> Column -> Html Msg
+viewCell : DateWithSessions -> Model -> List TimeInfo -> Int -> TimeInfo -> Int -> Column -> Html Msg
 viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index column =
     let
         sessionsInColumn =
@@ -465,7 +471,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 
         rowSpanVal =
             timeDelimiters
-                |> List.filter (\t -> t >= timeDelimiter && t < (DateUtils.timeOfDayToTime sessionDate endTime))
+                |> List.filter (\t -> t.delimiter >= timeDelimiter.delimiter && t.delimiter < (DateUtils.timeOfDayToTime sessionDate endTime))
                 |> List.length
 
         hideSession =
@@ -474,7 +480,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
         lastTime =
             timeDelimiters
                 |> Utils.last
-                |> Maybe.withDefault -1
+                |> Maybe.withDefault { delimiter = -1, displayTime = { hour = 0, minute = 0 } }
 
         trackId =
             getTrackId sessionStarting
@@ -521,7 +527,7 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
             else
                 ""
     in
-        if timeDelimiter == lastTime then
+        if timeDelimiter.delimiter == lastTime.delimiter then
             text ""
         else
             case sessionStarting of
@@ -582,43 +588,41 @@ viewCell dateWithSessions model timeDelimiters numColumns timeDelimiter index co
 -- HELPERS
 
 
-displayTimeDelimiter : DateWithSessions -> List Float -> Float -> List String
+displayTimeDelimiter : DateWithSessions -> List TimeInfo -> TimeInfo -> List String
 displayTimeDelimiter dateWithSessions timeDelimiters timeDelimiter =
     let
         nextDelimiter =
             timeDelimiters
-                |> List.filter (\t -> t > timeDelimiter)
+                |> List.filter (\t -> t.delimiter > timeDelimiter.delimiter)
                 |> List.head
-                |> Maybe.withDefault 0
+                |> Maybe.withDefault { displayTime = { hour = 0, minute = 0 }, delimiter = 0 }
 
+        -- [ { delimiter = DateUtils.timeOfDayToTime dateWithSessions.date s.startTime
         sessionExistsInTimeDelimiter =
             List.any
                 (\s ->
                     (DateUtils.timeOfDayToTime dateWithSessions.date s.startTime)
-                        == timeDelimiter
+                        == timeDelimiter.delimiter
                         || (DateUtils.timeOfDayToTime dateWithSessions.date s.endTime)
-                        == nextDelimiter
+                        == nextDelimiter.delimiter
                 )
                 dateWithSessions.sessions
     in
         if sessionExistsInTimeDelimiter then
-            -- list of start and end time
-            [ DateUtils.displayTime timeDelimiter, DateUtils.displayTime nextDelimiter ]
+            [ (DateUtils.add0Padding (toString timeDelimiter.displayTime.hour)) ++ ":" ++ (DateUtils.add0Padding (toString timeDelimiter.displayTime.minute))
+            , (DateUtils.add0Padding (toString nextDelimiter.displayTime.hour)) ++ ":" ++ (DateUtils.add0Padding (toString nextDelimiter.displayTime.minute))
+            ]
         else
             []
-
-
-
---
 
 
 getRowSpan timeDelimiters timeDelimiter sessionDate endTime =
     timeDelimiters
         |> List.filter
             (\t ->
-                t
-                    >= timeDelimiter
-                    && t
+                t.delimiter
+                    >= timeDelimiter.delimiter
+                    && t.delimiter
                     < (DateUtils.timeOfDayToTime sessionDate endTime)
             )
         |> List.length
