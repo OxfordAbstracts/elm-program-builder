@@ -132,7 +132,7 @@ viewDate model numColumns dateWithSessions =
         firstTime =
             timeDelimiters
                 |> List.head
-                |> Maybe.withDefault { delimiter = 8, displayTime = { hour = 0, minute = 0 } }
+                |> Maybe.withDefault { delimiter = 8, displayTime = { hour = 8, minute = 0 } }
     in
         [ tr [ class "prog-table__row" ]
             (viewDateCell dateWithSessions timeDelimiters firstTime
@@ -331,7 +331,7 @@ appendFirstRowCell dateWithSessions timeDelimiters model numColumns index column
                     noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn
 
 
-noSessionInDateCellView : { displayTime : TimeOfDay, delimiter : Float } -> DateWithSessions -> Int -> List Session -> Html Msg
+noSessionInDateCellView : TimeInfo -> DateWithSessions -> Int -> List Session -> Html Msg
 noSessionInDateCellView timeDelimiter dateWithSessions rowSpanVal sessionsInColumn =
     if
         List.any
