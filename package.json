@@ -8,8 +8,7 @@
     "wt": "elm-test --watch",
     "start": "elm-live Main.elm --output=elm.js --open",
     "debug": "elm-live Main.elm --output=elm.js --open --debug",
-    "build": "elm-make Main.elm --output=elm.js",
-    "prepublish": "npm run build"
+    "build": "elm-make Main.elm --output=elm.js"
   },
   "repository": {
     "type": "git",
